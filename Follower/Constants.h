@@ -1,19 +1,19 @@
 /*******************
  * Hardware Constants
  *******************/
-#define AIN1 3
-#define AIN2 5
-#define BIN1 9
-#define BIN2 6
+const int AIN1 = 3;
+const int AIN2 = 5;
+const int BIN1 = 9;
+const int BIN2 = 6;
 
 /*******************
  * Robot Constants
  *******************/
-#define WHEEL_RADIUS 0.035
+const float WHEEL_RADIUS = 0.035;
 
 /*******************
  * Environment Constants
  *******************/
-#define LINE_WIDTH 0.05
-#define MAP_WIDTH 5
-#define MAP_HEIGHT 5 
+const float LINE_WIDTH = 0.05;
+const int MAP_WIDTH = 5;
+const int MAP_HEIGHT = 5; 
