@@ -1,3 +1,6 @@
+#ifndef CONSTANTS
+#define CONSTANTS
+
 /*******************
  * Hardware Constants
  *******************/
@@ -17,3 +20,6 @@ const float WHEEL_RADIUS = 0.035;
 const float LINE_WIDTH = 0.05;
 const int MAP_WIDTH = 5;
 const int MAP_HEIGHT = 5; 
+const int MAP_RESOLUTION = 0.025;
+
+#endif
