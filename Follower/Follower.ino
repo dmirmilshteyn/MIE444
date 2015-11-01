@@ -15,7 +15,10 @@ void setup() {
 
   MoveRight();
 
-  AccessMapElement(16, 0);
+
+  SetMapElement(0, 0, true);
+  
+  Serial.println(AccessMapElement(1, 0));
 }
 
 void loop() {

@@ -10,22 +10,38 @@ const int map_tiles_width = (MAP_WIDTH / MAP_RESOLUTION / 8);
 const int map_tiles_height = (MAP_HEIGHT / MAP_RESOLUTION / 8);
 
 void InitializeMapping() {
-  map_tiles = new byte[map_tiles_width * map_tiles_height];
+  map_tiles = new byte[map_tiles_width * map_tiles_height]();
 }
 
 int CalculateInternalPosition(int x, int y) {
   return (y * map_tiles_width + x) / 8;
 }
 
+int CalculateInternalOffset(int x, int y) {
+  return (y * map_tiles_width + x) % 8;
+}
+
 bool AccessMapElement(int x, int y) {
   int position = CalculateInternalPosition(x, y);
+  int offset = CalculateInternalOffset(x, y);
 
-  return map_tiles[position];
+  byte internal_value = map_tiles[position];
+
+  return internal_value & (1 << offset);
 }
 
 void SetMapElement(int x, int y, bool value) {
   int position = CalculateInternalPosition(x, y);
+  int offset = CalculateInternalOffset(x, y);
 
-  map_tiles[position] = value;
+  byte internal_value = map_tiles[position];
+
+  if (value) {
+    internal_value = internal_value | 1 << offset;
+  } else {
+    internal_value = internal_value & ~(1 << offset);
+  }
+
+  map_tiles[position] = internal_value;
 }
 
