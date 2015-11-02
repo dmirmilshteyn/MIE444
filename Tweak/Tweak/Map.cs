@@ -3,11 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using System.Xml.Serialization;
 
 namespace Tweak
 {
     public class Map : ObservableObject
     {
+        WriteableBitmap gridBitmap;
+        [XmlIgnore]
+        public WriteableBitmap GridBitmap {
+            get { return gridBitmap; }
+            set {
+                gridBitmap = value;
+                RaisePropertyChanged();
+            }
+        }
+
         TileCollection tiles;
         public TileCollection Tiles {
             get { return tiles; }
@@ -18,8 +30,10 @@ namespace Tweak
         }
 
         public void InitializeMap(Constants constants) {
-            Tiles = new TileCollection();
-            Tiles.Initialize(constants);
+            if (Tiles == null) {
+                Tiles = new TileCollection();
+                Tiles.Initialize(constants);
+            }
         }
 
         public byte[] Export() {
@@ -50,6 +64,12 @@ namespace Tweak
             }
 
             return values;
+        }
+
+        public void RefreshGridBitmap() {
+            using (gridBitmap.GetBitmapContext()) {
+
+            }
         }
     }
 }

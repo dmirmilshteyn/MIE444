@@ -5,9 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tweak"
         mc:Ignorable="d"
-        Title="Tweak" Height="450" Width="300">
+        Title="Tweak" Height="450" Width="500">
     <Grid>
-        <StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
             <Button Content="Load Data..." Command="{Binding LoadDataFileCommand}" />
             <Button Content="Save Data..." Command="{Binding SaveDataFileCommand}" />
             <DockPanel LastChildFill="True">
@@ -17,5 +21,6 @@
             <local:ConstantsView DataContext="{Binding Project.Constants}" />
             <Button Content="Generate!" Command="{Binding GenerateCodeCommand}" />
         </StackPanel>
+        <local:MapView Grid.Column="1" DataContext="{Binding Project.Map}" />
     </Grid>
 </Window>

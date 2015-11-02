@@ -7,18 +7,35 @@ using System.Xml.Serialization;
 
 namespace Tweak
 {
-    public class TileCollection
+    public class TileCollection : ObservableObject
     {
         Tile[] tiles;
 
         public Tile[] Tiles {
             get { return tiles; }
-            set { tiles = value; }
+            set {
+                tiles = value;
+                RaisePropertyChanged();
+            }
         }
 
-        public int Width { get; set; }
+        int width;
+        public int Width {
+            get { return width; }
+            set {
+                width = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public int Height { get; set; }
+        int height;
+        public int Height {
+            get { return height; }
+            set {
+                height = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public Tile this[int x, int y] {
             get { return tiles[y * Width + x]; }
@@ -29,11 +46,15 @@ namespace Tweak
                 this.Width = (int)(constants.MapWidth / constants.MapResolution);
                 this.Height = (int)(constants.MapHeight / constants.MapResolution);
 
-                tiles = new Tile[this.Width * this.Height];
-                for (int i = 0; i < tiles.Length; i++) {
-                    tiles[i] = new Tile();
+                Tile[] localTiles = new Tile[this.Width * this.Height];
+                for (int i = 0; i < localTiles.Length; i++) {
+                    localTiles[i] = new Tile();
                 }
+
+                this.Tiles = localTiles;
             }
+
+            this.Tiles = this.Tiles;
         }
 
     }
