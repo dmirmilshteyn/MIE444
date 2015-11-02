@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Constants xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AIN1>3</AIN1>
+  <AIN2>5</AIN2>
+  <BIN1>9</BIN1>
+  <BIN2>6</BIN2>
+  <WheelRadius>0.035</WheelRadius>
+  <LineWidth>0.05</LineWidth>
+  <MapWidth>5</MapWidth>
+  <MapHeight>5</MapHeight>
+  <MapResolution>0.025</MapResolution>
+</Constants>
