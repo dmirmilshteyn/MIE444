@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <OutputDirectory>C:\Users\Daniel\OneDrive\Documents\UofT\4F\MIE444\Project\Code\Follower</OutputDirectory>
+  <OutputDirectory>..\..\..\..\Follower</OutputDirectory>
   <Constants>
     <AIN1>3</AIN1>
     <AIN2>5</AIN2>

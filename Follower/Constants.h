@@ -2,8 +2,8 @@
  ** This is a generated file. Do not modify. **
  **********************************************/
 
-#ifndef CONSTANTS
-#define CONSTANTS
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 /**********************************************
  ************* Hardware Constants *************

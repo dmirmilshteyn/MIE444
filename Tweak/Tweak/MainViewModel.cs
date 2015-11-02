@@ -74,6 +74,7 @@ namespace Tweak
             CodeGenerator codeGenerator = new CodeGenerator();
 
             codeGenerator.GenerateConstantsHeader(Path.Combine(Project.OutputDirectory, "Constants.h"), Project.Constants);
+            codeGenerator.GenerateMapHeader(Path.Combine(Project.OutputDirectory, "Map.h"), Project.Constants);
         }
     }
 }
