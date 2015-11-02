@@ -22,6 +22,7 @@ namespace Tweak
         public async Task Save(StorageFile storageFile, Project project) {
             XmlSerializer x = new XmlSerializer(typeof(Project));
             using (Stream fileStream = await storageFile.OpenStreamForWriteAsync()) {
+                fileStream.SetLength(0);
                 x.Serialize(fileStream, project);
             }
         }
