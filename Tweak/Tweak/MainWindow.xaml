@@ -5,12 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tweak"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="300">
+        Title="Tweak" Height="450" Width="300">
     <Grid>
         <StackPanel>
             <Button Content="Load Data..." Command="{Binding LoadDataFileCommand}" />
             <Button Content="Save Data..." Command="{Binding SaveDataFileCommand}" />
-            <local:ConstantsView DataContext="{Binding Constants}" />
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="..." Width="25" Command="{Binding BrowseOutputDirectoryCommand}" />
+                <TextBox DockPanel.Dock="Left" Text="{Binding Project.OutputDirectory}"/>
+            </DockPanel>
+            <local:ConstantsView DataContext="{Binding Project.Constants}" />
+            <Button Content="Generate!" Command="{Binding GenerateCodeCommand}" />
         </StackPanel>
     </Grid>
 </Window>

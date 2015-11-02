@@ -11,19 +11,19 @@ namespace Tweak
 {
     class DataManager
     {
-        public Constants Load(string filePath) {
-            XmlSerializer x = new XmlSerializer(typeof(Constants));
+        public Project Load(string filePath) {
+            XmlSerializer x = new XmlSerializer(typeof(Project));
             TextReader reader = new StreamReader(filePath);
-            Constants constants = (Constants)x.Deserialize(reader);
+            Project project = (Project)x.Deserialize(reader);
             reader.Close();
 
-            return constants;
+            return project;
         }
 
-        public void Save(string filePath, Constants constants) {
-            XmlSerializer x = new XmlSerializer(typeof(Constants));
+        public void Save(string filePath, Project project) {
+            XmlSerializer x = new XmlSerializer(typeof(Project));
             TextWriter writer = new StreamWriter(filePath);
-            x.Serialize(writer, constants);
+            x.Serialize(writer, project);
             writer.Close();
         }
     }

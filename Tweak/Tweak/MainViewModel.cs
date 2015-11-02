@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,23 +12,27 @@ namespace Tweak
 {
     class MainViewModel : ObservableObject
     {
-        Constants constants;
-        public Constants Constants {
-            get { return constants; }
+        Project project;
+        public Project Project {
+            get { return project; }
             set {
-                constants = value;
+                project = value;
                 RaisePropertyChanged();
             }
         }
 
         public ICommand LoadDataFileCommand { get; private set; }
         public ICommand SaveDataFileCommand { get; private set; }
+        public ICommand BrowseOutputDirectoryCommand { get; private set; }
+        public ICommand GenerateCodeCommand { get; private set; }
 
         public MainViewModel() {
-            Constants = new Constants();
+            Project = new Project();
 
             this.LoadDataFileCommand = new Command(LoadDataFileCallback);
             this.SaveDataFileCommand = new Command(SaveDataFileCallback);
+            this.BrowseOutputDirectoryCommand = new Command(BrowseOutputDirectoryCallback);
+            this.GenerateCodeCommand = new Command(GenerateCodeCallback);
         }
 
         private void LoadDataFileCallback() {
@@ -37,7 +43,7 @@ namespace Tweak
                 string path = ofd.FileName;
 
                 DataManager dataManager = new DataManager();
-                Constants = dataManager.Load(path);
+                Project = dataManager.Load(path);
             }
         }
 
@@ -50,8 +56,24 @@ namespace Tweak
                 string path = sfd.FileName;
 
                 DataManager dataManager = new DataManager();
-                dataManager.Save(path, Constants);
+                dataManager.Save(path, Project);
             }
+        }
+
+        private void BrowseOutputDirectoryCallback() {
+            var dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            CommonFileDialogResult result = dialog.ShowDialog();
+
+            if (result == CommonFileDialogResult.Ok) {
+                Project.OutputDirectory = dialog.FileName;
+            }
+        }
+
+        private void GenerateCodeCallback() {
+            CodeGenerator codeGenerator = new CodeGenerator();
+
+            codeGenerator.GenerateConstantsHeader(Path.Combine(Project.OutputDirectory, "Constants.h"), Project.Constants);
         }
     }
 }
