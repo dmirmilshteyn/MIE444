@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="Tweak.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Tweak"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Button Content="Load Data..." Command="{Binding LoadDataFileCommand}" HorizontalAlignment="Stretch" />
+            <Button Content="Save Data..." Command="{Binding SaveDataFileCommand}" HorizontalAlignment="Stretch" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding OutputDirectory.DisplayName}" HorizontalAlignment="Stretch" />
+                <Button Grid.Column="1" Content="..." Command="{Binding BrowseOutputDirectoryCommand}"/>
+            </Grid>
+            <local:ConstantsView DataContext="{Binding Project.Constants}" />
+            <Button Content="Generate!" Command="{Binding GenerateCodeCommand}" HorizontalAlignment="Stretch" />
+        </StackPanel>
+    </Grid>
+</Page>

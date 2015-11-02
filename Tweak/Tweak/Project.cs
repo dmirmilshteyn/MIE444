@@ -8,15 +8,6 @@ namespace Tweak
 {
     public class Project : ObservableObject
     {
-        string outputDirectory;
-        public string OutputDirectory {
-            get { return outputDirectory; }
-            set {
-                outputDirectory = value;
-                RaisePropertyChanged();
-            }
-        }
-
         Constants constants;
         public Constants Constants {
             get { return constants; }

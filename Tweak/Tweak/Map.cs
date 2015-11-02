@@ -3,23 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
 namespace Tweak
 {
     public class Map : ObservableObject
     {
-        WriteableBitmap gridBitmap;
-        [XmlIgnore]
-        public WriteableBitmap GridBitmap {
-            get { return gridBitmap; }
-            set {
-                gridBitmap = value;
-                RaisePropertyChanged();
-            }
-        }
-
         TileCollection tiles;
         public TileCollection Tiles {
             get { return tiles; }
@@ -64,12 +53,6 @@ namespace Tweak
             }
 
             return values;
-        }
-
-        public void RefreshGridBitmap() {
-            using (gridBitmap.GetBitmapContext()) {
-
-            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 
 namespace Tweak
 {
@@ -17,6 +18,15 @@ namespace Tweak
             get { return project; }
             set {
                 project = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        StorageFolder outputDirectory;
+        public StorageFolder OutputDirectory {
+            get { return outputDirectory; }
+            set {
+                outputDirectory = value;
                 RaisePropertyChanged();
             }
         }
@@ -35,47 +45,42 @@ namespace Tweak
             this.GenerateCodeCommand = new Command(GenerateCodeCallback);
         }
 
-        private void LoadDataFileCallback() {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "XML Files|*.xml";
-            bool? result = ofd.ShowDialog();
-            if (result.HasValue && result.Value) {
-                string path = ofd.FileName;
-
+        private async void LoadDataFileCallback() {
+            FileOpenPicker filePicker = new FileOpenPicker();
+            filePicker.FileTypeFilter.Add(".xml");
+            StorageFile storageFile = await filePicker.PickSingleFileAsync();
+            if (storageFile != null) {
                 DataManager dataManager = new DataManager();
-                Project = dataManager.Load(path);
+                Project = await dataManager.Load(storageFile);
                 Project.Initialize();
             }
         }
 
-        private void SaveDataFileCallback() {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "XML Files|*.xml";
-            sfd.AddExtension = true;
-            bool? result = sfd.ShowDialog();
-            if (result.HasValue && result.Value) {
-                string path = sfd.FileName;
-
+        private async void SaveDataFileCallback() {
+            FileSavePicker filePicker = new FileSavePicker();
+            filePicker.DefaultFileExtension = ".xml";
+            filePicker.FileTypeChoices.Add("XML", new List<string>() { ".xml" });
+            StorageFile storageFile = await filePicker.PickSaveFileAsync();
+            if (storageFile != null) {
                 DataManager dataManager = new DataManager();
-                dataManager.Save(path, Project);
+                await dataManager.Save(storageFile, Project);
             }
         }
 
-        private void BrowseOutputDirectoryCallback() {
-            var dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
-            CommonFileDialogResult result = dialog.ShowDialog();
-
-            if (result == CommonFileDialogResult.Ok) {
-                Project.OutputDirectory = dialog.FileName;
+        private async void BrowseOutputDirectoryCallback() {
+            FolderPicker folderPicker = new FolderPicker();
+            folderPicker.FileTypeFilter.Add("*");
+            StorageFolder storageFolder = await folderPicker.PickSingleFolderAsync();
+            if (storageFolder != null) {
+                OutputDirectory = storageFolder;
             }
         }
 
-        private void GenerateCodeCallback() {
+        private async void GenerateCodeCallback() {
             CodeGenerator codeGenerator = new CodeGenerator();
 
-            codeGenerator.GenerateConstantsHeader(Path.Combine(Project.OutputDirectory, "Constants.h"), Project.Constants);
-            codeGenerator.GenerateMapHeader(Path.Combine(Project.OutputDirectory, "Map.h"), Project.Constants, project.Map);
+            await codeGenerator.GenerateConstantsHeader(OutputDirectory, Project.Constants);
+            await codeGenerator.GenerateMapHeader(OutputDirectory, Project.Constants, project.Map);
         }
     }
 }
