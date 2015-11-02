@@ -26,5 +26,6 @@
             <local:ConstantsView DataContext="{Binding Project.Constants}" />
             <Button Content="Generate!" Command="{Binding GenerateCodeCommand}" HorizontalAlignment="Stretch" />
         </StackPanel>
+        <local:MapView Grid.Column="1" DataContext="{Binding Project}" />
     </Grid>
 </Page>
