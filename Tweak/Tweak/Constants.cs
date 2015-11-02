@@ -44,8 +44,8 @@ namespace Tweak
             }
         }
 
-        float wheelRadius;
-        public float WheelRadius {
+        double wheelRadius;
+        public double WheelRadius {
             get { return wheelRadius; }
             set {
                 wheelRadius = value;
@@ -53,8 +53,8 @@ namespace Tweak
             }
         }
 
-        float lineWidth;
-        public float LineWidth {
+        double lineWidth;
+        public double LineWidth {
             get { return lineWidth; }
             set {
                 lineWidth = value;
@@ -62,8 +62,8 @@ namespace Tweak
             }
         }
 
-        float mapWidth;
-        public float MapWidth {
+        double mapWidth;
+        public double MapWidth {
             get { return mapWidth; }
             set {
                 mapWidth = value;
@@ -71,8 +71,8 @@ namespace Tweak
             }
         }
 
-        float mapHeight;
-        public float MapHeight {
+        double mapHeight;
+        public double MapHeight {
             get { return mapHeight; }
             set {
                 mapHeight = value;
@@ -80,8 +80,8 @@ namespace Tweak
             }
         }
 
-        float mapResolution;
-        public float MapResolution {
+        double mapResolution;
+        public double MapResolution {
             get { return mapResolution; }
             set {
                 mapResolution = value;

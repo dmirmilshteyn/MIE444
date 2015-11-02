@@ -26,8 +26,22 @@ namespace Tweak
             }
         }
 
+        Map map;
+        public Map Map {
+            get { return map; }
+            set {
+                map = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public Project() {
             Constants = new Constants();
+            Map = new Map();
+        }
+
+        public void Initialize() {
+            Map.InitializeMap(Constants);
         }
     }
 }

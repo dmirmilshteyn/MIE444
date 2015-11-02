@@ -9,6 +9,8 @@ namespace Tweak
 {
     class CodeGenerator
     {
+        public static readonly int TILES_PER_LINE = 15;
+
         public void GenerateConstantsHeader(string filePath, Constants constants) {
             using (StreamWriter writer = new StreamWriter(filePath)) {
                 writer.WriteLine("/**********************************************");
@@ -44,7 +46,7 @@ namespace Tweak
             }
         }
 
-        public void GenerateMapHeader(string filePath, Constants constants) {
+        public void GenerateMapHeader(string filePath, Constants constants, Map map) {
             using (StreamWriter writer = new StreamWriter(filePath)) {
                 writer.WriteLine("/**********************************************");
                 writer.WriteLine(" ** This is a generated file. Do not modify. **");
@@ -59,15 +61,34 @@ namespace Tweak
                 writer.WriteLine("// This is done to minimize memory usage as the Arduino Uno only has 2048 bytes available.");
                 writer.WriteLine();
 
-                float map_tiles_width = (constants.MapWidth / constants.MapResolution / 8);
-                float map_tiles_height = (constants.MapHeight / constants.MapResolution / 8);
+                double map_tiles_width = (constants.MapWidth / constants.MapResolution / 8);
+                double map_tiles_height = (constants.MapHeight / constants.MapResolution / 8);
                 int arraySize = (int)(map_tiles_width * map_tiles_height);
 
                 writer.WriteLine($"const int map_tiles_width = {map_tiles_width};");
                 writer.WriteLine($"const int map_tiles_height = {map_tiles_height};");
                 writer.WriteLine();
                 writer.WriteLine("// Array size = (MAP_WIDTH / MAP_RESOLUTION / 8) * (MAP_HEIGHT / MAP_RESOLUTION / 8)");
-                writer.WriteLine($"byte map_tiles[{arraySize}];");
+                writer.Write($"byte map_tiles[{arraySize}] = {{");
+
+                byte[] exportedValues = map.Export();
+                for (int i = 0; i < exportedValues.Length; i++) {
+                    if (i % TILES_PER_LINE == 0) {
+                        writer.WriteLine();
+                    }
+
+                    writer.Write(exportedValues[i]);
+
+                    if (i < exportedValues.Length - 1) {
+                        writer.Write(", ");
+                    }
+                }
+
+                if (exportedValues.Length - 1 % TILES_PER_LINE != 0) {
+                    writer.WriteLine();
+                }
+
+                writer.WriteLine($"}};");
 
                 writer.WriteLine();
                 writer.WriteLine("#endif");
