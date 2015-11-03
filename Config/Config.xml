@@ -120018,5 +120018,19 @@
       <Width>200</Width>
       <Height>200</Height>
     </Tiles>
+    <Intersections>
+      <Intersection>
+        <X>61.340549468994141</X>
+        <Y>52.041873931884766</Y>
+        <Width>15.954479217529297</Width>
+        <Height>12.725887298583984</Height>
+      </Intersection>
+      <Intersection>
+        <X>63.049057006835938</X>
+        <Y>78.247390747070312</Y>
+        <Width>12.5374755859375</Width>
+        <Height>11.017372131347656</Height>
+      </Intersection>
+    </Intersections>
   </Map>
 </Project>

@@ -107,6 +107,7 @@
       <DependentUpon>ConstantsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataManager.cs" />
+    <Compile Include="Intersection.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

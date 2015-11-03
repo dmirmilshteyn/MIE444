@@ -24,6 +24,9 @@ namespace Tweak
         bool deleting;
         Object sharedDataContext;
 
+        Point? intersectionA;
+        Point? intersectionB;
+
         public MapView() {
             this.InitializeComponent();
 
@@ -44,7 +47,7 @@ namespace Tweak
             Map map = project.Map;
 
             args.DrawingSession.Antialiasing = Microsoft.Graphics.Canvas.CanvasAntialiasing.Aliased;
-            
+
             for (int x = 0; x < map.Tiles.Width; x++) {
                 for (int y = 0; y < map.Tiles.Height; y++) {
                     if (map.Tiles[x, y].Filled) {
@@ -54,12 +57,44 @@ namespace Tweak
                     }
                 }
             }
+
+            foreach (Intersection intersection in map.Intersections) {
+                args.DrawingSession.DrawRectangle(new Rect(intersection.X, intersection.Y, intersection.Width, intersection.Height), Colors.Green);
+            }
         }
 
         private void CanvasAnimatedControl_PointerPressed(object sender, PointerRoutedEventArgs e) {
+            Project project = (Project)sharedDataContext;
+            Map map = project.Map;
+
             pointerPressed = true;
             if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
                 deleting = true;
+            }
+            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift) {
+                pointerPressed = false;
+                if (!intersectionA.HasValue) {
+                    UIElement canvas = (UIElement)sender;
+
+                    PointerPoint point = e.GetCurrentPoint(canvas);
+
+                    intersectionA = point.Position;
+                } else if (!intersectionB.HasValue) {
+                    UIElement canvas = (UIElement)sender;
+
+                    PointerPoint point = e.GetCurrentPoint(canvas);
+                    intersectionB = point.Position;
+
+                    double width = intersectionB.Value.X - intersectionA.Value.X;
+                    double height = intersectionB.Value.Y - intersectionA.Value.Y;
+
+                    Intersection intersection = new Intersection(intersectionA.Value.X, intersectionA.Value.Y, width, height);
+
+                    map.Intersections.Add(intersection);
+
+                    intersectionA = null;
+                    intersectionB = null;
+                }
             }
 
             ProcessPointerMoved(sender, e);

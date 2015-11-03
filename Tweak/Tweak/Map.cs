@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,10 +19,22 @@ namespace Tweak
             }
         }
 
+        ObservableCollection<Intersection> intersections;
+        public ObservableCollection<Intersection> Intersections {
+            get { return intersections; }
+            set {
+                intersections = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public void InitializeMap(Constants constants) {
             if (Tiles == null) {
                 Tiles = new TileCollection();
                 Tiles.Initialize(constants);
+            }
+            if (Intersections == null) {
+                Intersections = new ObservableCollection<Intersection>();
             }
         }
 
