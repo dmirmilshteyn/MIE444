@@ -57,4 +57,16 @@ byte map_tiles[625] = {
 0, 0, 0, 0, 0, 0, 0, 0, 0, 128
 };
 
+struct intersection {
+  short TopLeft;
+  short TopRight;
+  short BottomLeft;
+  short BottomRight;
+};
+
+intersection intersections[2] = {
+  { 10469, 10484, 13014, 13029 }, 
+  { 15712, 15724, 17915, 17927 }
+};
+
 #endif

@@ -93,6 +93,33 @@ namespace Tweak
                     }
 
                     writer.WriteLine($"}};");
+                    writer.WriteLine();
+
+                    // Write out the intersection datatype
+                    writer.WriteLine("struct intersection {");
+                    writer.WriteLine("  short TopLeft;");
+                    writer.WriteLine("  short TopRight;");
+                    writer.WriteLine("  short BottomLeft;");
+                    writer.WriteLine("  short BottomRight;");
+                    writer.WriteLine("};");
+                    writer.WriteLine();
+
+                    // Write out the values for each intersection
+                    writer.WriteLine($"intersection intersections[{map.Intersections.Count}] = {{");
+                    for (int i = 0; i < map.Intersections.Count; i++) {
+                        writer.Write("  { ");
+
+                        var intersectionLocations = map.Intersections[i].Export(map);
+                        writer.Write($"{intersectionLocations.Item1}, {intersectionLocations.Item2}, {intersectionLocations.Item3}, {intersectionLocations.Item4}");
+
+                        writer.Write(" }");
+
+                        if (i < map.Intersections.Count - 1) {
+                            writer.Write(", ");
+                        }
+                        writer.WriteLine();
+                    }
+                    writer.WriteLine("};");
 
                     writer.WriteLine();
                     writer.WriteLine("#endif");
