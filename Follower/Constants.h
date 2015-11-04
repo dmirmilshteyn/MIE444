@@ -13,6 +13,15 @@ const int AIN2 = 5;
 const int BIN1 = 9;
 const int BIN2 = 6;
 
+const int LINE_SENSOR_1 = 0;
+const int LINE_SENSOR_2 = 0;
+const int LINE_SENSOR_3 = 0;
+const int LINE_SENSOR_4 = 0;
+const int LINE_SENSOR_5 = 0;
+const int LINE_SENSOR_6 = 0;
+
+const int IR_DETECTOR = 0;
+
 /**********************************************
  ************** Robot Constants ***************
  **********************************************/

@@ -24,6 +24,20 @@
             <TextBox Text="{Binding BIN1}" />
             <TextBlock Text="BIN2" />
             <TextBox Text="{Binding BIN2}" />
+            <TextBlock Text="Line Sensor 1" />
+            <TextBox Text="{Binding LineSensor1Pin}" />
+            <TextBlock Text="Line Sensor 2" />
+            <TextBox Text="{Binding LineSensor2Pin}" />
+            <TextBlock Text="Line Sensor 3" />
+            <TextBox Text="{Binding LineSensor3Pin}" />
+            <TextBlock Text="Line Sensor 4" />
+            <TextBox Text="{Binding LineSensor4Pin}" />
+            <TextBlock Text="Line Sensor 5" />
+            <TextBox Text="{Binding LineSensor5Pin}" />
+            <TextBlock Text="Line Sensor 6" />
+            <TextBox Text="{Binding LineSensor6Pin}" />
+            <TextBlock Text="IR Detector" />
+            <TextBox Text="{Binding IRDetectorPin}" />
         </StackPanel>
         <StackPanel Grid.Column="1">
             <TextBlock Text="Physics" FontSize="18" FontWeight="Bold" />

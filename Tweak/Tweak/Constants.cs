@@ -44,6 +44,69 @@ namespace Tweak
             }
         }
 
+        int lineSensor1Pin;
+        public int LineSensor1Pin {
+            get { return lineSensor1Pin; }
+            set {
+                lineSensor1Pin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int lineSensor2Pin;
+        public int LineSensor2Pin {
+            get { return lineSensor2Pin; }
+            set {
+                lineSensor2Pin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int lineSensor3Pin;
+        public int LineSensor3Pin {
+            get { return lineSensor3Pin; }
+            set {
+                lineSensor3Pin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int lineSensor4Pin;
+        public int LineSensor4Pin {
+            get { return lineSensor4Pin; }
+            set {
+                lineSensor4Pin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int lineSensor5Pin;
+        public int LineSensor5Pin {
+            get { return lineSensor5Pin; }
+            set {
+                lineSensor5Pin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int lineSensor6Pin;
+        public int LineSensor6Pin {
+            get { return lineSensor6Pin; }
+            set {
+                lineSensor6Pin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int irDetectorPin;
+        public int IRDetectorPin {
+            get { return irDetectorPin; }
+            set {
+                irDetectorPin = value;
+                RaisePropertyChanged();
+            }
+        }
+
         double wheelRadius;
         public double WheelRadius {
             get { return wheelRadius; }
