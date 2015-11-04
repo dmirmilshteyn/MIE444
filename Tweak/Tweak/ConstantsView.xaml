@@ -10,7 +10,12 @@
     d:DesignWidth="400">
 
     <Grid>
-        <StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="Connections" FontSize="18" FontWeight="Bold" />
             <TextBlock Text="AIN1" />
             <TextBox Text="{Binding AIN1}" />
             <TextBlock Text="AIN2" />
@@ -19,6 +24,9 @@
             <TextBox Text="{Binding BIN1}" />
             <TextBlock Text="BIN2" />
             <TextBox Text="{Binding BIN2}" />
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <TextBlock Text="Physics" FontSize="18" FontWeight="Bold" />
             <TextBlock Text="Wheel Radius" />
             <TextBox Text="{Binding WheelRadius}" InputScope="Digits" />
             <TextBlock Text="Line Width" />
