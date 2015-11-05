@@ -160,5 +160,14 @@ namespace Tweak
                 RaisePropertyChanged();
             }
         }
+
+        int checkpointReactionDuration;
+        public int CheckpointReactionDuration {
+            get { return checkpointReactionDuration; }
+            set {
+                checkpointReactionDuration = value;
+                RaisePropertyChanged();
+            }
+        }
     }
 }

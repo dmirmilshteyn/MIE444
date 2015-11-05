@@ -53,6 +53,11 @@ namespace Tweak
                     writer.WriteLine($"const int MAP_HEIGHT = {constants.MapHeight};");
                     writer.WriteLine($"const int MAP_RESOLUTION = {constants.MapResolution};");
                     writer.WriteLine();
+                    writer.WriteLine("/**********************************************");
+                    writer.WriteLine(" *********** Calibration Constants ************");
+                    writer.WriteLine(" **********************************************/");
+                    writer.WriteLine($"const int CHECKPOINT_REACTION_DURATION = {constants.CheckpointReactionDuration};");
+                    writer.WriteLine();
                     writer.WriteLine("#endif");
                 }
             }

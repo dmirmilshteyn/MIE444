@@ -54,6 +54,9 @@
             <toolkit:NumericUpDown Value="{Binding MapHeight, Mode=TwoWay}" SmallChange="0.25" Maximum="15" HorizontalAlignment="Stretch"/>
             <TextBlock Text="Map Resolution" />
             <toolkit:NumericUpDown Value="{Binding MapResolution, Mode=TwoWay}" SmallChange="0.005" ValueFormat="0.0000" HorizontalAlignment="Stretch" />
+            <TextBlock Text="Calibration" FontSize="18" FontWeight="Bold" />
+            <TextBlock Text="Checkpoint Duration" />
+            <toolkit:NumericUpDown Value="{Binding CheckpointReactionDuration, Mode=TwoWay}" SmallChange="100" Maximum="99999" ValueFormat="F0" HorizontalAlignment="Stretch" />
         </StackPanel>
     </Grid>
 </UserControl>
