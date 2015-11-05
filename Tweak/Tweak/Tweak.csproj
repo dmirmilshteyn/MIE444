@@ -113,6 +113,7 @@
     </Compile>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MapLoader.cs" />
     <Compile Include="MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>

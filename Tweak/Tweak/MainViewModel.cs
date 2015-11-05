@@ -90,7 +90,9 @@ namespace Tweak
             filePicker.FileTypeFilter.Add(".png");
             StorageFile storageFile = await filePicker.PickSingleFileAsync();
             if (storageFile != null) {
+                MapLoader mapLoader = new MapLoader();
 
+                Project.Map = await mapLoader.LoadMapFromImage(storageFile, Project.Constants);
             }
         }
     }

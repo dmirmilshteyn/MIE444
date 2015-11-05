@@ -47,11 +47,11 @@
             <TextBlock Text="Line Width" />
             <toolkit:NumericUpDown Value="{Binding LineWidth, Mode=TwoWay}" SmallChange="0.01" />
             <TextBlock Text="Map Width" />
-            <toolkit:NumericUpDown Value="{Binding MapWidth, Mode=TwoWay}" SmallChange="0.25" />
+            <toolkit:NumericUpDown Value="{Binding MapWidth, Mode=TwoWay}" SmallChange="0.25" Maximum="15" />
             <TextBlock Text="Map Height" />
-            <toolkit:NumericUpDown Value="{Binding MapHeight, Mode=TwoWay}" SmallChange="0.25" />
+            <toolkit:NumericUpDown Value="{Binding MapHeight, Mode=TwoWay}" SmallChange="0.25" Maximum="15"/>
             <TextBlock Text="Map Resolution" />
-            <toolkit:NumericUpDown Value="{Binding MapResolution, Mode=TwoWay}" SmallChange="0.05" />
+            <toolkit:NumericUpDown Value="{Binding MapResolution, Mode=TwoWay}" SmallChange="0.005" ValueFormat="0.0000" />
         </StackPanel>
     </Grid>
 </UserControl>
