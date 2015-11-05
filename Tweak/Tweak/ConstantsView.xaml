@@ -5,6 +5,7 @@
     xmlns:local="using:Tweak"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
     mc:Ignorable="d"
     d:DesignHeight="500"
     d:DesignWidth="400">
@@ -17,40 +18,40 @@
         <StackPanel Grid.Column="0">
             <TextBlock Text="Connections" FontSize="18" FontWeight="Bold" />
             <TextBlock Text="AIN1" />
-            <TextBox Text="{Binding AIN1}" />
+            <toolkit:NumericUpDown Value="{Binding AIN1, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="AIN2" />
-            <TextBox Text="{Binding AIN2}" />
+            <toolkit:NumericUpDown Value="{Binding AIN2, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="BIN1" />
-            <TextBox Text="{Binding BIN1}" />
+            <toolkit:NumericUpDown Value="{Binding BIN1, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="BIN2" />
-            <TextBox Text="{Binding BIN2}" />
+            <toolkit:NumericUpDown Value="{Binding BIN2, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="Line Sensor 1" />
-            <TextBox Text="{Binding LineSensor1Pin}" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor1Pin, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="Line Sensor 2" />
-            <TextBox Text="{Binding LineSensor2Pin}" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor2Pin, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="Line Sensor 3" />
-            <TextBox Text="{Binding LineSensor3Pin}" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor3Pin, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="Line Sensor 4" />
-            <TextBox Text="{Binding LineSensor4Pin}" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor4Pin, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="Line Sensor 5" />
-            <TextBox Text="{Binding LineSensor5Pin}" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor5Pin, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="Line Sensor 6" />
-            <TextBox Text="{Binding LineSensor6Pin}" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor6Pin, Mode=TwoWay}" Maximum="14" />
             <TextBlock Text="IR Detector" />
-            <TextBox Text="{Binding IRDetectorPin}" />
+            <toolkit:NumericUpDown Value="{Binding IRDetectorPin, Mode=TwoWay}" Maximum="14" />
         </StackPanel>
         <StackPanel Grid.Column="1">
             <TextBlock Text="Physics" FontSize="18" FontWeight="Bold" />
             <TextBlock Text="Wheel Radius" />
-            <TextBox Text="{Binding WheelRadius}" InputScope="Digits" />
+            <toolkit:NumericUpDown Value="{Binding WheelRadius, Mode=TwoWay}" SmallChange="0.05" />
             <TextBlock Text="Line Width" />
-            <TextBox Text="{Binding LineWidth}" />
+            <toolkit:NumericUpDown Value="{Binding LineWidth, Mode=TwoWay}" SmallChange="0.01" />
             <TextBlock Text="Map Width" />
-            <TextBox Text="{Binding MapWidth}" />
+            <toolkit:NumericUpDown Value="{Binding MapWidth, Mode=TwoWay}" SmallChange="0.25" />
             <TextBlock Text="Map Height" />
-            <TextBox Text="{Binding MapHeight}" />
+            <toolkit:NumericUpDown Value="{Binding MapHeight, Mode=TwoWay}" SmallChange="0.25" />
             <TextBlock Text="Map Resolution" />
-            <TextBox Text="{Binding MapResolution}" />
+            <toolkit:NumericUpDown Value="{Binding MapResolution, Mode=TwoWay}" SmallChange="0.05" />
         </StackPanel>
     </Grid>
 </UserControl>

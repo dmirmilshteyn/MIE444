@@ -33,6 +33,7 @@ namespace Tweak
 
         public ICommand LoadDataFileCommand { get; private set; }
         public ICommand SaveDataFileCommand { get; private set; }
+        public ICommand ImportMapCommand { get; private set; }
         public ICommand BrowseOutputDirectoryCommand { get; private set; }
         public ICommand GenerateCodeCommand { get; private set; }
 
@@ -43,6 +44,7 @@ namespace Tweak
             this.SaveDataFileCommand = new Command(SaveDataFileCallback);
             this.BrowseOutputDirectoryCommand = new Command(BrowseOutputDirectoryCallback);
             this.GenerateCodeCommand = new Command(GenerateCodeCallback);
+            this.ImportMapCommand = new Command(ImportMapCallback);
         }
 
         private async void LoadDataFileCallback() {
@@ -81,6 +83,15 @@ namespace Tweak
 
             await codeGenerator.GenerateConstantsHeader(OutputDirectory, Project.Constants);
             await codeGenerator.GenerateMapHeader(OutputDirectory, Project.Constants, project.Map);
+        }
+
+        private async void ImportMapCallback() {
+            FileOpenPicker filePicker = new FileOpenPicker();
+            filePicker.FileTypeFilter.Add(".png");
+            StorageFile storageFile = await filePicker.PickSingleFileAsync();
+            if (storageFile != null) {
+
+            }
         }
     }
 }

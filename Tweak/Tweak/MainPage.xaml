@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    d:DesignHeight="900"
     >
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -16,6 +17,7 @@
         <StackPanel Grid.Column="0">
             <Button Content="Load Data..." Command="{Binding LoadDataFileCommand}" HorizontalAlignment="Stretch" />
             <Button Content="Save Data..." Command="{Binding SaveDataFileCommand}" HorizontalAlignment="Stretch" />
+            <Button Content="Import Map..." Command="{Binding ImportMapCommand}" HorizontalAlignment="Stretch" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
