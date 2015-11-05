@@ -89,11 +89,11 @@ namespace Tweak
             }
         }
 
-        int lineSensor6Pin;
-        public int LineSensor6Pin {
-            get { return lineSensor6Pin; }
+        int wallSensorPin;
+        public int WallSensorPin {
+            get { return wallSensorPin; }
             set {
-                lineSensor6Pin = value;
+                wallSensorPin = value;
                 RaisePropertyChanged();
             }
         }
@@ -103,6 +103,15 @@ namespace Tweak
             get { return irDetectorPin; }
             set {
                 irDetectorPin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int antennaLEDPin;
+        public int AntennaLEDPin {
+            get { return antennaLEDPin; }
+            set {
+                antennaLEDPin = value;
                 RaisePropertyChanged();
             }
         }

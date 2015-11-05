@@ -22,28 +22,30 @@
             <TextBlock Text="AIN2" />
             <toolkit:NumericUpDown Value="{Binding AIN2, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="BIN1" />
-            <toolkit:NumericUpDown Value="{Binding BIN1, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding BIN1, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="BIN2" />
-            <toolkit:NumericUpDown Value="{Binding BIN2, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding BIN2, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="Line Sensor 1" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor1Pin, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor1Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="Line Sensor 2" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor2Pin, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor2Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="Line Sensor 3" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor3Pin, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor3Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="Line Sensor 4" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor4Pin, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor4Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="Line Sensor 5" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor5Pin, Mode=TwoWay}" Maximum="14" />
-            <TextBlock Text="Line Sensor 6" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor6Pin, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding LineSensor5Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
+            <TextBlock Text="Wall Sensor" />
+            <toolkit:NumericUpDown Value="{Binding WallSensorPin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
             <TextBlock Text="IR Detector" />
-            <toolkit:NumericUpDown Value="{Binding IRDetectorPin, Mode=TwoWay}" Maximum="14" />
+            <toolkit:NumericUpDown Value="{Binding IRDetectorPin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
+            <TextBlock Text="Antenna LED" />
+            <toolkit:NumericUpDown Value="{Binding AntennaLEDPin, Mode=TwoWay}" SmallChange="1" Maximum="14" />
         </StackPanel>
         <StackPanel Grid.Column="1">
             <TextBlock Text="Physics" FontSize="18" FontWeight="Bold" />
             <TextBlock Text="Wheel Radius" />
-            <toolkit:NumericUpDown Value="{Binding WheelRadius, Mode=TwoWay}" SmallChange="0.05" />
+            <toolkit:NumericUpDown Value="{Binding WheelRadius, Mode=TwoWay}" SmallChange="0.05" ValueFormat="0.0000" />
             <TextBlock Text="Line Width" />
             <toolkit:NumericUpDown Value="{Binding LineWidth, Mode=TwoWay}" SmallChange="0.01" />
             <TextBlock Text="Map Width" />
