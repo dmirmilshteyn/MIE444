@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 
 namespace Tweak
 {
@@ -79,10 +80,15 @@ namespace Tweak
         }
 
         private async void GenerateCodeCallback() {
-            CodeGenerator codeGenerator = new CodeGenerator();
+            if (OutputDirectory == null) {
+                MessageDialog dialog = new MessageDialog("Please specify an output directory before generating code.");
+                await dialog.ShowAsync();
+            } else {
+                CodeGenerator codeGenerator = new CodeGenerator();
 
-            await codeGenerator.GenerateConstantsHeader(OutputDirectory, Project.Constants);
-            await codeGenerator.GenerateMapHeader(OutputDirectory, Project.Constants, project.Map);
+                await codeGenerator.GenerateConstantsHeader(OutputDirectory, Project.Constants);
+                await codeGenerator.GenerateMapHeader(OutputDirectory, Project.Constants, project.Map);
+            }
         }
 
         private async void ImportMapCallback() {

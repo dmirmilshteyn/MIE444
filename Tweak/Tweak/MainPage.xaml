@@ -18,6 +18,8 @@
             <Button Content="Load Data..." Command="{Binding LoadDataFileCommand}" HorizontalAlignment="Stretch" />
             <Button Content="Save Data..." Command="{Binding SaveDataFileCommand}" HorizontalAlignment="Stretch" />
             <Button Content="Import Map..." Command="{Binding ImportMapCommand}" HorizontalAlignment="Stretch" />
+            <local:ConstantsView DataContext="{Binding Project.Constants}" />
+            <TextBlock Text="Output Directory" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -26,7 +28,6 @@
                 <TextBox Grid.Column="0" Text="{Binding OutputDirectory.DisplayName}" HorizontalAlignment="Stretch" />
                 <Button Grid.Column="1" Content="..." Command="{Binding BrowseOutputDirectoryCommand}"/>
             </Grid>
-            <local:ConstantsView DataContext="{Binding Project.Constants}" />
             <Button Content="Generate!" Command="{Binding GenerateCodeCommand}" HorizontalAlignment="Stretch" />
         </StackPanel>
         <local:MapView Grid.Column="1" DataContext="{Binding Project}" />
