@@ -32,11 +32,11 @@ namespace Tweak
                     writer.WriteLine($"const int BIN2 = {constants.BIN2};");
                     writer.WriteLine();
                     writer.WriteLine($"const int LINE_SENSOR_1 = {constants.LineSensor1Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_2 = {constants.LineSensor1Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_3 = {constants.LineSensor1Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_4 = {constants.LineSensor1Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_5 = {constants.LineSensor1Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_6 = {constants.LineSensor1Pin};");
+                    writer.WriteLine($"const int LINE_SENSOR_2 = {constants.LineSensor2Pin};");
+                    writer.WriteLine($"const int LINE_SENSOR_3 = {constants.LineSensor3Pin};");
+                    writer.WriteLine($"const int LINE_SENSOR_4 = {constants.LineSensor4Pin};");
+                    writer.WriteLine($"const int LINE_SENSOR_5 = {constants.LineSensor5Pin};");
+                    writer.WriteLine($"const int WALL_SENSOR_1 = {constants.WallSensorPin};");
                     writer.WriteLine();
                     writer.WriteLine($"const int IR_DETECTOR = {constants.IRDetectorPin};");
                     writer.WriteLine();
