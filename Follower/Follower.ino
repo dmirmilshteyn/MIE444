@@ -16,14 +16,17 @@ int ledBlinkCount = 0; //a counter to control the blinking of the LED
 bool ledOn = false; //variable stoes the state of the LED.
 
 /*************Lane following PID Variables and Functions***********/
-void followLane();
+void followLaneAnalog();
 float lastError;
 int integral;
 void driveMotorsPID(int speedOffset)
+int getLaneError();
+int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
+int stallPWM;//PWM at which the motor stalls
 
 /*************Helper functions***********/
 int roundToHundreds(int num); //rounds an integer to 100's
-
+int signOf(float num);
 
 void setup() {
   // put your setup code here, to run once:
@@ -34,8 +37,9 @@ void setup() {
   pinMode(IR_DETECTOR, INPUT);
   pinMode(ANTENNA_LED, OUTPUT);
   lastError = 0;
-
+  averageMotorSpeed = 0;
   Serial.begin(115200);
+  stallPWM = 55;
 
   //MoveRight();
 
@@ -100,47 +104,93 @@ void checkPointHandle(int currentTime) {
 /**************************************************************************************
 *********************************Lane following Functions******************************
 ***************************************************************************************/
-void followLane() {
-  int leftSensor = 1 - digitalRead(LINE_FOLLOW_SENSOR_LEFT);
-  int rightSensor = 1 - digitalRead(LINE_FOLLOW_SENSOR_RIGHT);
+void followLaneAnalog() {
   int derivative;
-  float currentError; //too far left is negative...too far right is positive
+  float currentError = getLaneError(); //robot too far left is negative...too far right is positive
   float controller;
 
-  if (leftSensor || rightSensor) {
-    if (leftSensor && rightSensor) {
-      if (lastError < 0) {
-        currentError = -(leftSensor + rightSensor);
-      }
-      else {
-        currentError = (leftSensor + rightSensor);
-      }
+
+  integral = integral + currentError;
+  derivative = currentError - lastError;
+  lastError = currentError;
+  controller = Kp * currentError + Ki * integral + Kd * derivative;
+  driveMotorsPID(controller);
+
+}
+
+
+void driveMotorsPID(int controller) {
+  //should make avg speed inversly proportional to the controller...will slow down if error is high
+  float speedOffset = (controller * (averageMotorSpeed - (stallPWM - 10)) / 210) //controller offset is scaled with average speed (255-45). Cutoff at 45 PWM.
+                      int newLeftMotorSpeed = averageMotorSpeed - speedOffset;
+  int newRightMotorSpeed = averageMotorSpeed + speedOffset;
+
+  //Controls what to do if the averageMotorSpeed is too low
+  //Function will assume the car is stopped and will try to keep the car centered with the line
+  if (averageMotorSpeed < stallPWM) {
+    if (abs(lastError) > 50) {
+      newLeftMotorSpeed = -signOf(controller) * (stallPWM + 5);
+      newRightMotorSpeed = signOf(controller) * (stallPWM + 5);
     }
-    else if (leftSensor) {
-      currentError = -leftSensor;
+    else {
+      newLeftMotorSpeed = 0;
+      newRightMotorSpeed = 0;
     }
-    else if (rightSensor) {
-      currentError = rightSensor;
+
+  }
+
+  //checks if any of the motors exceed max PWM and carries the difference to the other motor.
+  if (newLeftMotorSpeed > 255 || newRightMotorSpeed > 255) {
+    int tempNum;
+    if (newLeftMotorSpeed > 255) {
+      tempNum = newLeftMotorSpeed - 255;
+      newLeftMotorSpeed = 255;
+      newRightMotorSpeed = newRightMotorSpeed - tempNum;
     }
+    else if (newRightMotorSpeed > 255) {
+      tempNum = newRightMotorSpeed - 255;
+      newRightMotorSpeed = 255;
+      newLeftMotorSpeed = newLeftMotorSpeed - tempNum;
+    }
+
+  }
+
+  //checks if any of the motors are below stall PWM and sets them to zero
+  if (newLeftMotorSpeed < stallPWM || newRightMotorSpeed < stallPWM) {
+    if (newLeftMotorSpeed < stallPWM) {
+      newLeftMotorSpeed = 0;
+    }
+    else if (newRightMotorSpeed < stallPWM) {
+      newRightMotorSpeed = 0;
+    }
+  }
+
+  //next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
+  if (newLeftMotorSpeed >= 0) {
+    analogWrite(BIN2_LEFT_MOTOR, 0);
+    analogWrite(BIN1_LEFT_MOTOR, newLeftMotorSpeed);//drives left motor forward
   }
   else {
-    currentError = 0;
+    analogWrite(BIN1_LEFT_MOTOR, 0);
+    analogWrite(BIN2_LEFT_MOTOR, -newLeftMotorSpeed);//drives left motor reverse
   }
-  integral = integral+currentError;
-  derivative = currentError-lastError;
 
-
-  controller = Kp * currentError + Ki * integral + Kd * derivative;
-  driveMotorsPID(controller)
-
-  lastError = currentError;
-}
-void driveMotorsPID(int speedOffset){
-
-  analogWrite(AIN1, AVERAGE_MOTOR_SPEED+speedOffset);
-  analogWrite(BIN1, AVERAGE_MOTOR_SPEED-speedOffset);
+  if (newRightMotorSpeed >= 0) {
+    analogWrite(AIN2_RIGHT_MOTOR, 0);
+    analogWrite(AIN1_RIGHT_MOTOR, newRightMotorSpeed);//drives right motor forward
+  }
+  else {
+    analogWrite(AIN1_RIGHT_MOTOR, 0);
+    analogWrite(AIN2_RIGHT_MOTOR, -newRightMotorSpeed);//drives right motor reverse
+  }
 }
 
+//Function returns error of car's position relative to the lane
+int getLaneError() {
+  int leftSensorValue = analogRead(LINE_FOLLOW_SENSOR_LEFT);
+  int rightSensorValue = analogRead(LINE_FOLLOW_SENSOR_RIGHT);
+  return leftSensorValue - rightSensorValue;
+}
 /**************************************************************************************
 *************************************Helper Functions**********************************
 ***************************************************************************************/
@@ -148,7 +198,13 @@ int roundToHundreds(int num) {
   return round(num / 100) * 100;
 }
 
-
+//returns sign (+/-) of a number
+//returns 1 if positive or 0
+//returns -1 if negative
+int signOf(float num) {
+  if (num >= 0) return 1;
+  else return -1;
+}
 
 
 

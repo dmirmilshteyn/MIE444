@@ -8,10 +8,10 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   //Serial.println(analogRead(4));
-  Serial.print("Analog: ");
-  Serial.println(analogRead(4));
   Serial.print("Digital: ");
-  Serial.println(digitalRead(2));
+  Serial.print(digitalRead(2));
+  Serial.print("  Analog: ");
+  Serial.println(analogRead(4));
 
-  delay(100);
+  //delay(100);
 }
