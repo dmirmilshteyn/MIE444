@@ -19,7 +19,7 @@ bool ledOn = false; //variable stoes the state of the LED.
 void followLaneAnalog();
 float lastError;
 int integral;
-void driveMotorsPID(int speedOffset)
+void driveMotorsPID(int speedOffset);
 int getLaneError();
 int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
 int stallPWM;//PWM at which the motor stalls
@@ -30,10 +30,10 @@ int signOf(float num);
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(AIN1, OUTPUT);
-  pinMode(BIN1, OUTPUT);
-  pinMode(AIN2, OUTPUT);
-  pinMode(BIN2, OUTPUT);
+  pinMode(AIN1_RIGHT_MOTOR, OUTPUT);
+  pinMode(BIN1_LEFT_MOTOR, OUTPUT);
+  pinMode(AIN2_RIGHT_MOTOR, OUTPUT);
+  pinMode(BIN2_LEFT_MOTOR, OUTPUT);
   pinMode(IR_DETECTOR, INPUT);
   pinMode(ANTENNA_LED, OUTPUT);
   lastError = 0;
@@ -121,7 +121,7 @@ void followLaneAnalog() {
 
 void driveMotorsPID(int controller) {
   //should make avg speed inversly proportional to the controller...will slow down if error is high
-  float speedOffset = (controller * (averageMotorSpeed - (stallPWM - 10)) / 210) //controller offset is scaled with average speed (255-45). Cutoff at 45 PWM.
+  float speedOffset = (controller * (averageMotorSpeed - (stallPWM - 10)) / 210); //controller offset is scaled with average speed (255-45). Cutoff at 45 PWM.
                       int newLeftMotorSpeed = averageMotorSpeed - speedOffset;
   int newRightMotorSpeed = averageMotorSpeed + speedOffset;
 

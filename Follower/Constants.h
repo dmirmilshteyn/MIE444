@@ -1,6 +1,4 @@
-/**********************************************
- ** This is a generated file. Do not modify. **
- **********************************************/
+#include "MappingConstants.h"
 
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
@@ -25,20 +23,6 @@ const int LINE_FOLLOW_SENSOR_RIGHT = 1; //analog
 const int IR_DETECTOR = 10; //digital
 
 const int ANTENNA_LED = 13; //digital
-
-/**********************************************
- ************** Robot Constants ***************
- **********************************************/
-const float WHEEL_RADIUS = 0.035;
-
-/**********************************************
- *********** Environment Constants ************
- **********************************************/
-const float LINE_WIDTH = 0.05;
-const int MAP_WIDTH = 5;
-const int MAP_HEIGHT = 5;
-const float MAP_RESOLUTION = 0.025;
-
 
 /**********************************************
  *********** Calibration Constants ************

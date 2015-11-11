@@ -13,32 +13,15 @@ namespace Tweak
         public static readonly int TILES_PER_LINE = 15;
 
         public async Task GenerateConstantsHeader(StorageFolder storageFolder, Constants constants) {
-            using (Stream fileStream = await storageFolder.OpenStreamForWriteAsync("Constants.h", CreationCollisionOption.ReplaceExisting)) {
+            using (Stream fileStream = await storageFolder.OpenStreamForWriteAsync("MappingConstants.h", CreationCollisionOption.ReplaceExisting)) {
                 using (StreamWriter writer = new StreamWriter(fileStream)) {
                     writer.WriteLine("/**********************************************");
                     writer.WriteLine(" ** This is a generated file. Do not modify. **");
                     writer.WriteLine(" **********************************************/");
                     writer.WriteLine();
 
-                    writer.WriteLine("#ifndef CONSTANTS_H");
-                    writer.WriteLine("#define CONSTANTS_H");
-                    writer.WriteLine();
-                    writer.WriteLine("/**********************************************");
-                    writer.WriteLine(" ************* Hardware Constants *************");
-                    writer.WriteLine(" **********************************************/");
-                    writer.WriteLine($"const int AIN1 = {constants.AIN1};");
-                    writer.WriteLine($"const int AIN2 = {constants.AIN2};");
-                    writer.WriteLine($"const int BIN1 = {constants.BIN1};");
-                    writer.WriteLine($"const int BIN2 = {constants.BIN2};");
-                    writer.WriteLine();
-                    writer.WriteLine($"const int LINE_SENSOR_1 = {constants.LineSensor1Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_2 = {constants.LineSensor2Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_3 = {constants.LineSensor3Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_4 = {constants.LineSensor4Pin};");
-                    writer.WriteLine($"const int LINE_SENSOR_5 = {constants.LineSensor5Pin};");
-                    writer.WriteLine($"const int WALL_SENSOR_1 = {constants.WallSensorPin};");
-                    writer.WriteLine();
-                    writer.WriteLine($"const int IR_DETECTOR = {constants.IRDetectorPin};");
+                    writer.WriteLine("#ifndef MAPPING_CONSTANTS_H");
+                    writer.WriteLine("#define MAPPING_CONSTANTS_H");
                     writer.WriteLine();
                     writer.WriteLine("/**********************************************");
                     writer.WriteLine(" ************** Robot Constants ***************");
@@ -51,12 +34,7 @@ namespace Tweak
                     writer.WriteLine($"const float LINE_WIDTH = {constants.LineWidth};");
                     writer.WriteLine($"const int MAP_WIDTH = {constants.MapWidth};");
                     writer.WriteLine($"const int MAP_HEIGHT = {constants.MapHeight};");
-                    writer.WriteLine($"const int MAP_RESOLUTION = {constants.MapResolution};");
-                    writer.WriteLine();
-                    writer.WriteLine("/**********************************************");
-                    writer.WriteLine(" *********** Calibration Constants ************");
-                    writer.WriteLine(" **********************************************/");
-                    writer.WriteLine($"const int CHECKPOINT_REACTION_DURATION = {constants.CheckpointReactionDuration};");
+                    writer.WriteLine($"const float MAP_RESOLUTION = {constants.MapResolution};");
                     writer.WriteLine();
                     writer.WriteLine("#endif");
                 }

@@ -10,53 +10,17 @@
     d:DesignHeight="500"
     d:DesignWidth="400">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="3">
-            <TextBlock Text="Connections" FontSize="18" FontWeight="Bold" />
-            <TextBlock Text="AIN1" />
-            <toolkit:NumericUpDown Value="{Binding AIN1, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="AIN2" />
-            <toolkit:NumericUpDown Value="{Binding AIN2, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="BIN1" />
-            <toolkit:NumericUpDown Value="{Binding BIN1, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="BIN2" />
-            <toolkit:NumericUpDown Value="{Binding BIN2, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Line Sensor 1" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor1Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Line Sensor 2" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor2Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Line Sensor 3" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor3Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Line Sensor 4" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor4Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Line Sensor 5" />
-            <toolkit:NumericUpDown Value="{Binding LineSensor5Pin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Wall Sensor" />
-            <toolkit:NumericUpDown Value="{Binding WallSensorPin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="IR Detector" />
-            <toolkit:NumericUpDown Value="{Binding IRDetectorPin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Antenna LED" />
-            <toolkit:NumericUpDown Value="{Binding AntennaLEDPin, Mode=TwoWay}" SmallChange="1" Maximum="14" ValueFormat="F0" HorizontalAlignment="Stretch" />
-        </StackPanel>
-        <StackPanel Grid.Column="1" Margin="3">
-            <TextBlock Text="Physics" FontSize="18" FontWeight="Bold" />
-            <TextBlock Text="Wheel Radius" />
-            <toolkit:NumericUpDown Value="{Binding WheelRadius, Mode=TwoWay}" SmallChange="0.05" ValueFormat="0.0000" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Line Width" />
-            <toolkit:NumericUpDown Value="{Binding LineWidth, Mode=TwoWay}" SmallChange="0.01" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Map Width" />
-            <toolkit:NumericUpDown Value="{Binding MapWidth, Mode=TwoWay}" SmallChange="0.25" Maximum="15" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Map Height" />
-            <toolkit:NumericUpDown Value="{Binding MapHeight, Mode=TwoWay}" SmallChange="0.25" Maximum="15" HorizontalAlignment="Stretch"/>
-            <TextBlock Text="Map Resolution" />
-            <toolkit:NumericUpDown Value="{Binding MapResolution, Mode=TwoWay}" SmallChange="0.005" ValueFormat="0.0000" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Calibration" FontSize="18" FontWeight="Bold" />
-            <TextBlock Text="Checkpoint Duration" />
-            <toolkit:NumericUpDown Value="{Binding CheckpointReactionDuration, Mode=TwoWay}" SmallChange="100" Maximum="99999" ValueFormat="F0" HorizontalAlignment="Stretch" />
-        </StackPanel>
-    </Grid>
+    <StackPanel Margin="3">
+        <TextBlock Text="Physics" FontSize="18" FontWeight="Bold" />
+        <TextBlock Text="Wheel Radius" />
+        <toolkit:NumericUpDown Value="{Binding WheelRadius, Mode=TwoWay}" SmallChange="0.05" ValueFormat="0.0000" HorizontalAlignment="Stretch" />
+        <TextBlock Text="Line Width" />
+        <toolkit:NumericUpDown Value="{Binding LineWidth, Mode=TwoWay}" SmallChange="0.01" HorizontalAlignment="Stretch" />
+        <TextBlock Text="Map Width" />
+        <toolkit:NumericUpDown Value="{Binding MapWidth, Mode=TwoWay}" SmallChange="0.25" Maximum="15" HorizontalAlignment="Stretch" />
+        <TextBlock Text="Map Height" />
+        <toolkit:NumericUpDown Value="{Binding MapHeight, Mode=TwoWay}" SmallChange="0.25" Maximum="15" HorizontalAlignment="Stretch"/>
+        <TextBlock Text="Map Resolution" />
+        <toolkit:NumericUpDown Value="{Binding MapResolution, Mode=TwoWay}" SmallChange="0.005" ValueFormat="0.0000" HorizontalAlignment="Stretch" />
+    </StackPanel>
 </UserControl>
