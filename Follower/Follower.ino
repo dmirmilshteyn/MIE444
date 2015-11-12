@@ -47,7 +47,8 @@ void setup() {
 
   //SetMapElement(0, 0, true);
 
-  //Serial.println(AccessMapElement(1, 0));
+  Serial.println(AccessMapElement(36, 4));
+  Serial.println(AccessMapElement(20, 4));
 }
 
 void loop() {

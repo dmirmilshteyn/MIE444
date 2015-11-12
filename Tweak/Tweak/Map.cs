@@ -39,19 +39,13 @@ namespace Tweak
         }
 
         public byte[] Export() {
-            int exportedWidth = (int)Math.Ceiling(Tiles.Width / 8d);
-            int exportedHeight = (int)Math.Ceiling(Tiles.Height / 8d);
+            byte[] values = new byte[(int)Math.Ceiling(Tiles.Width * Tiles.Height / 8d)];
+            for (int y = 0; y < Tiles.Height; y++) {
+                for (int x = 0; x < Tiles.Width; x++) {
+                    int tileNum = y * Tiles.Width + x;
 
-            byte[] values = new byte[exportedWidth * exportedHeight];
-            short index = -1;
-            for (int x = 0; x < Tiles.Width; x++) {
-                for (int y = 0; y < Tiles.Height; y++) {
-                    if ((y * Tiles.Width + x) % 8 == 0) {
-                        index++;
-                    }
-
-                    short position = (short)(index / 8);
-                    short offset = (short)(index % 8);
+                    short position = (short)(tileNum / 8);
+                    short offset = (short)(tileNum % 8);
 
                     int internal_value = values[position];
 

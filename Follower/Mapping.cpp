@@ -4,11 +4,11 @@
 #include "Map.h"
 
 int CalculateInternalPosition(int x, int y) {
-  return (y * map_tiles_width + x) / 8;
+  return (y * MAP_TILES_WIDTH + x) / 8;
 }
 
 int CalculateInternalOffset(int x, int y) {
-  return (y * map_tiles_width + x) % 8;
+  return (y * MAP_TILES_WIDTH + x) % 8;
 }
 
 bool AccessMapElement(int x, int y) {
@@ -21,17 +21,17 @@ bool AccessMapElement(int x, int y) {
 }
 
 void SetMapElement(int x, int y, bool value) {
-  int position = CalculateInternalPosition(x, y);
-  int offset = CalculateInternalOffset(x, y);
-
-  byte internal_value = map_tiles[position];
-
-  if (value) {
-    internal_value = internal_value | 1 << offset;
-  } else {
-    internal_value = internal_value & ~(1 << offset);
-  }
-
-  map_tiles[position] = internal_value;
+//  int position = CalculateInternalPosition(x, y);
+//  int offset = CalculateInternalOffset(x, y);
+//
+//  byte internal_value = map_tiles[position];
+//
+//  if (value) {
+//    internal_value = internal_value | 1 << offset;
+//  } else {
+//    internal_value = internal_value & ~(1 << offset);
+//  }
+//
+//  map_tiles[position] = internal_value;
 }
 

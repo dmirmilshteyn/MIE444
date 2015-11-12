@@ -37,11 +37,11 @@ namespace Tweak
                     writer.WriteLine($"#define MAP_RESOLUTION {constants.MapResolution}");
                     writer.WriteLine();
 
-                    double map_tiles_width = Math.Ceiling(constants.MapWidth / constants.MapResolution / 8);
-                    double map_tiles_height = Math.Ceiling(constants.MapHeight / constants.MapResolution / 8);
+                    double map_tiles_width = Math.Ceiling(constants.MapWidth / constants.MapResolution);
+                    double map_tiles_height = Math.Ceiling(constants.MapHeight / constants.MapResolution);
 
-                    writer.WriteLine($"#define map_tiles_width {map_tiles_width}");
-                    writer.WriteLine($"#define map_tiles_height {map_tiles_height}");
+                    writer.WriteLine($"#define MAP_TILES_WIDTH {map_tiles_width}");
+                    writer.WriteLine($"#define MAP_TILES_HEIGHT {map_tiles_height}");
                     writer.WriteLine();
 
                     writer.WriteLine("#endif");
@@ -65,11 +65,9 @@ namespace Tweak
                     writer.WriteLine("// This is done to minimize memory usage as the Arduino Uno only has 2048 bytes available.");
                     writer.WriteLine();
 
-                    double map_tiles_width = Math.Ceiling(constants.MapWidth / constants.MapResolution / 8);
-                    double map_tiles_height = Math.Ceiling(constants.MapHeight / constants.MapResolution / 8);
-                    int arraySize = (int)(map_tiles_width * map_tiles_height);
-                    
-                    writer.WriteLine("// Array size = (MAP_WIDTH / MAP_RESOLUTION / 8) * (MAP_HEIGHT / MAP_RESOLUTION / 8)");
+                    int arraySize = (int)Math.Ceiling((constants.MapWidth / constants.MapResolution) * (constants.MapHeight / constants.MapResolution) / 8);
+
+                    writer.WriteLine("// Array size = ((MAP_WIDTH / MAP_RESOLUTION) * (MAP_HEIGHT / MAP_RESOLUTION) / 8)");
                     writer.Write($"byte map_tiles[{arraySize}] = {{");
 
                     byte[] exportedValues = map.Export();

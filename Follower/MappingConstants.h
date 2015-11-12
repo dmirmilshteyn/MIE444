@@ -18,7 +18,7 @@
 #define MAP_HEIGHT 1.5
 #define MAP_RESOLUTION 0.025
 
-#define map_tiles_width 12
-#define map_tiles_height 8
+#define MAP_TILES_WIDTH 90
+#define MAP_TILES_HEIGHT 60
 
 #endif

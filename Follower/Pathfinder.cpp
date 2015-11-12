@@ -1,7 +1,7 @@
 #include "Pathfinder.h"
 
 void Pathfinder::Initialize() {
-  closed_nodes = new byte[map_tiles_width * map_tiles_height] { 0 };
+  //closed_nodes = new byte[MAP_TILES_WIDTH * MAP_TILES_HEIGHT] { 0 };
 }
 
 float Pathfinder::CalculateDistanceBetween(Node nodeA, Node nodeB) {
