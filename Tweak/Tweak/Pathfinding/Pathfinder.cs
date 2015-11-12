@@ -35,8 +35,11 @@ namespace Tweak.Pathfinding
             List<Position> closedSet = new List<Position>();
 
             int openMax = 1;
+            int closedMax = 0;
 
             openSet.Add(startPosition);
+
+            int expiryLevel = 0;
 
             while (openSet.Count > 0) {
                 Position currentPosition = DetermineNextNode(openSet);
@@ -46,9 +49,21 @@ namespace Tweak.Pathfinding
 
                 Node currentNode = GetNode(currentPosition);
 
+                if (expiryLevel == 0 && closedSet.Count >= 400 ||
+                    expiryLevel == 1 && closedSet.Count >= 600 ||
+                    expiryLevel == 2 && closedSet.Count >= 800 ||
+                    expiryLevel == 3 && closedSet.Count >= 900) {
+                    ExpireOldNodes(closedSet);
+                    expiryLevel++;
+                }
+
                 // Remove the current node from the open list
                 RemovePosition(openSet, currentPosition);
                 closedSet.Add(currentPosition);
+
+                if (closedSet.Count > closedMax) {
+                    closedMax = closedSet.Count;
+                }
 
                 foreach (var neighbourPosition in EnumerateNeighbourPositions(currentPosition)) {
                     if (neighbourPosition.X < 0 || neighbourPosition.Y < 0 || neighbourPosition.X >= nodeMap.GetLength(0) || neighbourPosition.Y >= nodeMap.GetLength(1)) {
@@ -80,6 +95,30 @@ namespace Tweak.Pathfinding
             }
 
             return new List<Position>();
+        }
+
+        private void ExpireOldNodes(IList<Position> set) {
+            for (int i = set.Count - 1; i >= 0; i--) {
+                Position currentPosition = set[i];
+
+                bool openNeighbour = false;  
+                foreach (var neighbourPosition in EnumerateNeighbourPositions(currentPosition)) {
+                    if (!(neighbourPosition.X < 0 ||
+                        neighbourPosition.Y < 0 ||
+                        neighbourPosition.X >= nodeMap.GetLength(0) ||
+                        neighbourPosition.Y >= nodeMap.GetLength(1) ||
+                        HasPosition(set, neighbourPosition) ||
+                        GetNode(neighbourPosition).Closed
+                        )) {
+
+                        openNeighbour = true;
+                    }
+                }
+
+                if (!openNeighbour) {
+                    set.RemoveAt(i);
+                }
+            }
         }
 
         private void RemovePosition(IList<Position> set, Position position) {
