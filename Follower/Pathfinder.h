@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "MappingConstants.h"
+#include <LinkedList.h>
 
 #ifndef PATHFINDER_H
 #define PATHFINDER_H
@@ -12,8 +13,8 @@ struct Position {
   Position();
 };
 
-struct Node {
-  Node *parent;
+struct PathNode {
+  PathNode *parent;
 
   Position position;
 
@@ -23,12 +24,16 @@ struct Node {
 
 class Pathfinder {
   public:
-    void Initialize();
-    void Dispose();
+    Position* FindPath(Position startPosition, Position goalPosition);
 
   private:
     byte *closed_nodes;
 
+    void Initialize();
+    void Dispose();
+
+    PathNode DetermineNextNode(LinkedList<PathNode> openSet);
+    Position* PerformSearch(Position startPosition, Position goalPosition);
     bool IsBlocked(int x, int y);
     void MarkBlocked(int x, int y, bool value);
     const Position* GetNeighbourPositions(Position position);

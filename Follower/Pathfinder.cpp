@@ -1,3 +1,5 @@
+#include <LinkedList.h>
+
 #include "Pathfinder.h"
 
 void Pathfinder::Initialize() {
@@ -6,6 +8,28 @@ void Pathfinder::Initialize() {
 
 void Pathfinder::Dispose() {
   delete[] closed_nodes;
+}
+
+Position* Pathfinder::FindPath(Position startPosition, Position goalPosition) {
+  Initialize();
+  auto path = PerformSearch(startPosition, goalPosition);
+  Dispose();
+
+  return path;
+}
+
+Position* PerformSearch(Position startPosition, Position goalPosition) {
+  LinkedList<PathNode> openSet = LinkedList<PathNode>();
+
+  while (openSet.size() > 0) {
+
+  }
+  
+  return NULL;
+}
+
+PathNode Pathfinder::DetermineNextNode(LinkedList<PathNode> openSet) {
+  return PathNode();
 }
 
 bool Pathfinder::IsBlocked(int x, int y) {
