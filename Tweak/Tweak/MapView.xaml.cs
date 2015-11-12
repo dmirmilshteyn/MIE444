@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Tweak.Pathfinding;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -26,6 +27,11 @@ namespace Tweak
 
         Point? intersectionA;
         Point? intersectionB;
+
+        Point? pathPlanningA;
+        Point? pathPlanningB;
+
+        IReadOnlyList<Position> path;
 
         public MapView() {
             this.InitializeComponent();
@@ -60,6 +66,19 @@ namespace Tweak
 
             foreach (Intersection intersection in map.Intersections) {
                 args.DrawingSession.DrawRectangle(new Rect(intersection.X, intersection.Y, intersection.Width, intersection.Height), Colors.Green);
+            }
+
+            if (pathPlanningA.HasValue) {
+                args.DrawingSession.DrawRectangle(new Rect(pathPlanningA.Value.X, pathPlanningA.Value.Y, 1, 1), Colors.Red);
+            }
+            if (pathPlanningB.HasValue) {
+                args.DrawingSession.DrawRectangle(new Rect(pathPlanningB.Value.X, pathPlanningB.Value.Y, 1, 1), Colors.Red);
+            }
+
+            if (path != null) {
+                foreach (var position in path) {
+                    args.DrawingSession.DrawRectangle(new Rect(position.X, position.Y, 1, 1), Colors.Yellow);
+                }
             }
         }
 
@@ -96,13 +115,38 @@ namespace Tweak
                     intersectionB = null;
                 }
             }
+            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Windows) {
+                if (!pathPlanningA.HasValue) {
+                    UIElement canvas = (UIElement)sender;
+
+                    PointerPoint point = e.GetCurrentPoint(canvas);
+
+                    pathPlanningA = point.Position;
+                } else if (!pathPlanningB.HasValue) {
+                    UIElement canvas = (UIElement)sender;
+
+                    PointerPoint point = e.GetCurrentPoint(canvas);
+
+                    pathPlanningB = point.Position;
+                }
+            }
 
             ProcessPointerMoved(sender, e);
         }
 
         private void CanvasAnimatedControl_PointerReleased(object sender, PointerRoutedEventArgs e) {
+            Project project = (Project)sharedDataContext;
+            Map map = project.Map;
+
             pointerPressed = false;
             deleting = false;
+
+            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
+                if (pathPlanningA.HasValue && pathPlanningB.HasValue) {
+                    Pathfinder pathfinder = new Pathfinder(map);
+                    path = pathfinder.AStar(new Position((int)pathPlanningA.Value.X, (int)pathPlanningA.Value.Y), new Position((int)pathPlanningB.Value.X, (int)pathPlanningB.Value.Y));
+                }
+            }
         }
 
         private void ProcessPointerMoved(object sender, PointerRoutedEventArgs e) {

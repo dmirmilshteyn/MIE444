@@ -39,8 +39,8 @@ namespace Tweak
         }
 
         public byte[] Export() {
-            int exportedWidth = Tiles.Width / 8;
-            int exportedHeight = Tiles.Height / 8;
+            int exportedWidth = (int)Math.Ceiling(Tiles.Width / 8d);
+            int exportedHeight = (int)Math.Ceiling(Tiles.Height / 8d);
 
             byte[] values = new byte[exportedWidth * exportedHeight];
             short index = -1;

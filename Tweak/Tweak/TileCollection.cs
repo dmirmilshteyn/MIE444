@@ -43,8 +43,8 @@ namespace Tweak
 
         public void Initialize(Constants constants) {
             if (tiles == null) {
-                this.Width = (int)(constants.MapWidth / constants.MapResolution);
-                this.Height = (int)(constants.MapHeight / constants.MapResolution);
+                this.Width = (int)Math.Ceiling(constants.MapWidth / constants.MapResolution);
+                this.Height = (int)Math.Ceiling(constants.MapHeight / constants.MapResolution);
 
                 Tile[] localTiles = new Tile[this.Width * this.Height];
                 for (int i = 0; i < localTiles.Length; i++) {

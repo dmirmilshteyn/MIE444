@@ -57,8 +57,8 @@ namespace Tweak
                     writer.WriteLine("// This is done to minimize memory usage as the Arduino Uno only has 2048 bytes available.");
                     writer.WriteLine();
 
-                    double map_tiles_width = (constants.MapWidth / constants.MapResolution / 8);
-                    double map_tiles_height = (constants.MapHeight / constants.MapResolution / 8);
+                    double map_tiles_width = Math.Ceiling(constants.MapWidth / constants.MapResolution / 8);
+                    double map_tiles_height = Math.Ceiling(constants.MapHeight / constants.MapResolution / 8);
                     int arraySize = (int)(map_tiles_width * map_tiles_height);
 
                     writer.WriteLine($"const int map_tiles_width = {map_tiles_width};");

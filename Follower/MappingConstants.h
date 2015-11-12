@@ -14,8 +14,8 @@ const float WHEEL_RADIUS = 0.026;
  *********** Environment Constants ************
  **********************************************/
 const float LINE_WIDTH = 0.05;
-const int MAP_WIDTH = 4;
-const int MAP_HEIGHT = 3;
+const int MAP_WIDTH = 2.25;
+const int MAP_HEIGHT = 1.5;
 const float MAP_RESOLUTION = 0.025;
 
 #endif
