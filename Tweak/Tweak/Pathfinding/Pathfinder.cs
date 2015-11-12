@@ -190,7 +190,9 @@ namespace Tweak.Pathfinding
         }
 
         private double CalculateDistanceBetween(Position positionA, Position positionB) {
-            return Math.Sqrt(Math.Pow(positionB.X - positionA.X, 2) + Math.Pow(positionB.Y - positionA.Y, 2));
+            return Math.Pow(positionB.X - positionA.X, 2) + Math.Pow(positionB.Y - positionA.Y, 2);
+
+            //return Math.Sqrt(Math.Pow(positionB.X - positionA.X, 2) + Math.Pow(positionB.Y - positionA.Y, 2));
         }
 
     }

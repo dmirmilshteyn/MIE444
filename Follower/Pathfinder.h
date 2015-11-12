@@ -7,30 +7,22 @@
 struct Node {
   Node *parent;
   
-  int x;
-  int y;
+  byte x;
+  byte y;
   
-  float g;
-  // float h; - always 0 for Dijkstra's algorithm, no need to waste memory for this
-
-  bool closed;
-};
-
-struct PackedNode {
-  float g;
-  Node *parent;
+  int g;
+  // int h; - always 0 for Dijkstra's algorithm, no need to waste memory for this
 };
 
 class Pathfinder { 
   public:
     void Initialize();
+    void Dispose();
   
   private:
     byte *closed_nodes;
   
     float CalculateDistanceBetween(Node nodeA, Node nodeB);
-    Node UnpackNode(PackedNode packedNode);
-    PackedNode PackNode(Node node);
 };
 
 #endif
