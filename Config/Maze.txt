@@ -1,0 +1,4 @@
+59 inches by 89 inches
+
+x res = 0.0235
+y res = 0.0234 

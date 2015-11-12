@@ -8,9 +8,6 @@
 // Map tiles are stored as a byte array, but should be manipulated as a BIT array.
 // This is done to minimize memory usage as the Arduino Uno only has 2048 bytes available.
 
-const int map_tiles_width = 12;
-const int map_tiles_height = 8;
-
 // Array size = (MAP_WIDTH / MAP_RESOLUTION / 8) * (MAP_HEIGHT / MAP_RESOLUTION / 8)
 byte map_tiles[96] = {
 0, 0, 0, 8, 0, 196, 63, 1, 144, 8, 16, 4, 4, 48, 0, 

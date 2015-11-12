@@ -34,6 +34,8 @@ namespace Tweak.Pathfinding
             List<Position> openSet = new List<Position>();
             List<Position> closedSet = new List<Position>();
 
+            int openMax = 1;
+
             openSet.Add(startPosition);
 
             while (openSet.Count > 0) {
@@ -62,6 +64,10 @@ namespace Tweak.Pathfinding
                     double tentative_g_score = currentNode.G + CalculateDistanceBetween(currentPosition, neighbourPosition); // Length of this path
                     if (!HasPosition(openSet, neighbourPosition)) { // Discover a new node
                         openSet.Add(neighbourPosition);
+
+                        if (openSet.Count > openMax) {
+                            openMax = openSet.Count;
+                        }
                     } else if (tentative_g_score > neighbour.G) {
                         continue; // This is not a better path
                     }

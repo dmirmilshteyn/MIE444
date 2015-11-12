@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "MotorController.h"
 #include "Mapping.h"
+#include "Pathfinder.h"
 
 
 /*************Checkpoint Variables and Functions***********/

@@ -36,6 +36,14 @@ namespace Tweak
                     writer.WriteLine($"const int MAP_HEIGHT = {constants.MapHeight};");
                     writer.WriteLine($"const float MAP_RESOLUTION = {constants.MapResolution};");
                     writer.WriteLine();
+
+                    double map_tiles_width = Math.Ceiling(constants.MapWidth / constants.MapResolution / 8);
+                    double map_tiles_height = Math.Ceiling(constants.MapHeight / constants.MapResolution / 8);
+
+                    writer.WriteLine($"const int map_tiles_width = {map_tiles_width};");
+                    writer.WriteLine($"const int map_tiles_height = {map_tiles_height};");
+                    writer.WriteLine();
+
                     writer.WriteLine("#endif");
                 }
             }
@@ -60,10 +68,7 @@ namespace Tweak
                     double map_tiles_width = Math.Ceiling(constants.MapWidth / constants.MapResolution / 8);
                     double map_tiles_height = Math.Ceiling(constants.MapHeight / constants.MapResolution / 8);
                     int arraySize = (int)(map_tiles_width * map_tiles_height);
-
-                    writer.WriteLine($"const int map_tiles_width = {map_tiles_width};");
-                    writer.WriteLine($"const int map_tiles_height = {map_tiles_height};");
-                    writer.WriteLine();
+                    
                     writer.WriteLine("// Array size = (MAP_WIDTH / MAP_RESOLUTION / 8) * (MAP_HEIGHT / MAP_RESOLUTION / 8)");
                     writer.Write($"byte map_tiles[{arraySize}] = {{");
 

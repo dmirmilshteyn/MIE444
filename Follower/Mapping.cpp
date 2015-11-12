@@ -1,6 +1,6 @@
+#include "Mapping.h"
 #include "Arduino.h"
 #include "Constants.h"
-#include "Mapping.h"
 #include "Map.h"
 
 int CalculateInternalPosition(int x, int y) {
