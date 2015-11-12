@@ -1,3 +1,4 @@
+#include <avr/pgmspace.h>
 #include "Mapping.h"
 #include "Arduino.h"
 #include "Constants.h"
@@ -15,7 +16,7 @@ bool AccessMapElement(int x, int y) {
   int position = CalculateInternalPosition(x, y);
   int offset = CalculateInternalOffset(x, y);
 
-  byte internal_value = map_tiles[position];
+  byte internal_value = pgm_read_byte(map_tiles + position);
 
   return internal_value & (1 << offset);
 }

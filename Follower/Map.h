@@ -9,7 +9,7 @@
 // This is done to minimize memory usage as the Arduino Uno only has 2048 bytes available.
 
 // Array size = ((MAP_WIDTH / MAP_RESOLUTION) * (MAP_HEIGHT / MAP_RESOLUTION) / 8)
-byte map_tiles[675] = {
+const PROGMEM byte map_tiles[675] = {
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 

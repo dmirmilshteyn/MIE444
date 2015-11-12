@@ -68,7 +68,7 @@ namespace Tweak
                     int arraySize = (int)Math.Ceiling((constants.MapWidth / constants.MapResolution) * (constants.MapHeight / constants.MapResolution) / 8);
 
                     writer.WriteLine("// Array size = ((MAP_WIDTH / MAP_RESOLUTION) * (MAP_HEIGHT / MAP_RESOLUTION) / 8)");
-                    writer.Write($"byte map_tiles[{arraySize}] = {{");
+                    writer.Write($"const PROGMEM byte map_tiles[{arraySize}] = {{");
 
                     byte[] exportedValues = map.Export();
                     for (int i = 0; i < exportedValues.Length; i++) {
