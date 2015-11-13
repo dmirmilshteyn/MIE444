@@ -85,7 +85,7 @@ class Pathfinder {
     bool IsBlocked(int x, int y);
     void MarkBlocked(int x, int y, bool value);
     const Position* GetNeighbourPositions(int x, int y);
-    int IndexOfSet(LinkedList<PathNode*> *set, Position position);
+    int IndexOfSet(LinkedList<PathNode*> *set, int x, int y);
 
     inline float CalculateDistanceBetween(Position positionA, Position positionB) {
       return pow(positionB.x - positionA.x, 2) + pow(positionB.y - positionA.y, 2);

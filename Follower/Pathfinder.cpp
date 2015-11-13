@@ -22,23 +22,33 @@ PathfinderResult Pathfinder::FindPath(Position startPosition, Position goalPosit
 PathfinderResult Pathfinder::PerformSearch(Position startPosition, Position goalPosition) {
   LinkedList<PathNode*> *openSet = new LinkedList<PathNode*>();
 
+  Serial.println(sizeof(ListNode<PathNode*>));
+  int nodeCount = 1;
+
+  Serial.print("Free Memory: ");
+  Serial.println(freeMemory());
+
+  // Add the starting position
   openSet->add(new PathNode(startPosition.x, startPosition.y));
 
   while (openSet->size() > 0) {
     Serial.print("Free Memory: ");
-    Serial.println(freeMemory());
+    Serial.print(freeMemory());
+    Serial.print(", Node Count: ");
+    Serial.println(nodeCount);
+    
     int currentNodeIndex = DetermineNextNode(openSet);
-    PathNode *currentNode = openSet->get(currentNodeIndex);
+    PathNode *currentNode = openSet->remove(currentNodeIndex);
 
     if (currentNode->x == goalPosition.x && currentNode->y == goalPosition.y) {
       return ReconstructPath(currentNode);
     }
 
-    openSet->remove(currentNodeIndex);
     MarkBlocked(currentNode->x, currentNode->y, true);
 
     const Position* neighbourPositions = GetNeighbourPositions(currentNode->x, currentNode->y);
 
+    bool stillAlive = false;
     for (int i = 0; i < NEIGHBOUR_POSITION_COUNT; i++) {
       Position neighbourPosition = neighbourPositions[i];
 
@@ -54,23 +64,31 @@ PathfinderResult Pathfinder::PerformSearch(Position startPosition, Position goal
       }
 
       byte tentative_g_score = currentNode->g + CalculateDistanceBetween(Position(currentNode->x, currentNode->y), neighbourPosition);
-      int index = IndexOfSet(openSet, Position(currentNode->x, currentNode->y));
+      int index = IndexOfSet(openSet, currentNode->x, currentNode->y);
       if (index == -1) { // Discover a new node
         PathNode *setNode = new PathNode(neighbourPosition.x, neighbourPosition.y, tentative_g_score, currentNode);
         openSet->add(setNode);
+        stillAlive = true;
+        
+        nodeCount++;
       } else {
-        int neighbourIndex = IndexOfSet(openSet, neighbourPosition);
+        int neighbourIndex = IndexOfSet(openSet, neighbourPosition.x, neighbourPosition.y);
         if (neighbourIndex > -1) {
           auto neighbourNode = openSet->get(neighbourIndex);
 
           if (tentative_g_score <= neighbourNode->g) {
             neighbourNode->parent = currentNode;
             neighbourNode->g = tentative_g_score;
+            stillAlive = true;
           }
         }
       }
     }
 
+    if (!stillAlive) {
+      delete currentNode;
+      nodeCount--;
+    }
     delete[] neighbourPositions;
   }
 
@@ -135,10 +153,10 @@ void Pathfinder::MarkBlocked(int x, int y, bool value) {
   closed_nodes[position] = internal_value;
 }
 
-int Pathfinder::IndexOfSet(LinkedList<PathNode*> *set, Position position) {
+int Pathfinder::IndexOfSet(LinkedList<PathNode*> *set, int x, int y) {
   for (int i = 0; i < set->size(); i++) {
     auto node = set->get(i);
-    if (node->x == position.x && node->y == position.y) {
+    if (node->x == x && node->y == y) {
       return i;
     }
   }
