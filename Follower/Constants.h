@@ -7,7 +7,7 @@
  ************* Hardware Constants *************
  **********************************************/
 
-//DIGITAL PINS
+ //DIGITAL PINS
 #define AIN1_RIGHT_MOTOR 3 //FORWARD
 #define AIN2_RIGHT_MOTOR 5 //REVERSE
 #define BIN1_LEFT_MOTOR 9 //FORWARD
@@ -35,10 +35,15 @@
 
 #define CHECKPOINT_REACTION_DURATION 5000
 
-//PID
-#define Kp 3.4
-#define Ki 0.000
-#define Kd 400
+ //PID
+ //#define Kp 3.4
+ //#define Ki 0.000
+ //#define Kd 400
+
+static float Kp = 3.4;
+static float Ki = 0.00;
+static float Kd = 400;
+
 #define DERIVATIVE_SPEED_ADJUST 1
 
 //best settings for pwm 65
