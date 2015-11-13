@@ -6,23 +6,28 @@
 /**********************************************
  ************* Hardware Constants *************
  **********************************************/
-#define AIN1_RIGHT_MOTOR 3
-#define AIN2_RIGHT_MOTOR 5
-#define BIN1_LEFT_MOTOR 9
-#define BIN2_LEFT_MOTOR 6
 
-#define LINE_SENSOR_1 2 //digital
-#define LINE_SENSOR_2 4 //digital
-#define LINE_SENSOR_3 7 //digital
-//#define LINE_FOLLOW_SENSOR_LEFT 8 //digital
-//#define LINE_FOLLOW_SENSOR_RIGHT 12 //digital
-#define WALL_SENSOR_1 11 //digital
-#define LINE_FOLLOW_SENSOR_LEFT 0 //analog
-#define LINE_FOLLOW_SENSOR_RIGHT 1 //analog
+//DIGITAL PINS
+#define AIN1_RIGHT_MOTOR 3 //FORWARD
+#define AIN2_RIGHT_MOTOR 5 //REVERSE
+#define BIN1_LEFT_MOTOR 9 //FORWARD
+#define BIN2_LEFT_MOTOR 6 //REVERSE
+#define WALL_SENSOR_1 2
+#define IR_DETECTOR 4
+#define ANTENNA_LED 7
 
-#define IR_DETECTOR 10 //digital
+//ANALOG PINS
+#define LINE_FOLLOW_SENSOR_LEFT 0
+#define LINE_FOLLOW_SENSOR_RIGHT 1
+#define LINE_SENSOR_1 2
+#define LINE_SENSOR_2 3
+#define LINE_SENSOR_3 4
+#define WALL_DISTANCE_SENSOR 5
 
-#define ANTENNA_LED 13 //digital
+
+
+
+
 
 /**********************************************
  *********** Calibration Constants ************
@@ -31,11 +36,15 @@
 #define CHECKPOINT_REACTION_DURATION 5000
 
 //PID
-#define LINE_DETECTED 1
-#define LINE_NOT_DETECTED 0
-#define Kp 0.3
-#define Ki 0.1
-#define Kd 1
+#define Kp 3.4
+#define Ki 0.000
+#define Kd 400
+#define DERIVATIVE_SPEED_ADJUST 1
+
+//best settings for pwm 65
+//#define Kp 1.7
+//#define Ki 0.00
+//#define Kd 200
 
 
 #endif
