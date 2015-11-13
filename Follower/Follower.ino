@@ -1,4 +1,5 @@
 
+#include <LinkedList.h>
 #include <math.h>
 #include "Constants.h"
 #include "MotorController.h"
@@ -54,7 +55,7 @@ void setup() {
   //Serial.println(AccessMapElement(20, 4));
 
   Pathfinder pathfinder;
-  PathfinderResult path = pathfinder.FindPath(Position(47, 19), Position(47, 10));
+  PathfinderResult path = pathfinder.FindPath(Position(47, 19), Position(47, 18));
 
   Serial.println("Values:");
   for (int i = 0; i < path.size; i++) {
