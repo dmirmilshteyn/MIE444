@@ -47,11 +47,24 @@ void setup() {
 
   //SetMapElement(0, 0, true);
 
-  Serial.println(AccessMapElement(36, 4));
-  Serial.println(AccessMapElement(20, 4));
+  //Serial.println(AccessMapElement(36, 4));
+  //Serial.println(AccessMapElement(20, 4));
 
   Pathfinder pathfinder;
-  PathfinderResult path = pathfinder.FindPath(Position(87, 5), Position(59, 41));
+  PathfinderResult path = pathfinder.FindPath(Position(47, 19), Position(47, 14));
+
+  Serial.println("Values:");
+  for (int i = 0; i < path.size; i++) {
+    Serial.println(path.path[i]->y);
+  }
+
+//  Expected output: 
+//  19
+//  18
+//  17
+//  16
+//  15
+//  14
 
   Serial.print("Path Size: ");
   Serial.println(path.size);
