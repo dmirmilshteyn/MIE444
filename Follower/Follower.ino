@@ -29,6 +29,10 @@ int stallPWM;//PWM at which the motor stalls
 
 int previousTime;
 
+float Kp = 3.4;
+float Ki = 0.00;
+float Kd = 400;
+
 /*************Helper functions***********/
 int roundToHundreds(int num); //rounds an integer to 100's
 int signOf(float num);
@@ -89,7 +93,7 @@ void loop() {
 
 	currentTime = millis();
 	//checkPointHandle(currentTime);
-	//followLaneAnalog(currentTime);
+	followLaneAnalog(currentTime);
 
 	while (Serial.available() > 0) {
 		int command = Serial.read();
@@ -159,14 +163,22 @@ void followLaneAnalog(int currentTime) {
 	lastError = currentError;
 	controller = Kp * currentError + Ki * integral + Kd * derivative;
 	driveMotorsPID(controller, derivative);
-	Serial.print("P:  ");
+
+	Serial.print(Kp * currentError);
+	Serial.print("    ");
+	Serial.print(Ki * integral);
+	Serial.print("    ");
+	Serial.print(Kd * derivative);
+	Serial.print("    ");
+	Serial.println(controller);
+	/*Serial.print("P:  ");
 	Serial.print(Kp * currentError);
 	Serial.print("    I:  ");
 	Serial.print(Ki * integral);
 	Serial.print("    D:  ");
 	Serial.print(Kd * derivative);
 	Serial.print("    Controller:   ");
-	Serial.println(controller);
+	Serial.println(controller);*/
 	previousTime = currentTime;
 }
 

@@ -40,9 +40,9 @@
  //#define Ki 0.000
  //#define Kd 400
 
-static float Kp = 3.4;
-static float Ki = 0.00;
-static float Kd = 400;
+extern float Kp;
+extern float Ki;
+extern float Kd;
 
 #define DERIVATIVE_SPEED_ADJUST 1
 
