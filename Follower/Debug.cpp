@@ -42,5 +42,17 @@ void processDebugCommand(int command) {
 		print("Kd = ");
 		Serial.println(Kd);
 		break;
+	case DEBUG_SPEED_ADJUST:
+		DERIVATIVE_SPEED_ADJUST = Serial.parseFloat();
+		Serial.read();
+		print("Speed Adjust = ");
+		Serial.println(DERIVATIVE_SPEED_ADJUST);
+		break;
+	case DEBUG_AVERAGE_SPEED:
+		averageMotorSpeed = Serial.parseInt();
+		Serial.read();
+		print("Average Motor Speed = ");
+		Serial.println(averageMotorSpeed);
+		break;
 	}
 }

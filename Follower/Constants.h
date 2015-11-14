@@ -43,8 +43,9 @@
 extern float Kp;
 extern float Ki;
 extern float Kd;
+extern float DERIVATIVE_SPEED_ADJUST;
 
-#define DERIVATIVE_SPEED_ADJUST 1
+//#define DERIVATIVE_SPEED_ADJUST 1
 
 //best settings for pwm 65
 //#define Kp 1.7

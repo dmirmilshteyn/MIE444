@@ -17,6 +17,11 @@
 #define DEBUG_MOVE_RIGHT 'd'
 #define DEBUG_MOVE_BACKWARD 's'
 
+#define DEBUG_SPEED_ADJUST 'z'
+#define DEBUG_AVERAGE_SPEED 'x'
+
+extern int averageMotorSpeed;
+
 void print(const char* message);
 void println(const char* message);
 

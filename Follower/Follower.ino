@@ -29,14 +29,20 @@ int stallPWM;//PWM at which the motor stalls
 
 int previousTime;
 
-float Kp = 3.4;
+float Kp = 0.6; //0.3;
 float Ki = 0.00;
-float Kd = 400;
+float Kd = 450; //100;
+
+float DERIVATIVE_SPEED_ADJUST = 0;
 
 /*************Helper functions***********/
 int roundToHundreds(int num); //rounds an integer to 100's
 int signOf(float num);
 
+
+
+float readLeft;
+float readRight;
 void setup() {
 	// put your setup code here, to run once:
 	pinMode(AIN1_RIGHT_MOTOR, OUTPUT);
@@ -46,7 +52,7 @@ void setup() {
 	pinMode(IR_DETECTOR, INPUT);
 	pinMode(ANTENNA_LED, OUTPUT);
 	lastError = 0;
-	averageMotorSpeed = 80;
+	averageMotorSpeed = 90;
 	Serial.begin(9600);
 	stallPWM = 65;
 	previousTime = millis();
@@ -94,6 +100,11 @@ void loop() {
 	currentTime = millis();
 	//checkPointHandle(currentTime);
 	followLaneAnalog(currentTime);
+
+	//Serial.print("Left: ");
+	//Serial.print(analogRead(LINE_FOLLOW_SENSOR_LEFT));
+	//Serial.print("Right: ");
+	//Serial.println(analogRead(LINE_FOLLOW_SENSOR_RIGHT));
 
 	while (Serial.available() > 0) {
 		int command = Serial.read();
@@ -164,13 +175,15 @@ void followLaneAnalog(int currentTime) {
 	controller = Kp * currentError + Ki * integral + Kd * derivative;
 	driveMotorsPID(controller, derivative);
 
+	Serial.print(" ");
 	Serial.print(Kp * currentError);
 	Serial.print("    ");
 	Serial.print(Ki * integral);
 	Serial.print("    ");
 	Serial.print(Kd * derivative);
 	Serial.print("    ");
-	Serial.println(controller);
+	Serial.println(abs((controller * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM))));
+
 	/*Serial.print("P:  ");
 	Serial.print(Kp * currentError);
 	Serial.print("    I:  ");
@@ -187,6 +200,7 @@ void driveMotorsPID(float controller, float derivative) {
 	//should make avg speed inversely proportional to the controller...will slow down if error is high
 
 	float adjustedSpeed = averageMotorSpeed - DERIVATIVE_SPEED_ADJUST*derivative*(averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
+	//float adjustedSpeed = averageMotorSpeed;
 	float speedOffset = abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
 	int newLeftMotorSpeed;
 	int newRightMotorSpeed;
@@ -214,7 +228,7 @@ void driveMotorsPID(float controller, float derivative) {
 
 	}
 	//checks if any of the motors are below stall PWM and sets them to zero
-	if (abs(newLeftMotorSpeed) < stallPWM || abs(newRightMotorSpeed) < stallPWM) {
+	else if (newLeftMotorSpeed < stallPWM || newRightMotorSpeed < stallPWM) {
 		if (abs(newLeftMotorSpeed) < stallPWM) {
 			newLeftMotorSpeed = 0;
 		}
@@ -223,12 +237,20 @@ void driveMotorsPID(float controller, float derivative) {
 		}
 	}
 
-	//stops the car if it left the line (on white)
-	if (analogRead(LINE_FOLLOW_SENSOR_LEFT) < 750 && analogRead(LINE_FOLLOW_SENSOR_RIGHT) < 750) {
-		newLeftMotorSpeed = 0;
+	/*if (readLeft < 750 && readRight < 750) {
 		newRightMotorSpeed = 0;
 
+		newLeftMotorSpeed = 0;
+
+	}*/
+	//stops the car if it left the line (on white)
+	if (readLeft < 800 && readRight < 800) {
+		newRightMotorSpeed = -(stallPWM + 60);
+
+		newLeftMotorSpeed = (stallPWM + 5);
+
 	}
+
 	//next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
 	if (newLeftMotorSpeed >= 0) {
 		analogWrite(BIN2_LEFT_MOTOR, 0);
@@ -252,9 +274,15 @@ void driveMotorsPID(float controller, float derivative) {
 
 //Function returns error of car's position relative to the lane
 float getLaneError() {
-	float leftSensorValue = analogRead(LINE_FOLLOW_SENSOR_LEFT);
-	float rightSensorValue = analogRead(LINE_FOLLOW_SENSOR_RIGHT);
-	return leftSensorValue - rightSensorValue;
+	readLeft = analogRead(LINE_FOLLOW_SENSOR_LEFT);
+	readRight = analogRead(LINE_FOLLOW_SENSOR_RIGHT);
+
+
+	Serial.print(" Left: ");
+	Serial.print(readLeft);
+	Serial.print(" Right: ");
+	Serial.print(readRight);
+	return readLeft - readRight;
 }
 /**************************************************************************************
 *************************************Helper Functions**********************************
