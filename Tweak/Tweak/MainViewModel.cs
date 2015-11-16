@@ -32,6 +32,15 @@ namespace Tweak
             }
         }
 
+        BluetoothViewModel bluetoothViewModel;
+        public BluetoothViewModel BluetoothViewModel {
+            get { return bluetoothViewModel; }
+            set {
+                bluetoothViewModel = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public ICommand LoadDataFileCommand { get; private set; }
         public ICommand SaveDataFileCommand { get; private set; }
         public ICommand ImportMapCommand { get; private set; }
@@ -40,6 +49,7 @@ namespace Tweak
 
         public MainViewModel() {
             Project = new Project();
+            BluetoothViewModel = new BluetoothViewModel();
 
             this.LoadDataFileCommand = new Command(LoadDataFileCallback);
             this.SaveDataFileCommand = new Command(SaveDataFileCallback);

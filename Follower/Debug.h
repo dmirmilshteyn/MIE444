@@ -6,6 +6,7 @@
 // ************************
 // **** Debug Commands ****
 // ************************
+#define DEBUG_REQUEST_SYNC '!'
 #define DEBUG_OUTPUT_STATE '0'
 
 #define DEBUG_SET_P '1'

@@ -118,12 +118,12 @@ void loop() {
 ***************************************************************************************/
 void enableLED() {
 	digitalWrite(ANTENNA_LED, HIGH);
-	Serial.println("ON");
+	//Serial.println("ON");
 	ledOn = true;
 }
 void disableLED() {
 	digitalWrite(ANTENNA_LED, LOW);
-	Serial.println("OFF");
+	//Serial.println("OFF");
 	ledOn = false;
 }
 void checkPointHandle(int currentTime) {
@@ -152,7 +152,7 @@ void checkPointHandle(int currentTime) {
 	else if (ledOn) {
 		disableLED();
 		checkPointComplete = true;
-		Serial.println("DONE");
+		//Serial.println("DONE");
 	}
 }
 
@@ -175,7 +175,7 @@ void followLaneAnalog(int currentTime) {
 	controller = Kp * currentError + Ki * integral + Kd * derivative;
 	driveMotorsPID(controller, derivative);
 
-	Serial.print(" ");
+	/*Serial.print(" ");
 	Serial.print(Kp * currentError);
 	Serial.print("    ");
 	Serial.print(Ki * integral);
@@ -183,7 +183,7 @@ void followLaneAnalog(int currentTime) {
 	Serial.print(Kd * derivative);
 	Serial.print("    ");
 	Serial.println(abs((controller * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM))));
-
+*/
 	/*Serial.print("P:  ");
 	Serial.print(Kp * currentError);
 	Serial.print("    I:  ");
@@ -278,10 +278,10 @@ float getLaneError() {
 	readRight = analogRead(LINE_FOLLOW_SENSOR_RIGHT);
 
 
-	Serial.print(" Left: ");
+	/*Serial.print(" Left: ");
 	Serial.print(readLeft);
 	Serial.print(" Right: ");
-	Serial.print(readRight);
+	Serial.print(readRight);*/
 	return readLeft - readRight;
 }
 /**************************************************************************************

@@ -17,13 +17,29 @@ int readDebugCommand() {
 
 void processDebugCommand(int command) {
 	switch (command) {
+	case DEBUG_REQUEST_SYNC:
+		Serial.read();
+		Serial.print("!!");
+		Serial.print(Kp);
+		Serial.print("|");
+		Serial.print(Ki);
+		Serial.print("|");
+		Serial.print(Kd);
+		Serial.print("|");
+		Serial.print(DERIVATIVE_SPEED_ADJUST);
+		Serial.print("|");
+		Serial.print(averageMotorSpeed);
+		Serial.println();
+		break;
 	case DEBUG_OUTPUT_STATE:
+		Serial.read();
 		print("PID Constants - Kp: ");
 		Serial.print(Kp);
 		print(", Ki: ");
 		Serial.print(Ki);
 		print(", Kd: ");
 		Serial.println(Kd);
+		break;
 	case DEBUG_SET_P:
 		Kp = Serial.parseFloat();
 		Serial.read();

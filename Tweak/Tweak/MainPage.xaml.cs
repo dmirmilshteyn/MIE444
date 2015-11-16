@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,11 @@ namespace Tweak
             this.InitializeComponent();
 
             this.DataContext = new MainViewModel();
+
+            string value = AnalyticsInfo.VersionInfo.DeviceFamily;
+            if (value != "Windows.Desktop") {
+                pivotControl.Items.Remove(pivotControl.Items.Single(p => ((PivotItem)p).Name == "mappingPivotItem"));
+            }
         }
     }
 }

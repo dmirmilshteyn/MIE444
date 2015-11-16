@@ -9,27 +9,34 @@
     d:DesignHeight="900"
     >
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
-            <Button Content="Load Data..." Command="{Binding LoadDataFileCommand}" HorizontalAlignment="Stretch" />
-            <Button Content="Save Data..." Command="{Binding SaveDataFileCommand}" HorizontalAlignment="Stretch" />
-            <Button Content="Import Map..." Command="{Binding ImportMapCommand}" HorizontalAlignment="Stretch" />
-            <local:ConstantsView DataContext="{Binding Project.Constants}" />
-            <TextBlock Text="Output Directory" />
-            <Grid>
+    <Pivot x:Name="pivotControl">
+        <PivotItem x:Name="mappingPivotItem" Header="Mapping">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Text="{Binding OutputDirectory.DisplayName}" HorizontalAlignment="Stretch" />
-                <Button Grid.Column="1" Content="..." Command="{Binding BrowseOutputDirectoryCommand}"/>
+                <StackPanel Grid.Column="0">
+                    <Button Content="Load Data..." Command="{Binding LoadDataFileCommand}" HorizontalAlignment="Stretch" />
+                    <Button Content="Save Data..." Command="{Binding SaveDataFileCommand}" HorizontalAlignment="Stretch" />
+                    <Button Content="Import Map..." Command="{Binding ImportMapCommand}" HorizontalAlignment="Stretch" />
+                    <local:ConstantsView DataContext="{Binding Project.Constants}" />
+                    <TextBlock Text="Output Directory" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding OutputDirectory.DisplayName}" HorizontalAlignment="Stretch" />
+                        <Button Grid.Column="1" Content="..." Command="{Binding BrowseOutputDirectoryCommand}"/>
+                    </Grid>
+                    <Button Content="Generate!" Command="{Binding GenerateCodeCommand}" HorizontalAlignment="Stretch" />
+                </StackPanel>
+                <local:MapView Grid.Column="1" DataContext="{Binding Project}" />
             </Grid>
-            <Button Content="Generate!" Command="{Binding GenerateCodeCommand}" HorizontalAlignment="Stretch" />
-        </StackPanel>
-        <local:MapView Grid.Column="1" DataContext="{Binding Project}" />
-    </Grid>
+        </PivotItem>
+        <PivotItem Header="Testing">
+            <local:BluetoothView Grid.Column="2" DataContext="{Binding BluetoothViewModel}" />
+        </PivotItem>
+    </Pivot>
 </Page>
