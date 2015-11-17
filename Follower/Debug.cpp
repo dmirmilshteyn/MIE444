@@ -1,18 +1,46 @@
 #include "Debug.h"
 #include "Constants.h"
 
-void print(const char* message) {
+inline void print(const char* message) {
 	Serial.print(message);
 }
 
-void println(const char* message) {
+inline void print(float value) {
+	Serial.print(value);
+}
+
+inline void println() {
+	Serial.println();
+}
+
+inline void println(const char* message) {
 	Serial.println(message);
 }
 
+inline void println(float value) {
+	Serial.print(value);
+}
+
 int readDebugCommand() {
-	while (Serial.available() > 0) {
+	if (Serial.available() > 0) {
 		return Serial.read();
 	}
+}
+
+void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller) {
+	print("!?");
+	print(currentError);
+	print("|");
+	print(integral);
+	print("|");
+	print(derivative);
+	print("|");
+	print(controller);
+	print("|");
+	print(motorSpeeds.left);
+	print("|");
+	print(motorSpeeds.right);
+	println();
 }
 
 void processDebugCommand(int command) {

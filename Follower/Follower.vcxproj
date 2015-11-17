@@ -138,6 +138,7 @@
     <ClInclude Include="Debug.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="LineFollower.h" />
     <ClInclude Include="Map.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="LineFollower.cpp" />
     <ClCompile Include="Mapping.cpp" />
     <ClCompile Include="MemoryFree.cpp" />
     <ClCompile Include="MotorControl.cpp" />

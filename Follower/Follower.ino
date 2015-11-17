@@ -1,4 +1,5 @@
 
+#include "LineFollower.h"
 #include <LinkedList.h>
 #include <math.h>
 #include "Constants.h"
@@ -6,6 +7,7 @@
 #include "MotorController.h"
 #include "Mapping.h"
 #include "Pathfinder.h"
+#include "LineFollower.h"
 
 
 /*************Checkpoint Variables and Functions***********/
@@ -22,7 +24,7 @@ bool ledOn = false; //variable stoes the state of the LED.
 void followLaneAnalog(int currentTime);
 float lastError;
 float integral;
-void driveMotorsPID(float controller, float derivative);
+MotorSpeeds driveMotorsPID(float controller, float derivative);
 float getLaneError();
 int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
 int stallPWM;//PWM at which the motor stalls
@@ -173,7 +175,10 @@ void followLaneAnalog(int currentTime) {
 	derivative = (currentError - lastError) / timeDifference;
 	lastError = currentError;
 	controller = Kp * currentError + Ki * integral + Kd * derivative;
-	driveMotorsPID(controller, derivative);
+
+	MotorSpeeds motorSpeeds = driveMotorsPID(controller, derivative);
+
+	publishLaneFollowingData(motorSpeeds, currentError, integral, derivative, controller);
 
 	/*Serial.print(" ");
 	Serial.print(Kp * currentError);
@@ -184,56 +189,58 @@ void followLaneAnalog(int currentTime) {
 	Serial.print("    ");
 	Serial.println(abs((controller * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM))));
 */
-	/*Serial.print("P:  ");
-	Serial.print(Kp * currentError);
-	Serial.print("    I:  ");
-	Serial.print(Ki * integral);
-	Serial.print("    D:  ");
-	Serial.print(Kd * derivative);
-	Serial.print("    Controller:   ");
-	Serial.println(controller);*/
+/*Serial.print("P:  ");
+Serial.print(Kp * currentError);
+Serial.print("    I:  ");
+Serial.print(Ki * integral);
+Serial.print("    D:  ");
+Serial.print(Kd * derivative);
+Serial.print("    Controller:   ");
+Serial.println(controller);*/
 	previousTime = currentTime;
 }
 
 
-void driveMotorsPID(float controller, float derivative) {
+MotorSpeeds driveMotorsPID(float controller, float derivative) {
 	//should make avg speed inversely proportional to the controller...will slow down if error is high
 
 	float adjustedSpeed = averageMotorSpeed - DERIVATIVE_SPEED_ADJUST*derivative*(averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
 	//float adjustedSpeed = averageMotorSpeed;
 	float speedOffset = abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
-	int newLeftMotorSpeed;
-	int newRightMotorSpeed;
+	MotorSpeeds newMotorSpeeds;
+
+	/*int newLeftMotorSpeed;
+	int newRightMotorSpeed;*/
 
 	if (controller <= 0) {
-		newLeftMotorSpeed = adjustedSpeed;
-		newRightMotorSpeed = adjustedSpeed - speedOffset;
+		newMotorSpeeds.left = adjustedSpeed;
+		newMotorSpeeds.right = adjustedSpeed - speedOffset;
 	}
 	else if (controller > 0) {
-		newLeftMotorSpeed = adjustedSpeed - speedOffset;
-		newRightMotorSpeed = adjustedSpeed;
+		newMotorSpeeds.left = adjustedSpeed - speedOffset;
+		newMotorSpeeds.right = adjustedSpeed;
 	}
 
 	//Controls what to do if the adjustedSpeed is too low
 	//Function will assume the car is stopped and will try to keep the car centered with the line
 	if (adjustedSpeed < stallPWM) {
 		if (abs(lastError) > 50) {
-			newLeftMotorSpeed = -signOf(controller) * (stallPWM + 10);
-			newRightMotorSpeed = signOf(controller) * (stallPWM + 10);
+			newMotorSpeeds.left = -signOf(controller) * (stallPWM + 10);
+			newMotorSpeeds.right = signOf(controller) * (stallPWM + 10);
 		}
 		else {
-			newLeftMotorSpeed = 0;
-			newRightMotorSpeed = 0;
+			newMotorSpeeds.left = 0;
+			newMotorSpeeds.right = 0;
 		}
 
 	}
 	//checks if any of the motors are below stall PWM and sets them to zero
-	else if (newLeftMotorSpeed < stallPWM || newRightMotorSpeed < stallPWM) {
-		if (abs(newLeftMotorSpeed) < stallPWM) {
-			newLeftMotorSpeed = 0;
+	else if (newMotorSpeeds.left < stallPWM || newMotorSpeeds.right < stallPWM) {
+		if (abs(newMotorSpeeds.left) < stallPWM) {
+			newMotorSpeeds.left = 0;
 		}
-		else if (abs(newRightMotorSpeed) < stallPWM) {
-			newRightMotorSpeed = 0;
+		else if (abs(newMotorSpeeds.right) < stallPWM) {
+			newMotorSpeeds.right = 0;
 		}
 	}
 
@@ -245,30 +252,32 @@ void driveMotorsPID(float controller, float derivative) {
 	}*/
 	//stops the car if it left the line (on white)
 	if (readLeft < 800 && readRight < 800) {
-		newRightMotorSpeed = -(stallPWM + 60);
+		newMotorSpeeds.right = -(stallPWM + 60);
 
-		newLeftMotorSpeed = (stallPWM + 5);
+		newMotorSpeeds.left = (stallPWM + 5);
 
 	}
 
 	//next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
-	if (newLeftMotorSpeed >= 0) {
+	if (newMotorSpeeds.left >= 0) {
 		analogWrite(BIN2_LEFT_MOTOR, 0);
-		analogWrite(BIN1_LEFT_MOTOR, newLeftMotorSpeed);//drives left motor forward
+		analogWrite(BIN1_LEFT_MOTOR, newMotorSpeeds.left);//drives left motor forward
 	}
 	else {
 		analogWrite(BIN1_LEFT_MOTOR, 0);
-		analogWrite(BIN2_LEFT_MOTOR, -newLeftMotorSpeed);//drives left motor reverse
+		analogWrite(BIN2_LEFT_MOTOR, -newMotorSpeeds.left);//drives left motor reverse
 	}
 
-	if (newRightMotorSpeed >= 0) {
+	if (newMotorSpeeds.right >= 0) {
 		analogWrite(AIN2_RIGHT_MOTOR, 0);
-		analogWrite(AIN1_RIGHT_MOTOR, newRightMotorSpeed);//drives right motor forward
+		analogWrite(AIN1_RIGHT_MOTOR, newMotorSpeeds.right);//drives right motor forward
 	}
 	else {
 		analogWrite(AIN1_RIGHT_MOTOR, 0);
-		analogWrite(AIN2_RIGHT_MOTOR, -newRightMotorSpeed);//drives right motor reverse
+		analogWrite(AIN2_RIGHT_MOTOR, -newMotorSpeeds.right);//drives right motor reverse
 	}
+
+	return newMotorSpeeds;
 }
 
 

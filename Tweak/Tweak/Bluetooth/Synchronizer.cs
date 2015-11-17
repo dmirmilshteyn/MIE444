@@ -79,8 +79,61 @@ namespace Tweak.Bluetooth
             }
         }
 
-        Task listenTask;
+        float currentError;
+        public float CurrentError {
+            get { return currentError; }
+            set {
+                currentError = value;
+                RaisePropertyChanged();
+            }
+        }
 
+        float integral;
+        public float Integral {
+            get { return integral; }
+            set {
+                integral = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        float derivative;
+        public float Derivative {
+            get { return derivative; }
+            set {
+                derivative = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        float controller;
+        public float Controller {
+            get { return controller; }
+            set {
+                controller = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        float leftSpeed;
+        public float LeftSpeed {
+            get { return leftSpeed; }
+            set {
+                leftSpeed = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        float rightSpeed;
+        public float RightSpeed {
+            get { return rightSpeed; }
+            set {
+                rightSpeed = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        Task listenTask;
 
         public Synchronizer(StreamSocket socket) {
             this.socket = socket;
@@ -117,6 +170,19 @@ namespace Tweak.Bluetooth
                             Kd = float.Parse(resultSegments[2]);
                             SpeedAdjust = float.Parse(resultSegments[3]);
                             AverageSpeed = Int32.Parse(resultSegments[4]);
+                        }
+                        break;
+                    case '?':
+                        {
+                            line = line.Substring(2);
+
+                            string[] resultSegments = line.Split('|');
+                            CurrentError = float.Parse(resultSegments[0]);
+                            Integral = float.Parse(resultSegments[1]);
+                            Derivative = float.Parse(resultSegments[2]);
+                            Controller = float.Parse(resultSegments[3]);
+                            LeftSpeed = float.Parse(resultSegments[4]);
+                            RightSpeed = float.Parse(resultSegments[5]);
                         }
                         break;
                 }

@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#include "LineFollower.h"
 
 #ifndef DEBUG_H
 #define DEBUG_H
@@ -23,11 +24,16 @@
 
 extern int averageMotorSpeed;
 
-void print(const char* message);
-void println(const char* message);
+inline void print(const char* message);
+inline void print(float value);
+inline void println();
+inline void println(const char* message);
+inline void println(float value);
 
 int readDebugCommand();
 
 void processDebugCommand(int command);
+
+void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller);
 
 #endif
