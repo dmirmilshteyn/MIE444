@@ -133,10 +133,47 @@ namespace Tweak.Bluetooth
             }
         }
 
+        int frontIntersectionSensor;
+        public int FrontIntersectionSensor {
+            get { return frontIntersectionSensor; }
+            set {
+                frontIntersectionSensor = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int leftIntersectionSensor;
+        public int LeftIntersectionSensor {
+            get { return leftIntersectionSensor; }
+            set {
+                leftIntersectionSensor = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int rightIntersectionSensor;
+        public int RightIntersectionSensor {
+            get { return rightIntersectionSensor; }
+            set {
+                rightIntersectionSensor = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        IntersectionIdentifier intersectionIdentifier;
+        public IntersectionIdentifier IntersectionIdentifier {
+            get { return intersectionIdentifier; }
+            set {
+                intersectionIdentifier = value;
+                RaisePropertyChanged();
+            }
+        }
+
         Task listenTask;
 
         public Synchronizer(StreamSocket socket) {
             this.socket = socket;
+            this.intersectionIdentifier = new IntersectionIdentifier();
 
             this.dataWriter = new DataWriter(socket.OutputStream);
             this.dataReader = new DataReader(socket.InputStream);
@@ -183,6 +220,22 @@ namespace Tweak.Bluetooth
                             Controller = float.Parse(resultSegments[3]);
                             LeftSpeed = float.Parse(resultSegments[4]);
                             RightSpeed = float.Parse(resultSegments[5]);
+                        }
+                        break;
+                    case '#':
+                        {
+                            line = line.Substring(2);
+
+                            string[] resultSegments = line.Split('|');
+                            FrontIntersectionSensor = (int)float.Parse(resultSegments[0]);
+                            LeftIntersectionSensor = (int)float.Parse(resultSegments[1]);
+                            RightIntersectionSensor = (int)float.Parse(resultSegments[2]);
+
+                            if (!IntersectionIdentifier.IsRunning) {
+                                IntersectionIdentifier.Start();
+                            }
+
+                            IntersectionIdentifier.HandleIncomingData(frontIntersectionSensor, LeftIntersectionSensor, RightIntersectionSensor);
                         }
                         break;
                 }

@@ -43,6 +43,16 @@ void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float
 	println();
 }
 
+void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor) {
+	print("!#");
+	print(frontSensor);
+	print("|");
+	print(leftSensor);
+	print("|");
+	print(rightSensor);
+	println();
+}
+
 void processDebugCommand(int command) {
 	switch (command) {
 	case DEBUG_REQUEST_SYNC:

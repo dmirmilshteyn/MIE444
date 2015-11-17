@@ -1,4 +1,5 @@
 
+#include "IntersectionDetection.h"
 #include "LineFollower.h"
 #include <LinkedList.h>
 #include <math.h>
@@ -8,6 +9,7 @@
 #include "Mapping.h"
 #include "Pathfinder.h"
 #include "LineFollower.h"
+#include "IntersectionDetection.h"
 
 
 /*************Checkpoint Variables and Functions***********/
@@ -101,7 +103,8 @@ void loop() {
 
 	currentTime = millis();
 	//checkPointHandle(currentTime);
-	followLaneAnalog(currentTime);
+	//followLaneAnalog(currentTime);
+	ReadIntersectionSensors();
 
 	//Serial.print("Left: ");
 	//Serial.print(analogRead(LINE_FOLLOW_SENSOR_LEFT));
