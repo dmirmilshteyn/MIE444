@@ -19,17 +19,6 @@ namespace Tweak
         public static readonly int RIGHT_APPROACHING_THRESHOLD = 750;
         public static readonly int RIGHT_ON_THRESHOLD = 900;
 
-        public enum IntersectionType
-        {
-            None,
-            RightTurn,
-            LeftTurn,
-            TRight,
-            TLeft,
-            T,
-            Cross
-        }
-
         public enum SensorLocation
         {
             Front,

@@ -1,4 +1,5 @@
-﻿using Microsoft.Graphics.Canvas.UI.Xaml;
+﻿using Microsoft.Graphics.Canvas.Text;
+using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -68,6 +69,20 @@ namespace Tweak
                 args.DrawingSession.DrawRectangle(new Rect(intersection.X, intersection.Y, intersection.Width, intersection.Height), Colors.Green);
             }
 
+            foreach (IntersectionMarker intersectionMarker in map.IntersectionMarkers) {
+                args.DrawingSession.DrawLine(intersectionMarker.X1, intersectionMarker.Y1, intersectionMarker.X2, intersectionMarker.Y2, Colors.Green, 2);
+
+                args.DrawingSession.DrawText(intersectionMarker.IntersectionId.ToString(), intersectionMarker.X1, intersectionMarker.Y1, Colors.Red, new CanvasTextFormat() { FontSize = 4 });
+            }
+
+            if (intersectionA.HasValue) {
+                args.DrawingSession.DrawRectangle(new Rect(intersectionA.Value.X, intersectionA.Value.Y, 1, 1), Colors.Green);
+            }
+
+            if (intersectionB.HasValue) {
+                args.DrawingSession.DrawRectangle(new Rect(intersectionB.Value.X, intersectionB.Value.Y, 1, 1), Colors.Green);
+            }
+
             if (pathPlanningA.HasValue) {
                 args.DrawingSession.DrawRectangle(new Rect(pathPlanningA.Value.X, pathPlanningA.Value.Y, 1, 1), Colors.Red);
             }
@@ -82,7 +97,7 @@ namespace Tweak
             }
         }
 
-        private void CanvasAnimatedControl_PointerPressed(object sender, PointerRoutedEventArgs e) {
+        private async void CanvasAnimatedControl_PointerPressed(object sender, PointerRoutedEventArgs e) {
             Project project = (Project)sharedDataContext;
             Map map = project.Map;
 
@@ -90,7 +105,7 @@ namespace Tweak
             if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
                 deleting = true;
             }
-            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift) {
+            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.None) {
                 pointerPressed = false;
                 if (!intersectionA.HasValue) {
                     UIElement canvas = (UIElement)sender;
@@ -107,9 +122,23 @@ namespace Tweak
                     double width = intersectionB.Value.X - intersectionA.Value.X;
                     double height = intersectionB.Value.Y - intersectionA.Value.Y;
 
-                    Intersection intersection = new Intersection(intersectionA.Value.X, intersectionA.Value.Y, width, height);
+                    IntersectionMarker marker = new IntersectionMarker();
+                    IntersectionMarkerConfiguration configurationDialog = new IntersectionMarkerConfiguration();
+                    configurationDialog.DataContext = marker;
 
-                    map.Intersections.Add(intersection);
+                    marker.X1 = (int)intersectionA.Value.X;
+                    marker.Y1 = (int)intersectionA.Value.Y;
+                    marker.X2 = (int)intersectionB.Value.X;
+                    marker.Y2 = (int)intersectionB.Value.Y;
+
+                    var result = await configurationDialog.ShowAsync();
+                    if (result == ContentDialogResult.Primary) {
+                        map.IntersectionMarkers.Add(marker);
+                    }
+
+                    //Intersection intersection = new Intersection(intersectionA.Value.X, intersectionA.Value.Y, width, height);
+
+                    //map.Intersections.Add(intersection);
 
                     intersectionA = null;
                     intersectionB = null;
@@ -131,7 +160,7 @@ namespace Tweak
                 }
             }
 
-            ProcessPointerMoved(sender, e);
+            //ProcessPointerMoved(sender, e);
         }
 
         private void CanvasAnimatedControl_PointerReleased(object sender, PointerRoutedEventArgs e) {

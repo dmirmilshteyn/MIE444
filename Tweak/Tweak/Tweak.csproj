@@ -119,9 +119,15 @@
     <Compile Include="ConstantsView.xaml.cs">
       <DependentUpon>ConstantsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\EnumToItemsSourceProvider.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Intersection.cs" />
     <Compile Include="IntersectionIdentifier.cs" />
+    <Compile Include="IntersectionMarker.cs" />
+    <Compile Include="IntersectionMarkerConfiguration.xaml.cs">
+      <DependentUpon>IntersectionMarkerConfiguration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IntersectionType.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -166,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConstantsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IntersectionMarkerConfiguration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

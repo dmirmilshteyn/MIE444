@@ -28,6 +28,15 @@ namespace Tweak
             }
         }
 
+        ObservableCollection<IntersectionMarker> intersectionMarkers;
+        public ObservableCollection<IntersectionMarker> IntersectionMarkers {
+            get { return intersectionMarkers; }
+            set {
+                intersectionMarkers = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public void InitializeMap(Constants constants) {
             if (Tiles == null) {
                 Tiles = new TileCollection();
@@ -35,6 +44,9 @@ namespace Tweak
             }
             if (Intersections == null) {
                 Intersections = new ObservableCollection<Intersection>();
+            }
+            if (IntersectionMarkers == null) {
+                IntersectionMarkers = new ObservableCollection<IntersectionMarker>();
             }
         }
 

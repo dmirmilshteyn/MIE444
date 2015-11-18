@@ -1,0 +1,35 @@
+﻿<ContentDialog
+    x:Class="Tweak.IntersectionMarkerConfiguration"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Tweak"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:converters="using:Tweak.Converters"
+    mc:Ignorable="d"
+    Title="Intersection Marker Configuration"
+    PrimaryButtonText="Confirm"
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <ContentDialog.Resources>
+        <converters:EnumToItemsSourceProvider x:Key="enumToItemsSourceProvider" />
+    </ContentDialog.Resources>
+
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="Intersection Id" />
+            <toolkit:NumericUpDown Value="{Binding IntersectionId, Mode=TwoWay}" Maximum="40" SmallChange="1" HorizontalAlignment="Stretch" />
+            <TextBlock Text="Top Intersection Type" />
+            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding TopType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding TopType, Mode=TwoWay}" />
+            <TextBlock Text="Bottom Intersection Type" />
+            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding BottomType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding BottomType, Mode=TwoWay}" />
+            <TextBlock Text="Left Intersection Type" />
+            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding LeftType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding LeftType, Mode=TwoWay}" />
+            <TextBlock Text="Right Intersection Type" />
+            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding RightType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding RightType, Mode=TwoWay}" />
+        </StackPanel>
+    </Grid>
+</ContentDialog>
