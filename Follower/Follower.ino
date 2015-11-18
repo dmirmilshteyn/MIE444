@@ -1,4 +1,5 @@
 
+#include "Localization.h"
 #include "Checkpoint.h"
 #include "IntersectionDetection.h"
 #include "LineFollower.h"
@@ -12,6 +13,7 @@
 #include "LineFollower.h"
 #include "Checkpoint.h"
 #include "IntersectionDetection.h"
+#include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
 float Kp = 0.6; //0.3;
