@@ -72,41 +72,41 @@ void processDebugCommand(int command) {
 	case DEBUG_OUTPUT_STATE:
 		Serial.read();
 		print("PID Constants - Kp: ");
-		Serial.print(Kp);
+		print(Kp);
 		print(", Ki: ");
-		Serial.print(Ki);
+		print(Ki);
 		print(", Kd: ");
-		Serial.println(Kd);
+		println(Kd);
 		break;
 	case DEBUG_SET_P:
 		Kp = Serial.parseFloat();
 		Serial.read();
 		print("Kp = ");
-		Serial.println(Kp);
+		println(Kp);
 		break;
 	case DEBUG_SET_I:
 		Ki = Serial.parseFloat();
 		Serial.read();
 		print("Ki = ");
-		Serial.println(Ki);
+		println(Ki);
 		break;
 	case DEBUG_SET_D:
 		Kd = Serial.parseFloat();
 		Serial.read();
 		print("Kd = ");
-		Serial.println(Kd);
+		println(Kd);
 		break;
 	case DEBUG_SPEED_ADJUST:
 		DERIVATIVE_SPEED_ADJUST = Serial.parseFloat();
 		Serial.read();
 		print("Speed Adjust = ");
-		Serial.println(DERIVATIVE_SPEED_ADJUST);
+		println(DERIVATIVE_SPEED_ADJUST);
 		break;
 	case DEBUG_AVERAGE_SPEED:
 		averageMotorSpeed = Serial.parseInt();
 		Serial.read();
 		print("Average Motor Speed = ");
-		Serial.println(averageMotorSpeed);
+		println(averageMotorSpeed);
 		break;
 	}
 }

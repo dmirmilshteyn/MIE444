@@ -7,10 +7,22 @@
 	#include "WProgram.h"
 #endif
 
-struct MotorSpeeds {
-	int left;
-	int right;
-};
+#include "Constants.h"
+#include "Debug.h"
+
+extern int previousTime;
+extern float readLeft;
+extern float readRight;
+
+extern float lastError;
+extern float integral;
+
+extern int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
+extern int stallPWM; //PWM at which the motor stalls
+
+MotorSpeeds driveMotorsPID(float controller, float derivative);
+float getLaneError();
+void followLaneAnalog(int currentTime);
 
 
 #endif

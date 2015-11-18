@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "LineFollower.h"
+#include "Core.h"
 
 #ifndef DEBUG_H
 #define DEBUG_H
