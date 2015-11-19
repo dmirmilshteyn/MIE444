@@ -32,10 +32,15 @@
 /**********************************************
  *********** Calibration Constants ************
  **********************************************/
-
 #define CHECKPOINT_REACTION_DURATION 5000
 #define GEAR_RATIO 100.37
 #define ENCODER_TEETH_COUNT 3
+
+/**********************************************
+ ************** Robot Constants ***************
+ **********************************************/
+#define WHEEL_RADIUS 0.035
+#define ROBOT_WIDTH 0.21
 
  //PID
  //#define Kp 3.4

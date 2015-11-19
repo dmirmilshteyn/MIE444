@@ -24,11 +24,6 @@ namespace Tweak
                     writer.WriteLine("#define MAPPING_CONSTANTS_H");
                     writer.WriteLine();
                     writer.WriteLine("/**********************************************");
-                    writer.WriteLine(" ************** Robot Constants ***************");
-                    writer.WriteLine(" **********************************************/");
-                    writer.WriteLine($"#define WHEEL_RADIUS {constants.WheelRadius}");
-                    writer.WriteLine();
-                    writer.WriteLine("/**********************************************");
                     writer.WriteLine(" *********** Environment Constants ************");
                     writer.WriteLine(" **********************************************/");
                     writer.WriteLine($"#define LINE_WIDTH {constants.LineWidth}");

@@ -8,15 +8,6 @@ namespace Tweak
 {
     public class Constants : ObservableObject
     {
-        double wheelRadius;
-        public double WheelRadius {
-            get { return wheelRadius; }
-            set {
-                wheelRadius = value;
-                RaisePropertyChanged();
-            }
-        }
-
         double lineWidth;
         public double LineWidth {
             get { return lineWidth; }
