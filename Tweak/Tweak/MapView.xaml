@@ -26,7 +26,7 @@
             <RadioButton Margin="5,0,0,0" MinWidth="0" IsChecked="{Binding ElementName=mapView, Path=MapPlacementMode, Converter={StaticResource enumMatchConverter}, ConverterParameter=Tiles, Mode=TwoWay}">Tiles</RadioButton>
             <RadioButton Margin="15,0,0,0" MinWidth="0" IsChecked="{Binding ElementName=mapView, Path=MapPlacementMode, Converter={StaticResource enumMatchConverter}, ConverterParameter=Intersections, Mode=TwoWay}">Intersections</RadioButton>
             <RadioButton Margin="15,0,0,0" MinWidth="0" IsChecked="{Binding ElementName=mapView, Path=MapPlacementMode, Converter={StaticResource enumMatchConverter}, ConverterParameter=Path, Mode=TwoWay}">Path</RadioButton>
-
+            <RadioButton Margin="15,0,0,0" MinWidth="0" IsChecked="{Binding ElementName=mapView, Path=MapPlacementMode, Converter={StaticResource enumMatchConverter}, ConverterParameter=StartPositions, Mode=TwoWay}">Start Position</RadioButton>
         </StackPanel>
         <Viewbox Grid.Row="1">
             <canvas:CanvasAnimatedControl PointerMoved="CanvasAnimatedControl_PointerMoved" PointerPressed="CanvasAnimatedControl_PointerPressed" PointerReleased="CanvasAnimatedControl_PointerReleased" Draw="CanvasAnimatedControl_Draw" ClearColor="White" Width="{Binding Map.Tiles.Width}" Height="{Binding Map.Tiles.Height}" />

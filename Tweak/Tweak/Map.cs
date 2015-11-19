@@ -37,6 +37,15 @@ namespace Tweak
             }
         }
 
+        ObservableCollection<StartPosition> startPositions;
+        public ObservableCollection<StartPosition> StartPositions {
+            get { return startPositions; }
+            set {
+                startPositions = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public void InitializeMap(Constants constants) {
             if (Tiles == null) {
                 Tiles = new TileCollection();
@@ -47,6 +56,9 @@ namespace Tweak
             }
             if (IntersectionMarkers == null) {
                 IntersectionMarkers = new ObservableCollection<IntersectionMarker>();
+            }
+            if (StartPositions == null) {
+                StartPositions = new ObservableCollection<StartPosition>();
             }
         }
 

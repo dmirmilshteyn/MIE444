@@ -95,6 +95,12 @@ namespace Tweak
                 args.DrawingSession.DrawText(intersectionMarker.IntersectionId.ToString(), intersectionMarker.X1, intersectionMarker.Y1, Colors.Red, new CanvasTextFormat() { FontSize = 4 });
             }
 
+            for (int i = 0; i < map.StartPositions.Count; i++) {
+                StartPosition startPosition = map.StartPositions[i];
+
+                args.DrawingSession.DrawRectangle(new Rect(startPosition.X, startPosition.Y, 1, 1), Colors.Purple);
+            }
+
             if (intersectionA.HasValue) {
                 args.DrawingSession.DrawRectangle(new Rect(intersectionA.Value.X, intersectionA.Value.Y, 1, 1), Colors.Green);
             }
@@ -190,6 +196,21 @@ namespace Tweak
                         }
                     }
                     break;
+                case MapPlacementMode.StartPositions:
+                    {
+                        if (e.KeyModifiers != Windows.System.VirtualKeyModifiers.Control) {
+                            UIElement canvas = (UIElement)sender;
+
+                            PointerPoint point = e.GetCurrentPoint(canvas);
+
+                            StartPosition startPosition = new StartPosition();
+                            startPosition.X = (int)Math.Round(point.Position.X);
+                            startPosition.Y = (int)Math.Round(point.Position.Y);
+
+                            map.StartPositions.Add(startPosition);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -200,16 +221,30 @@ namespace Tweak
             pointerPressed = false;
             deleting = false;
 
-            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
-                if (pathPlanningA.HasValue && pathPlanningB.HasValue) {
-                    Pathfinder pathfinder = new Pathfinder(map);
-                    path = pathfinder.AStar(new Position((int)pathPlanningA.Value.X, (int)pathPlanningA.Value.Y), new Position((int)pathPlanningB.Value.X, (int)pathPlanningB.Value.Y));
-                }
-            } else if (e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift) && e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control)) {
-                pathPlanningA = null;
-                pathPlanningB = null;
-                path = null;
+            switch (MapPlacementMode) {
+                case MapPlacementMode.Path:
+                    {
+                        if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
+                            if (pathPlanningA.HasValue && pathPlanningB.HasValue) {
+                                Pathfinder pathfinder = new Pathfinder(map);
+                                path = pathfinder.AStar(new Position((int)pathPlanningA.Value.X, (int)pathPlanningA.Value.Y), new Position((int)pathPlanningB.Value.X, (int)pathPlanningB.Value.Y));
+                            }
+                        } else if (e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift) && e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control)) {
+                            pathPlanningA = null;
+                            pathPlanningB = null;
+                            path = null;
+                        }
+                    }
+                    break;
+                case MapPlacementMode.StartPositions:
+                    {
+                        if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
+                            map.StartPositions.RemoveAt(map.StartPositions.Count - 1);
+                        }
+                    }
+                    break;
             }
+            
         }
 
         private void ProcessPointerMoved(object sender, PointerRoutedEventArgs e) {

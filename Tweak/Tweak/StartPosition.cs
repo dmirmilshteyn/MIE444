@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Tweak
 {
-    public enum MapPlacementMode
+    public class StartPosition
     {
-        Tiles,
-        Intersections,
-        Path,
-        StartPositions
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public StartPosition() {
+        }
     }
 }
