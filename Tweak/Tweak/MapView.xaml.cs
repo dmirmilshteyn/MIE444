@@ -2,8 +2,10 @@
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Tweak.Pathfinding;
 using Windows.Foundation;
@@ -20,7 +22,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Tweak
 {
-    public sealed partial class MapView : UserControl
+    public sealed partial class MapView : UserControl, INotifyPropertyChanged
     {
         bool pointerPressed;
         bool deleting;
@@ -33,6 +35,23 @@ namespace Tweak
         Point? pathPlanningB;
 
         IReadOnlyList<Position> path;
+
+        MapPlacementMode mapPlacementMode;
+        public MapPlacementMode MapPlacementMode {
+            get { return mapPlacementMode; }
+            set {
+                mapPlacementMode = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged([CallerMemberName] string property = "") {
+            if (PropertyChanged != null) {
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
+        }
 
         public MapView() {
             this.InitializeComponent();
@@ -69,8 +88,9 @@ namespace Tweak
                 args.DrawingSession.DrawRectangle(new Rect(intersection.X, intersection.Y, intersection.Width, intersection.Height), Colors.Green);
             }
 
-            foreach (IntersectionMarker intersectionMarker in map.IntersectionMarkers) {
-                args.DrawingSession.DrawLine(intersectionMarker.X1, intersectionMarker.Y1, intersectionMarker.X2, intersectionMarker.Y2, Colors.Green, 2);
+            for (int i = 0; i < map.IntersectionMarkers.Count; i++) {
+                IntersectionMarker intersectionMarker = map.IntersectionMarkers[i];
+                args.DrawingSession.DrawLine(intersectionMarker.X1, intersectionMarker.Y1, intersectionMarker.X2, intersectionMarker.Y2, Colors.Green, 1);
 
                 args.DrawingSession.DrawText(intersectionMarker.IntersectionId.ToString(), intersectionMarker.X1, intersectionMarker.Y1, Colors.Red, new CanvasTextFormat() { FontSize = 4 });
             }
@@ -102,65 +122,75 @@ namespace Tweak
             Map map = project.Map;
 
             pointerPressed = true;
-            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
-                deleting = true;
-            }
-            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.None) {
-                pointerPressed = false;
-                if (!intersectionA.HasValue) {
-                    UIElement canvas = (UIElement)sender;
+            switch (MapPlacementMode) {
+                case MapPlacementMode.Tiles:
+                    {
+                        if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
+                            deleting = true;
+                        }
 
-                    PointerPoint point = e.GetCurrentPoint(canvas);
-
-                    intersectionA = point.Position;
-                } else if (!intersectionB.HasValue) {
-                    UIElement canvas = (UIElement)sender;
-
-                    PointerPoint point = e.GetCurrentPoint(canvas);
-                    intersectionB = point.Position;
-
-                    double width = intersectionB.Value.X - intersectionA.Value.X;
-                    double height = intersectionB.Value.Y - intersectionA.Value.Y;
-
-                    IntersectionMarker marker = new IntersectionMarker();
-                    IntersectionMarkerConfiguration configurationDialog = new IntersectionMarkerConfiguration();
-                    configurationDialog.DataContext = marker;
-
-                    marker.X1 = (int)intersectionA.Value.X;
-                    marker.Y1 = (int)intersectionA.Value.Y;
-                    marker.X2 = (int)intersectionB.Value.X;
-                    marker.Y2 = (int)intersectionB.Value.Y;
-
-                    var result = await configurationDialog.ShowAsync();
-                    if (result == ContentDialogResult.Primary) {
-                        map.IntersectionMarkers.Add(marker);
+                        ProcessPointerMoved(sender, e);
                     }
+                    break;
+                case MapPlacementMode.Intersections:
+                    {
+                        pointerPressed = false;
+                        if (!intersectionA.HasValue) {
+                            UIElement canvas = (UIElement)sender;
 
-                    //Intersection intersection = new Intersection(intersectionA.Value.X, intersectionA.Value.Y, width, height);
+                            PointerPoint point = e.GetCurrentPoint(canvas);
 
-                    //map.Intersections.Add(intersection);
+                            intersectionA = point.Position;
+                        } else if (!intersectionB.HasValue) {
+                            UIElement canvas = (UIElement)sender;
 
-                    intersectionA = null;
-                    intersectionB = null;
-                }
+                            PointerPoint point = e.GetCurrentPoint(canvas);
+                            intersectionB = point.Position;
+
+                            double width = intersectionB.Value.X - intersectionA.Value.X;
+                            double height = intersectionB.Value.Y - intersectionA.Value.Y;
+
+                            IntersectionMarker marker = new IntersectionMarker();
+                            IntersectionMarkerConfiguration configurationDialog = new IntersectionMarkerConfiguration();
+                            configurationDialog.DataContext = marker;
+
+                            marker.X1 = (int)intersectionA.Value.X;
+                            marker.Y1 = (int)intersectionA.Value.Y;
+                            marker.X2 = (int)intersectionB.Value.X;
+                            marker.Y2 = (int)intersectionB.Value.Y;
+
+                            var result = await configurationDialog.ShowAsync();
+                            if (result == ContentDialogResult.Primary) {
+                                map.IntersectionMarkers.Add(marker);
+                            }
+
+                            //Intersection intersection = new Intersection(intersectionA.Value.X, intersectionA.Value.Y, width, height);
+
+                            //map.Intersections.Add(intersection);
+
+                            intersectionA = null;
+                            intersectionB = null;
+                        }
+                    }
+                    break;
+                case MapPlacementMode.Path:
+                    {
+                        if (!pathPlanningA.HasValue) {
+                            UIElement canvas = (UIElement)sender;
+
+                            PointerPoint point = e.GetCurrentPoint(canvas);
+
+                            pathPlanningA = point.Position;
+                        } else if (!pathPlanningB.HasValue) {
+                            UIElement canvas = (UIElement)sender;
+
+                            PointerPoint point = e.GetCurrentPoint(canvas);
+
+                            pathPlanningB = point.Position;
+                        }
+                    }
+                    break;
             }
-            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Windows) {
-                if (!pathPlanningA.HasValue) {
-                    UIElement canvas = (UIElement)sender;
-
-                    PointerPoint point = e.GetCurrentPoint(canvas);
-
-                    pathPlanningA = point.Position;
-                } else if (!pathPlanningB.HasValue) {
-                    UIElement canvas = (UIElement)sender;
-
-                    PointerPoint point = e.GetCurrentPoint(canvas);
-
-                    pathPlanningB = point.Position;
-                }
-            }
-
-            //ProcessPointerMoved(sender, e);
         }
 
         private void CanvasAnimatedControl_PointerReleased(object sender, PointerRoutedEventArgs e) {
@@ -183,21 +213,23 @@ namespace Tweak
         }
 
         private void ProcessPointerMoved(object sender, PointerRoutedEventArgs e) {
-            Project project = (Project)sharedDataContext;
-            Map map = project.Map;
+            if (MapPlacementMode == MapPlacementMode.Tiles) {
+                Project project = (Project)sharedDataContext;
+                Map map = project.Map;
 
-            UIElement canvas = (UIElement)sender;
+                UIElement canvas = (UIElement)sender;
 
-            PointerPoint point = e.GetCurrentPoint(canvas);
+                PointerPoint point = e.GetCurrentPoint(canvas);
 
-            int x = (int)point.Position.X;
-            int y = (int)point.Position.Y;
+                int x = (int)point.Position.X;
+                int y = (int)point.Position.Y;
 
-            if (pointerPressed) {
-                if (!deleting) {
-                    map.Tiles[x, y].Filled = true;
-                } else {
-                    map.Tiles[x, y].Filled = false;
+                if (pointerPressed) {
+                    if (!deleting) {
+                        map.Tiles[x, y].Filled = true;
+                    } else {
+                        map.Tiles[x, y].Filled = false;
+                    }
                 }
             }
         }

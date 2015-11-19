@@ -6,12 +6,29 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:converters="using:Tweak.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    x:Name="mapView">
+
+    <UserControl.Resources>
+        <converters:EnumMatchConverter x:Key="enumMatchConverter" />
+    </UserControl.Resources>
 
     <Grid>
-        <Viewbox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="Placement Mode:" VerticalAlignment="Center" />
+            <RadioButton Margin="5,0,0,0" MinWidth="0" IsChecked="{Binding ElementName=mapView, Path=MapPlacementMode, Converter={StaticResource enumMatchConverter}, ConverterParameter=Tiles, Mode=TwoWay}">Tiles</RadioButton>
+            <RadioButton Margin="15,0,0,0" MinWidth="0" IsChecked="{Binding ElementName=mapView, Path=MapPlacementMode, Converter={StaticResource enumMatchConverter}, ConverterParameter=Intersections, Mode=TwoWay}">Intersections</RadioButton>
+            <RadioButton Margin="15,0,0,0" MinWidth="0" IsChecked="{Binding ElementName=mapView, Path=MapPlacementMode, Converter={StaticResource enumMatchConverter}, ConverterParameter=Path, Mode=TwoWay}">Path</RadioButton>
+
+        </StackPanel>
+        <Viewbox Grid.Row="1">
             <canvas:CanvasAnimatedControl PointerMoved="CanvasAnimatedControl_PointerMoved" PointerPressed="CanvasAnimatedControl_PointerPressed" PointerReleased="CanvasAnimatedControl_PointerReleased" Draw="CanvasAnimatedControl_Draw" ClearColor="White" Width="{Binding Map.Tiles.Width}" Height="{Binding Map.Tiles.Height}" />
         </Viewbox>
     </Grid>

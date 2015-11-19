@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Constants>
-    <WheelRadius>0.026</WheelRadius>
     <LineWidth>0.05</LineWidth>
     <MapWidth>2.25</MapWidth>
     <MapHeight>1.5</MapHeight>
@@ -16217,15 +16216,20 @@
     <Intersections />
     <IntersectionMarkers>
       <IntersectionMarker>
-        <X1>7</X1>
-        <Y1>13</Y1>
-        <X2>7</X2>
+        <X1>5</X1>
+        <Y1>16</Y1>
+        <X2>8</X2>
         <Y2>17</Y2>
         <IntersectionId>0</IntersectionId>
-        <LeftType>Cross</LeftType>
-        <RightType>Cross</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>Cross</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>7</X1>
+        <Y1>14</Y1>
+        <X2>8</X2>
+        <Y2>16</Y2>
+        <IntersectionId>0</IntersectionId>
+        <IntersectionType>Cross</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>4</X1>
@@ -16233,549 +16237,415 @@
         <X2>8</X2>
         <Y2>14</Y2>
         <IntersectionId>0</IntersectionId>
-        <LeftType>Cross</LeftType>
-        <RightType>Cross</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>Cross</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>4</X1>
-        <Y1>17</Y1>
-        <X2>8</X2>
+        <Y1>14</Y1>
+        <X2>4</X2>
         <Y2>17</Y2>
         <IntersectionId>0</IntersectionId>
-        <LeftType>Cross</LeftType>
-        <RightType>Cross</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>Cross</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>4</X1>
-        <Y1>13</Y1>
-        <X2>4</X2>
-        <Y2>18</Y2>
-        <IntersectionId>0</IntersectionId>
-        <LeftType>Cross</LeftType>
-        <RightType>Cross</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>4</X1>
-        <Y1>6</Y1>
-        <X2>9</X2>
+        <Y1>7</Y1>
+        <X2>8</X2>
         <Y2>7</Y2>
         <IntersectionId>1</IntersectionId>
-        <LeftType>LeftTurn</LeftType>
-        <RightType>RightTurn</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>RightTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>8</X1>
+        <X1>7</X1>
         <Y1>2</Y1>
         <X2>8</X2>
         <Y2>7</Y2>
         <IntersectionId>1</IntersectionId>
-        <LeftType>LeftTurn</LeftType>
-        <RightType>RightTurn</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>LeftTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>27</X1>
         <Y1>5</Y1>
-        <X2>32</X2>
-        <Y2>8</Y2>
+        <X2>24</X2>
+        <Y2>9</Y2>
         <IntersectionId>2</IntersectionId>
-        <LeftType>RightTurn</LeftType>
-        <RightType>LeftTurn</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>LeftTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>28</X1>
-        <Y1>5</Y1>
-        <X2>26</X2>
-        <Y2>10</Y2>
-        <IntersectionId>3</IntersectionId>
-        <LeftType>RightTurn</LeftType>
-        <RightType>LeftTurn</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <Y1>4</Y1>
+        <X2>33</X2>
+        <Y2>8</Y2>
+        <IntersectionId>2</IntersectionId>
+        <IntersectionType>RightTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>45</X1>
         <Y1>2</Y1>
         <X2>45</X2>
-        <Y2>7</Y2>
-        <IntersectionId>4</IntersectionId>
-        <LeftType>TLeft</LeftType>
-        <RightType>TRight</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <Y2>6</Y2>
+        <IntersectionId>3</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>45</X1>
+        <X1>44</X1>
         <Y1>7</Y1>
-        <X2>50</X2>
+        <X2>49</X2>
         <Y2>7</Y2>
-        <IntersectionId>4</IntersectionId>
-        <LeftType>T</LeftType>
-        <RightType>Cross</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>3</IntersectionId>
+        <IntersectionType>T</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>49</X1>
+        <Y1>1</Y1>
+        <X2>49</X2>
+        <Y2>7</Y2>
+        <IntersectionId>3</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>65</X1>
         <Y1>20</Y1>
         <X2>70</X2>
         <Y2>20</Y2>
-        <IntersectionId>5</IntersectionId>
-        <LeftType>RightTurn</LeftType>
-        <RightType>LeftTurn</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>4</IntersectionId>
+        <IntersectionType>LeftTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>70</X1>
         <Y1>20</Y1>
         <X2>70</X2>
         <Y2>24</Y2>
+        <IntersectionId>4</IntersectionId>
+        <IntersectionType>RightTurn</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>85</X1>
+        <Y1>20</Y1>
+        <X2>85</X2>
+        <Y2>24</Y2>
         <IntersectionId>5</IntersectionId>
-        <LeftType>RightTurn</LeftType>
-        <RightType>LeftTurn</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>T</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>71</X1>
+        <X1>84</X1>
+        <Y1>19</Y1>
+        <X2>90</X2>
+        <Y2>20</Y2>
+        <IntersectionId>5</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>85</X1>
+        <Y1>25</Y1>
+        <X2>89</X2>
+        <Y2>25</Y2>
+        <IntersectionId>5</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>85</X1>
+        <Y1>27</Y1>
+        <X2>89</X2>
+        <Y2>27</Y2>
+        <IntersectionId>6</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>85</X1>
+        <Y1>30</Y1>
+        <X2>89</X2>
+        <Y2>30</Y2>
+        <IntersectionId>6</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>84</X1>
         <Y1>26</Y1>
-        <X2>71</X2>
+        <X2>84</X2>
         <Y2>30</Y2>
-        <IntersectionId>9</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>TRight</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>6</IntersectionId>
+        <IntersectionType>T</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>71</X1>
-        <Y1>31</Y1>
-        <X2>78</X2>
-        <Y2>30</Y2>
-        <IntersectionId>9</IntersectionId>
-        <LeftType>TRight</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <X1>85</X1>
+        <Y1>33</Y1>
+        <X2>85</X2>
+        <Y2>37</Y2>
+        <IntersectionId>7</IntersectionId>
+        <IntersectionType>LeftTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>77</X1>
-        <Y1>26</Y1>
-        <X2>77</X2>
-        <Y2>30</Y2>
-        <IntersectionId>9</IntersectionId>
-        <LeftType>TLeft</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <X1>85</X1>
+        <Y1>33</Y1>
+        <X2>89</X2>
+        <Y2>33</Y2>
+        <IntersectionId>7</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>85</X1>
         <Y1>37</Y1>
         <X2>89</X2>
         <Y2>37</Y2>
-        <IntersectionId>8</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>TLeft</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>7</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>84</X1>
-        <Y1>33</Y1>
-        <X2>89</X2>
-        <Y2>33</Y2>
+        <X1>71</X1>
+        <Y1>30</Y1>
+        <X2>78</X2>
+        <Y2>30</Y2>
         <IntersectionId>8</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>TRight</BottomType>
+        <IntersectionType>T</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>84</X1>
-        <Y1>32</Y1>
-        <X2>81</X2>
-        <Y2>36</Y2>
+        <X1>78</X1>
+        <Y1>26</Y1>
+        <X2>79</X2>
+        <Y2>30</Y2>
         <IntersectionId>8</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>LeftTurn</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>56</X1>
+        <X1>69</X1>
+        <Y1>26</Y1>
+        <X2>69</X2>
+        <Y2>30</Y2>
+        <IntersectionId>8</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>57</X1>
         <Y1>30</Y1>
         <X2>61</X2>
         <Y2>30</Y2>
-        <IntersectionId>10</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>T</BottomType>
+        <IntersectionId>9</IntersectionId>
+        <IntersectionType>T</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>56</X1>
         <Y1>26</Y1>
         <X2>56</X2>
-        <Y2>31</Y2>
-        <IntersectionId>10</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>TRight</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <Y2>30</Y2>
+        <IntersectionId>9</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>61</X1>
         <Y1>26</Y1>
-        <X2>61</X2>
+        <X2>62</X2>
         <Y2>30</Y2>
-        <IntersectionId>10</IntersectionId>
-        <LeftType>TLeft</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>9</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>42</X1>
-        <Y1>41</Y1>
-        <X2>46</X2>
-        <Y2>46</Y2>
-        <IntersectionId>12</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>RightTurn</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>38</X1>
-        <Y1>45</Y1>
-        <X2>42</X2>
-        <Y2>41</Y2>
-        <IntersectionId>12</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>LeftTurn</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>50</X1>
+        <X1>49</X1>
         <Y1>26</Y1>
         <X2>50</X2>
-        <Y2>31</Y2>
-        <IntersectionId>11</IntersectionId>
-        <LeftType>TLeft</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <Y2>30</Y2>
+        <IntersectionId>10</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>45</X1>
-        <Y1>28</Y1>
-        <X2>45</X2>
-        <Y2>32</Y2>
-        <IntersectionId>11</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>TRight</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>44</X1>
-        <Y1>33</Y1>
+        <Y1>32</Y1>
         <X2>49</X2>
         <Y2>33</Y2>
-        <IntersectionId>11</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>TLeft</BottomType>
+        <IntersectionId>10</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>37</X1>
-        <Y1>33</Y1>
-        <X2>39</X2>
-        <Y2>37</Y2>
-        <IntersectionId>13</IntersectionId>
-        <LeftType>Cross</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <X1>45</X1>
+        <Y1>27</Y1>
+        <X2>45</X2>
+        <Y2>32</Y2>
+        <IntersectionId>10</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>38</X1>
+        <Y1>37</Y1>
+        <X2>36</X2>
+        <Y2>33</Y2>
+        <IntersectionId>11</IntersectionId>
+        <IntersectionType>Cross</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>35</X1>
+        <Y1>39</Y1>
+        <X2>32</X2>
+        <Y2>35</Y2>
+        <IntersectionId>11</IntersectionId>
+        <IntersectionType>Cross</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>35</X1>
         <Y1>39</Y1>
         <X2>39</X2>
         <Y2>37</Y2>
-        <IntersectionId>13</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>Cross</BottomType>
+        <IntersectionId>11</IntersectionId>
+        <IntersectionType>Cross</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>32</X1>
         <Y1>35</Y1>
-        <X2>35</X2>
-        <Y2>33</Y2>
-        <IntersectionId>13</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>Cross</TopType>
-        <BottomType>None</BottomType>
+        <X2>36</X2>
+        <Y2>31</Y2>
+        <IntersectionId>11</IntersectionId>
+        <IntersectionType>Cross</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>31</X1>
-        <Y1>36</Y1>
-        <X2>34</X2>
+        <X1>40</X1>
+        <Y1>46</Y1>
+        <X2>42</X2>
         <Y2>40</Y2>
-        <IntersectionId>13</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>Cross</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>12</IntersectionId>
+        <IntersectionType>LeftTurn</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>42</X1>
+        <Y1>42</Y1>
+        <X2>46</X2>
+        <Y2>48</Y2>
+        <IntersectionId>12</IntersectionId>
+        <IntersectionType>RightTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>20</X1>
-        <Y1>44</Y1>
-        <X2>24</X2>
+        <Y1>42</Y1>
+        <X2>22</X2>
         <Y2>47</Y2>
-        <IntersectionId>14</IntersectionId>
-        <LeftType>TRight</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>13</IntersectionId>
+        <IntersectionType>RightTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>16</X1>
         <Y1>45</Y1>
         <X2>20</X2>
-        <Y2>42</Y2>
-        <IntersectionId>14</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>LeftTurn</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>13</X1>
-        <Y1>40</Y1>
-        <X2>16</X2>
-        <Y2>36</Y2>
-        <IntersectionId>15</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>TLeft</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>8</X1>
-        <Y1>38</Y1>
-        <X2>13</X2>
         <Y2>41</Y2>
-        <IntersectionId>15</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>T</BottomType>
+        <IntersectionId>13</IntersectionId>
+        <IntersectionType>LeftTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>9</X1>
         <Y1>38</Y1>
-        <X2>12</X2>
-        <Y2>34</Y2>
-        <IntersectionId>15</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>TRight</TopType>
-        <BottomType>None</BottomType>
+        <X2>13</X2>
+        <Y2>40</Y2>
+        <IntersectionId>14</IntersectionId>
+        <IntersectionType>T</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>13</X1>
+        <Y1>40</Y1>
+        <X2>15</X2>
+        <Y2>36</Y2>
+        <IntersectionId>14</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>8</X1>
-        <Y1>33</Y1>
-        <X2>7</X2>
-        <Y2>38</Y2>
-        <IntersectionId>16</IntersectionId>
-        <LeftType>RightTurn</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <Y1>38</Y1>
+        <X2>11</X2>
+        <Y2>33</Y2>
+        <IntersectionId>14</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>3</X1>
         <Y1>32</Y1>
-        <X2>8</X2>
+        <X2>9</X2>
         <Y2>32</Y2>
-        <IntersectionId>16</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>LeftTurn</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>15</IntersectionId>
+        <IntersectionType>LeftTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
-        <X1>16</X1>
-        <Y1>14</Y1>
-        <X2>17</X2>
-        <Y2>17</Y2>
-        <IntersectionId>17</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>TLeft</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>14</X1>
-        <Y1>15</Y1>
-        <X2>12</X2>
-        <Y2>18</Y2>
-        <IntersectionId>17</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>TRight</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <X1>7</X1>
+        <Y1>32</Y1>
+        <X2>7</X2>
+        <Y2>37</Y2>
+        <IntersectionId>15</IntersectionId>
+        <IntersectionType>RightTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>12</X1>
-        <Y1>18</Y1>
-        <X2>16</X2>
-        <Y2>19</Y2>
-        <IntersectionId>17</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>T</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>21</X1>
-        <Y1>14</Y1>
-        <X2>21</X2>
+        <Y1>13</Y1>
+        <X2>13</X2>
         <Y2>17</Y2>
-        <IntersectionId>18</IntersectionId>
-        <LeftType>RightTurn</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionId>16</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>12</X1>
+        <Y1>17</Y1>
+        <X2>16</X2>
+        <Y2>17</Y2>
+        <IntersectionId>16</IntersectionId>
+        <IntersectionType>T</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>16</X1>
+        <Y1>13</Y1>
+        <X2>16</X2>
+        <Y2>17</Y2>
+        <IntersectionId>16</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>20</X1>
-        <Y1>18</Y1>
-        <X2>26</X2>
-        <Y2>18</Y2>
-        <IntersectionId>18</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>LeftTurn</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>20</X1>
-        <Y1>20</Y1>
-        <X2>26</X2>
-        <Y2>18</Y2>
-        <IntersectionId>19</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>TLeft</TopType>
-        <BottomType>None</BottomType>
+        <Y1>13</Y1>
+        <X2>20</X2>
+        <Y2>17</Y2>
+        <IntersectionId>17</IntersectionId>
+        <IntersectionType>RightTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>21</X1>
-        <Y1>22</Y1>
-        <X2>27</X2>
-        <Y2>23</Y2>
-        <IntersectionId>19</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>TRight</BottomType>
+        <Y1>17</Y1>
+        <X2>26</X2>
+        <Y2>18</Y2>
+        <IntersectionId>17</IntersectionId>
+        <IntersectionType>LeftTurn</IntersectionType>
       </IntersectionMarker>
       <IntersectionMarker>
         <X1>26</X1>
+        <Y1>19</Y1>
+        <X2>26</X2>
+        <Y2>26</Y2>
+        <IntersectionId>18</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>21</X1>
+        <Y1>24</Y1>
+        <X2>26</X2>
+        <Y2>25</Y2>
+        <IntersectionId>18</IntersectionId>
+        <IntersectionType>TRight</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>21</X1>
         <Y1>20</Y1>
-        <X2>27</X2>
+        <X2>26</X2>
+        <Y2>19</Y2>
+        <IntersectionId>18</IntersectionId>
+        <IntersectionType>TLeft</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>20</X1>
+        <Y1>24</Y1>
+        <X2>19</X2>
+        <Y2>28</Y2>
+        <IntersectionId>19</IntersectionId>
+        <IntersectionType>LeftTurn</IntersectionType>
+      </IntersectionMarker>
+      <IntersectionMarker>
+        <X1>21</X1>
+        <Y1>25</Y1>
+        <X2>26</X2>
         <Y2>26</Y2>
         <IntersectionId>19</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>TLeft</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>85</X1>
-        <Y1>20</Y1>
-        <X2>88</X2>
-        <Y2>20</Y2>
-        <IntersectionId>6</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>TRight</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>85</X1>
-        <Y1>24</Y1>
-        <X2>88</X2>
-        <Y2>24</Y2>
-        <IntersectionId>6</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>TLeft</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>84</X1>
-        <Y1>20</Y1>
-        <X2>84</X2>
-        <Y2>24</Y2>
-        <IntersectionId>0</IntersectionId>
-        <LeftType>T</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>84</X1>
-        <Y1>26</Y1>
-        <X2>84</X2>
-        <Y2>30</Y2>
-        <IntersectionId>7</IntersectionId>
-        <LeftType>T</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>None</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>85</X1>
-        <Y1>30</Y1>
-        <X2>88</X2>
-        <Y2>30</Y2>
-        <IntersectionId>7</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>None</TopType>
-        <BottomType>TLeft</BottomType>
-      </IntersectionMarker>
-      <IntersectionMarker>
-        <X1>84</X1>
-        <Y1>26</Y1>
-        <X2>89</X2>
-        <Y2>26</Y2>
-        <IntersectionId>7</IntersectionId>
-        <LeftType>None</LeftType>
-        <RightType>None</RightType>
-        <TopType>TRight</TopType>
-        <BottomType>None</BottomType>
+        <IntersectionType>RightTurn</IntersectionType>
       </IntersectionMarker>
     </IntersectionMarkers>
   </Map>

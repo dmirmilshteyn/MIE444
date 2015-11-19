@@ -22,14 +22,8 @@
         <StackPanel>
             <TextBlock Text="Intersection Id" />
             <toolkit:NumericUpDown Value="{Binding IntersectionId, Mode=TwoWay}" Maximum="40" SmallChange="1" HorizontalAlignment="Stretch" />
-            <TextBlock Text="Top Intersection Type" />
-            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding TopType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding TopType, Mode=TwoWay}" />
-            <TextBlock Text="Bottom Intersection Type" />
-            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding BottomType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding BottomType, Mode=TwoWay}" />
-            <TextBlock Text="Left Intersection Type" />
-            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding LeftType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding LeftType, Mode=TwoWay}" />
-            <TextBlock Text="Right Intersection Type" />
-            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding RightType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding RightType, Mode=TwoWay}" />
+            <TextBlock Text="Intersection Type" />
+            <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding IntersectionType, Converter={StaticResource enumToItemsSourceProvider}}" SelectedItem="{Binding IntersectionType, Mode=TwoWay}" />
         </StackPanel>
     </Grid>
 </ContentDialog>
