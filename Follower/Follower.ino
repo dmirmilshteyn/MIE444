@@ -65,6 +65,9 @@ void setup() {
 
 	//Serial.print("Path Size: ");
 	//Serial.println(path.size);
+
+	initializeEncoders();
+	interrupts();
 }
 
 void loop() {
@@ -73,11 +76,35 @@ void loop() {
 	delay(10);
 	int currentTime;
 
+	// TODO: Debugging code
+	//MotorSpeeds newMotorSpeeds;
+	//newMotorSpeeds.left = 90;
+	//newMotorSpeeds.right = 90;
+
+	//if (newMotorSpeeds.left >= 0) {
+	//	analogWrite(BIN2_LEFT_MOTOR, 0);
+	//	analogWrite(BIN1_LEFT_MOTOR, newMotorSpeeds.left);//drives left motor forward
+	//}
+	//else {
+	//	analogWrite(BIN1_LEFT_MOTOR, 0);
+	//	analogWrite(BIN2_LEFT_MOTOR, -newMotorSpeeds.left);//drives left motor reverse
+	//}
+
+	//if (newMotorSpeeds.right >= 0) {
+	//	analogWrite(AIN2_RIGHT_MOTOR, 0);
+	//	analogWrite(AIN1_RIGHT_MOTOR, newMotorSpeeds.right);//drives right motor forward
+	//}
+	//else {
+	//	analogWrite(AIN1_RIGHT_MOTOR, 0);
+	//	analogWrite(AIN2_RIGHT_MOTOR, -newMotorSpeeds.right);//drives right motor reverse
+	//}
 
 	currentTime = millis();
 	//checkPointHandle(currentTime);
 	//followLaneAnalog(currentTime);
 	ReadIntersectionSensors();
+
+	publishEncoderData(leftMotorCount, rightMotorCount);
 
 	while (Serial.available() > 0) {
 		int command = Serial.read();

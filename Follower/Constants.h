@@ -8,13 +8,18 @@
  **********************************************/
 
  //DIGITAL PINS
-#define AIN1_RIGHT_MOTOR 3 //FORWARD
+#define AIN1_RIGHT_MOTOR 10 //FORWARD
 #define AIN2_RIGHT_MOTOR 5 //REVERSE
 #define BIN1_LEFT_MOTOR 9 //FORWARD
 #define BIN2_LEFT_MOTOR 6 //REVERSE
-#define WALL_SENSOR_1 2
+//#define WALL_SENSOR_1 2
 #define IR_DETECTOR 4
 #define ANTENNA_LED 7
+
+#define ENCODER_LEFT_MOTOR 2
+#define ENCODER_LEFT_MOTORB 11
+#define ENCODER_RIGHT_MOTOR 3
+#define ENCODER_RIGHT_MOTORB 8
 
 //ANALOG PINS
 #define LINE_FOLLOW_SENSOR_LEFT 0
@@ -29,6 +34,8 @@
  **********************************************/
 
 #define CHECKPOINT_REACTION_DURATION 5000
+#define GEAR_RATIO 100.37
+#define ENCODER_TEETH_COUNT 3
 
  //PID
  //#define Kp 3.4

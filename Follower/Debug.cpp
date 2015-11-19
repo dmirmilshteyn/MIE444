@@ -53,6 +53,14 @@ void publishIntersectionDetectionData(int frontSensor, int leftSensor, int right
 	println();
 }
 
+void publishEncoderData(int leftMotorCount, int rightMotorCount) {
+	print("!$");
+	print(leftMotorCount);
+	print("|");
+	print(rightMotorCount);
+	println();
+}
+
 void processDebugCommand(int command) {
 	switch (command) {
 	case DEBUG_REQUEST_SYNC:

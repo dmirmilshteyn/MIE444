@@ -160,6 +160,24 @@ namespace Tweak.Bluetooth
             }
         }
 
+        int leftMotorCount;
+        public int LeftMotorCount {
+            get { return leftMotorCount; }
+            set {
+                leftMotorCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int rightMotorCount;
+        public int RightMotorCount {
+            get { return rightMotorCount; }
+            set {
+                rightMotorCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
         IntersectionIdentifier intersectionIdentifier;
         public IntersectionIdentifier IntersectionIdentifier {
             get { return intersectionIdentifier; }
@@ -236,6 +254,15 @@ namespace Tweak.Bluetooth
                             }
 
                             IntersectionIdentifier.HandleIncomingData(frontIntersectionSensor, LeftIntersectionSensor, RightIntersectionSensor);
+                        }
+                        break;
+                    case '$':
+                        {
+                            line = line.Substring(2);
+
+                            string[] resultSegments = line.Split('|');
+                            LeftMotorCount = (int)float.Parse(resultSegments[0]);
+                            RightMotorCount = (int)float.Parse(resultSegments[1]);
                         }
                         break;
                 }

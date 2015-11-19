@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "LineFollower.h"
 #include "Core.h"
+#include "Localization.h"
 
 #ifndef DEBUG_H
 #define DEBUG_H
@@ -37,5 +38,6 @@ void processDebugCommand(int command);
 
 void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller);
 void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor);
+void publishEncoderData(int leftMotorCount, int rightMotorCount);
 
 #endif
