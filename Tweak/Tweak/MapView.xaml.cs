@@ -226,7 +226,7 @@ namespace Tweak
                     {
                         if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
                             if (pathPlanningA.HasValue && pathPlanningB.HasValue) {
-                                Pathfinder pathfinder = new Pathfinder(map);
+                                AStarPathfinder pathfinder = new AStarPathfinder(map);
                                 path = pathfinder.AStar(new Position((int)pathPlanningA.Value.X, (int)pathPlanningA.Value.Y), new Position((int)pathPlanningB.Value.X, (int)pathPlanningB.Value.Y));
                             }
                         } else if (e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift) && e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control)) {

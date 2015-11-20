@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Tweak.Pathfinding
 {
-    class Pathfinder
+    class AStarPathfinder
     {
         // Pathfinding based on https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
 
         Node[,] nodeMap;
 
-        public Pathfinder(Map map) {
+        public AStarPathfinder(Map map) {
             BuildNodeMap(map);
         }
 
