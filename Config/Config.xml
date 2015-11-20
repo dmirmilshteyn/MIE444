@@ -16650,8 +16650,8 @@
     </IntersectionMarkers>
     <StartPositions>
       <StartPosition>
-        <X>47</X>
-        <Y>22</Y>
+        <X>2</X>
+        <Y>53</Y>
       </StartPosition>
       <StartPosition>
         <X>59</X>
@@ -16664,14 +16664,6 @@
       <StartPosition>
         <X>87</X>
         <Y>5</Y>
-      </StartPosition>
-      <StartPosition>
-        <X>0</X>
-        <Y>16</Y>
-      </StartPosition>
-      <StartPosition>
-        <X>2</X>
-        <Y>53</Y>
       </StartPosition>
     </StartPositions>
   </Map>
