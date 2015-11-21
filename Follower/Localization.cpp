@@ -9,6 +9,8 @@ int absoluteLocationY = 0;
 double absoluteHeadingAngle = 0;
 int relativeLocationX = 0;
 int relativeLocationY = 0;
+int relativeLocationXMeters = 0; //************ADD*************
+int relativeLocationYMeters = 0; //************ADD*************
 double relativeHeadingAngle = 0; //rads...right is negative, left is positive
 void updateRelativeLocation();
 
@@ -23,7 +25,7 @@ void handleLeftMotorInterupt() {
   leftMotorCount++;
   //if(digitalRead(ENCODER_LEFT_MOTOR2)) leftMotorCount++;
   //else leftMotorCount--;
-  
+
   // TODO: Handle direction
 }
 
@@ -44,21 +46,23 @@ void updateRelativeLocation() {
   double relativeHeadingAngleDiff;
   double travelDist;
 
-  double leftEncoderDiffMetres = leftEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
-  double rightEncoderDiffMetres = rightEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
+  double leftEncoderDiffMeters = leftEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
+  double rightEncoderDiffMeters = rightEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
 
-  relativeHeadingAngleDiff = (rightEncoderDiffMetres - leftEncoderDiffMetres) / WHEEL_GAP;
+  relativeHeadingAngleDiff = (rightEncoderDiffMeters - leftEncoderDiffMeters) / WHEEL_GAP;
 
   if (abs(relativeHeadingAngleDiff) > 0.001) {
-    travelDist = ((leftEncoderDiffMetres + rightEncoderDiffMetres) * sqrt(2 - 2 * cos(relativeHeadingAngleDiff))) / (2 * relativeHeadingAngleDiff);
+    travelDist = ((leftEncoderDiffMeters + rightEncoderDiffMeters) * sqrt(2 - 2 * cos(relativeHeadingAngleDiff))) / (2 * relativeHeadingAngleDiff);
   }
-  else{
-     travelDist = ((leftEncoderDiffMetres + rightEncoderDiffMetres)  / (2));
+  else {
+    travelDist = ((leftEncoderDiffMeters + rightEncoderDiffMeters)  / (2));
   }
-  
-  relativeLocationX += cos(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
-  relativeLocationY += sin(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
 
+  relativeLocationXMeters += cos(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
+  relativeLocationXMeters += sin(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
+  
+  relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
+  relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
 
   relativeHeadingAngle += relativeHeadingAngleDiff;
 }

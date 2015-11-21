@@ -21,6 +21,8 @@ extern int absoluteLocationY;
 extern double absoluteHeadingAngle;
 extern int relativeLocationX;
 extern int relativeLocationY;
+extern int relativeLocationXMeters; //************ADD*************
+extern int relativeLocationYMeters; //************ADD*************
 extern double relativeHeadingAngle;
 extern void updateRelativeLocation();
 
