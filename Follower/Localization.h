@@ -10,13 +10,19 @@
 #include "Constants.h"
 #include "MappingConstants.h"
 #include "Mapping.h"
+#include "Math.h"
 
-extern volatile int leftMotorCount;
-extern volatile int rightMotorCount;
+extern volatile long int leftMotorCount;
+extern volatile long int rightMotorCount;
+extern long int previousLeftMotorCount;
+extern long int previousRightMotorCount;
 extern int absoluteLocationX;
 extern int absoluteLocationY;
+extern double absoluteHeadingAngle;
 extern int relativeLocationX;
 extern int relativeLocationY;
+extern double relativeHeadingAngle;
+extern void updateRelativeLocation();
 
 void initializeEncoders();
 void handleLeftMotorInterupt();
