@@ -25,6 +25,8 @@ extern int relativeLocationXMeters; //************ADD*************
 extern int relativeLocationYMeters; //************ADD*************
 extern double relativeHeadingAngle;
 extern void updateRelativeLocation();
+extern void correctRelativeAngle();
+extern bool correctRelativeAngleDone;
 
 void initializeEncoders();
 void handleLeftMotorInterupt();

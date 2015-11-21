@@ -13,7 +13,8 @@ int relativeLocationXMeters = 0; //************ADD*************
 int relativeLocationYMeters = 0; //************ADD*************
 double relativeHeadingAngle = 0; //rads...right is negative, left is positive
 void updateRelativeLocation();
-
+void correctRelativeAngle();
+bool correctRelativeAngleDone = false;
 
 void initializeEncoders() {
   attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_MOTOR), handleLeftMotorInterupt, RISING);
@@ -36,7 +37,20 @@ void handleRightMotorInterupt() {
   // TODO: Handle direction
 }
 
-
+//if robot is placed at an angle with the line, this code will correct the angle and position after the robot has travelled 0.4m
+void correctRelativeAngle() {
+  double travelDistFromStart = sqrt(pow(relativeLocationXMeters, 2) + pow(relativeLocationYMeters, 2));
+  double relativeCorrectionAngle;
+  if (travelDistFromStart > 0.4) {
+    relativeCorrectionAngle = atan(relativeLocationYMeters / relativeLocationXMeters);
+    relativeHeadingAngle -= relativeCorrectionAngle;
+    relativeLocationXMeters = travelDistFromStart;
+    relativeLocationYMeters = 0;
+    relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
+    relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
+    correctRelativeAngleDone = true;
+  }
+}
 void updateRelativeLocation() {
   int leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
   previousLeftMotorCount = leftMotorCount;
@@ -60,11 +74,15 @@ void updateRelativeLocation() {
 
   relativeLocationXMeters += cos(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
   relativeLocationXMeters += sin(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
-  
+
   relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
   relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
 
   relativeHeadingAngle += relativeHeadingAngleDiff;
+
+  if (correctRelativeAngleDone == false) {
+    correctRelativeAngle();
+  }
 }
 
 
