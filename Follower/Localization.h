@@ -13,6 +13,10 @@
 
 extern volatile int leftMotorCount;
 extern volatile int rightMotorCount;
+extern int absoluteLocationX;
+extern int absoluteLocationY;
+extern int relativeLocationX;
+extern int relativeLocationY;
 
 void initializeEncoders();
 void handleLeftMotorInterupt();
