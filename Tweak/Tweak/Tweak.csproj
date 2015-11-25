@@ -123,6 +123,8 @@
     <Compile Include="Converters\EnumToItemsSourceProvider.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Intersection.cs" />
+    <Compile Include="Pathfinding\IntersectionCostmapGenerator.cs" />
+    <Compile Include="Pathfinding\IntersectionCostmapNode.cs" />
     <Compile Include="IntersectionIdentifier.cs" />
     <Compile Include="IntersectionMarker.cs" />
     <Compile Include="IntersectionMarkerConfiguration.xaml.cs">

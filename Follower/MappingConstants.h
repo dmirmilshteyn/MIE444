@@ -15,6 +15,5 @@
 
 #define MAP_TILES_WIDTH 90
 #define MAP_TILES_HEIGHT 60
-#define WHEEL_GAP 0.2
 
 #endif

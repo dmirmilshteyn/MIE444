@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tweak.Pathfinding;
 using Windows.Storage;
 
 namespace Tweak
@@ -110,6 +111,29 @@ namespace Tweak
                         writer.WriteLine();
                     }
                     writer.WriteLine("};");
+                    writer.WriteLine();
+
+                    // Build the intersection costmap
+                    IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
+                    int[,] costmap = costmapGenerator.BuildCostmap();
+
+                    // Write out the costmap for intersections
+                    writer.WriteLine($"const PROGMEM byte intersection_cost_map[{costmap.GetLength(0)}][{costmap.GetLength(1)}] = {{");
+                    for (int y = 0; y < costmap.GetLength(1); y++) {
+                        writer.Write(" {");
+                        for (int x = 0; x < costmap.GetLength(0); x++) {
+                            writer.Write($" {costmap[x, y]}");
+                            if (x != costmap.GetLength(0) - 1) {
+                                writer.Write(",");
+                            }
+                        }
+                        writer.Write(" }");
+                        if (y != costmap.GetLength(1)) {
+                            writer.Write(",");
+                        }
+                        writer.WriteLine();
+                    }
+                    writer.WriteLine("}");
 
                     writer.WriteLine();
                     writer.WriteLine("#endif");

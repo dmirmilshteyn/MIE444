@@ -96,6 +96,9 @@ namespace Tweak
             }
 
             for (int i = 0; i < map.StartPositions.Count; i++) {
+                if (i > 0) {
+                    continue;
+                }
                 StartPosition startPosition = map.StartPositions[i];
 
                 args.DrawingSession.DrawRectangle(new Rect(startPosition.X, startPosition.Y, 1, 1), Colors.Purple);
@@ -198,7 +201,21 @@ namespace Tweak
                     break;
                 case MapPlacementMode.StartPositions:
                     {
-                        if (e.KeyModifiers != Windows.System.VirtualKeyModifiers.Control) {
+                        if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift) {
+                            IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
+
+                            //int result = costmapGenerator.BuildCostmapPath(new Position(map.StartPositions[0].X, map.StartPositions[0].Y), 11);
+                            //System.Diagnostics.Debug.WriteLine(result);
+
+                            int[,] costmap = costmapGenerator.BuildCostmap();
+                            for (int y = 0; y < costmap.GetLength(1); y++) {
+                                for (int x = 0; x < costmap.GetLength(0); x++) {
+                                    System.Diagnostics.Debug.Write(costmap[x, y]);
+                                    System.Diagnostics.Debug.Write(", ");
+                                }
+                                System.Diagnostics.Debug.WriteLine("");
+                            }
+                        } else if (e.KeyModifiers != Windows.System.VirtualKeyModifiers.Control) {
                             UIElement canvas = (UIElement)sender;
 
                             PointerPoint point = e.GetCurrentPoint(canvas);
@@ -244,7 +261,7 @@ namespace Tweak
                     }
                     break;
             }
-            
+
         }
 
         private void ProcessPointerMoved(object sender, PointerRoutedEventArgs e) {
