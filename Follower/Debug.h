@@ -38,6 +38,6 @@ void processDebugCommand(int command);
 
 void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller);
 void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor);
-void publishEncoderData(int leftMotorCount, int rightMotorCount);
+void publishEncoderData(int relativePositionX, int relativePositionY);
 
 #endif

@@ -1,4 +1,5 @@
 #include "Localization.h"
+#include "digitalWriteFast.h"
 
 volatile long int leftMotorCount;
 volatile long int rightMotorCount;
@@ -17,23 +18,26 @@ void correctRelativeAngle();
 bool correctRelativeAngleDone = false;
 
 void initializeEncoders() {
-  attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_MOTOR), handleLeftMotorInterupt, RISING);
-  attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_MOTOR), handleRightMotorInterupt, RISING);
+  attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_MOTOR), handleLeftMotorInterupt, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_MOTOR), handleRightMotorInterupt, CHANGE);
+
+  pinMode(ENCODER_LEFT_MOTORB, INPUT);
+  pinMode(ENCODER_RIGHT_MOTORB, INPUT);
 }
 
 void handleLeftMotorInterupt() {
   // Note: 1 wheel rotation = GEAR_RATIO * ENCODER_TEETH_COUNT = 100.37 * 12 = 1204.44 clicks
-  leftMotorCount++;
-  //if(digitalRead(ENCODER_LEFT_MOTOR2)) leftMotorCount++;
-  //else leftMotorCount--;
+  //leftMotorCount++;
+  if(digitalReadFast(ENCODER_LEFT_MOTORB)) leftMotorCount++;
+  else leftMotorCount--;
 
   // TODO: Handle direction
 }
 
 void handleRightMotorInterupt() {
-  rightMotorCount++;
-  //if(digitalRead(ENCODER_RIGHT_MOTOR2)) rightMotorCount++;
-  //else leftMotorCount--;
+  //rightMotorCount++;
+  if(digitalReadFast(ENCODER_RIGHT_MOTORB)) rightMotorCount++;
+  else leftMotorCount--;
   // TODO: Handle direction
 }
 
