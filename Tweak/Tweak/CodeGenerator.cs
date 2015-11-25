@@ -115,7 +115,7 @@ namespace Tweak
 
                     // Build the intersection costmap
                     IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
-                    int[,] costmap = costmapGenerator.BuildCostmap();
+                    int[,] costmap = costmapGenerator.BuildCostmap(false);
 
                     // Write out the costmap for intersections
                     writer.WriteLine($"const PROGMEM byte intersection_cost_map[{costmap.GetLength(0)}][{costmap.GetLength(1)}] = {{");

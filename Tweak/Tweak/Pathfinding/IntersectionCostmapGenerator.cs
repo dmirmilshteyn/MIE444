@@ -56,21 +56,20 @@ namespace Tweak.Pathfinding
             return markers;
         }
 
-        public int[,] BuildCostmap() {
-            List<IntersectionMarker> uniqueIntersections = CountUniqueIntersectionMarkers();
+        public int[,] BuildCostmap(bool onlyUnique) {
+            IReadOnlyList<IntersectionMarker> selectedIntersections;
+            if (onlyUnique) {
+                selectedIntersections = CountUniqueIntersectionMarkers();
+            } else {
+                selectedIntersections = intersectionMarkers;
+            }
 
-            int[,] costmap = new int[uniqueIntersections.Count, uniqueIntersections.Count];
+            int[,] costmap = new int[selectedIntersections.Count, selectedIntersections.Count];
 
-            for (int x = 0; x < uniqueIntersections.Count; x++) {
-                HashSet<int> completedIntersections = new HashSet<int>();
-                HashSet<int> completedStartIntersections = new HashSet<int>();
-                for (int y = 0; y < uniqueIntersections.Count; y++) {
-                    var startingMarker = uniqueIntersections[x];
-                    var endingMarker = uniqueIntersections[y];
-
-                    if (completedIntersections.Contains(endingMarker.IntersectionId) ) {
-                        continue;
-                    }
+            for (int x = 0; x < selectedIntersections.Count; x++) {
+                for (int y = 0; y < selectedIntersections.Count; y++) {
+                    var startingMarker = selectedIntersections[x];
+                    var endingMarker = selectedIntersections[y];
 
                     if (x == y) {
                         costmap[x, y] =-1;
@@ -79,10 +78,7 @@ namespace Tweak.Pathfinding
 
                     int cost = BuildCostmapPath(new Position(startingMarker.X1, startingMarker.Y1), endingMarker.IntersectionId);
                     costmap[x, y] = cost;
-
-                    completedIntersections.Add(endingMarker.IntersectionId);
                 }
-                completedIntersections.Clear();
             }
 
             return costmap;

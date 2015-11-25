@@ -204,10 +204,7 @@ namespace Tweak
                         if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift) {
                             IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
 
-                            //int result = costmapGenerator.BuildCostmapPath(new Position(map.StartPositions[0].X, map.StartPositions[0].Y), 11);
-                            //System.Diagnostics.Debug.WriteLine(result);
-
-                            int[,] costmap = costmapGenerator.BuildCostmap();
+                            int[,] costmap = costmapGenerator.BuildCostmap(false);
                             for (int y = 0; y < costmap.GetLength(1); y++) {
                                 for (int x = 0; x < costmap.GetLength(0); x++) {
                                     System.Diagnostics.Debug.Write(costmap[x, y]);
