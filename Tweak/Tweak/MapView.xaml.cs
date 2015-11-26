@@ -203,15 +203,26 @@ namespace Tweak
                     {
                         if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift) {
                             IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
+                            int testDistance = 1;
 
-                            int[,] costmap = costmapGenerator.BuildCostmap(false);
-                            for (int y = 0; y < costmap.GetLength(1); y++) {
-                                for (int x = 0; x < costmap.GetLength(0); x++) {
-                                    System.Diagnostics.Debug.Write(costmap[x, y]);
-                                    System.Diagnostics.Debug.Write(", ");
+                            List<Tuple<int, IntersectionCostmapPath>> allPaths = new List<Tuple<int, IntersectionCostmapPath>>();
+
+                            for (int i = 0; i < map.StartPositions.Count; i++) {
+                                var paths = costmapGenerator.BuildCostmapPath(new Position(map.StartPositions[i].X, map.StartPositions[i].Y), -1, testDistance).Distinct(new IntersectionCostmapPathComparer());
+
+                                foreach (var path in paths) {
+                                    allPaths.Add(Tuple.Create(i, path));
                                 }
-                                System.Diagnostics.Debug.WriteLine("");
                             }
+
+                            //int[,] costmap = costmapGenerator.BuildCostmap(false);
+                            //for (int y = 0; y < costmap.GetLength(1); y++) {
+                            //    for (int x = 0; x < costmap.GetLength(0); x++) {
+                            //        System.Diagnostics.Debug.Write(costmap[x, y]);
+                            //        System.Diagnostics.Debug.Write(", ");
+                            //    }
+                            //    System.Diagnostics.Debug.WriteLine("");
+                            //}
                         } else if (e.KeyModifiers != Windows.System.VirtualKeyModifiers.Control) {
                             UIElement canvas = (UIElement)sender;
 

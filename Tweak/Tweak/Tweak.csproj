@@ -142,6 +142,8 @@
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ObservableObject.cs" />
+    <Compile Include="Pathfinding\IntersectionCostmapPath.cs" />
+    <Compile Include="Pathfinding\IntersectionCostmapPathComparer.cs" />
     <Compile Include="Pathfinding\Node.cs" />
     <Compile Include="Pathfinding\AStarPathfinder.cs" />
     <Compile Include="Pathfinding\Position.cs" />
