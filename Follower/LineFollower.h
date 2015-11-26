@@ -20,6 +20,8 @@ extern float integral;
 extern int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
 extern int stallPWM; //PWM at which the motor stalls
 
+extern int determineStallPWMDone;//states when determineStallPWMD() is complete
+
 MotorSpeeds driveMotorsPID(float controller, float derivative);
 float getLaneError();
 void followLaneAnalog(int currentTime);
