@@ -86,26 +86,39 @@ namespace Tweak
                     writer.WriteLine($"}};");
                     writer.WriteLine();
 
+                    // Write out the intersection type constants
+                    string[] names = Enum.GetNames(typeof(IntersectionType));
+                    for (int i = 0; i < names.Length; i++) {
+                        var intersectionTypeName = names[i];
+                        writer.WriteLine($"#define INTERSECTION_TYPE_{intersectionTypeName.ToUpper()} {i}");
+                    }
+                    writer.WriteLine();
+
                     // Write out the intersection datatype
                     writer.WriteLine("struct intersection {");
-                    writer.WriteLine("  short TopLeft;");
-                    writer.WriteLine("  short TopRight;");
-                    writer.WriteLine("  short BottomLeft;");
-                    writer.WriteLine("  short BottomRight;");
+                    writer.WriteLine("  byte id;");
+                    writer.WriteLine();
+                    writer.WriteLine("  byte x1;");
+                    writer.WriteLine("  byte y1;");
+                    writer.WriteLine("  byte x2;");
+                    writer.WriteLine("  byte y2;");
+                    writer.WriteLine();
+                    writer.WriteLine("  byte type;");
                     writer.WriteLine("};");
                     writer.WriteLine();
 
                     // Write out the values for each intersection
-                    writer.WriteLine($"intersection intersections[{map.Intersections.Count}] = {{");
-                    for (int i = 0; i < map.Intersections.Count; i++) {
+                    writer.WriteLine($"const PROGMEM intersection intersections[{map.IntersectionMarkers.Count}] = {{");
+                    for (int i = 0; i < map.IntersectionMarkers.Count; i++) {
                         writer.Write("  { ");
 
-                        var intersectionLocations = map.Intersections[i].Export(map);
-                        writer.Write($"{intersectionLocations.Item1}, {intersectionLocations.Item2}, {intersectionLocations.Item3}, {intersectionLocations.Item4}");
+                        //var intersectionLocations = map.Intersections[i].Export(map);
+                        var marker = map.IntersectionMarkers[i];
+                        writer.Write($"{marker.IntersectionId}, {marker.X1}, {marker.Y1}, {marker.X2}, {marker.Y2}, {(int)marker.IntersectionType}");
 
                         writer.Write(" }");
 
-                        if (i < map.Intersections.Count - 1) {
+                        if (i < map.IntersectionMarkers.Count - 1) {
                             writer.Write(", ");
                         }
                         writer.WriteLine();
