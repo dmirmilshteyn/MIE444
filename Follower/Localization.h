@@ -11,6 +11,7 @@
 #include "MappingConstants.h"
 #include "Mapping.h"
 #include "Math.h"
+#include "LineFollower.h"
 
 extern volatile long int leftMotorCount;
 extern volatile long int rightMotorCount;
@@ -21,8 +22,8 @@ extern int absoluteLocationY;
 extern double absoluteHeadingAngle;
 extern int relativeLocationX;
 extern int relativeLocationY;
-extern int relativeLocationXMeters; //************ADD*************
-extern int relativeLocationYMeters; //************ADD*************
+extern double relativeLocationXMeters; //************ADD*************
+extern double relativeLocationYMeters; //************ADD*************
 extern double relativeHeadingAngle;
 extern void updateRelativeLocation();
 extern void correctRelativeAngle();

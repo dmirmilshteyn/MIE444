@@ -22,95 +22,96 @@ float Kd = 400; //332; //450; //100;
 
 float DERIVATIVE_SPEED_ADJUST = 0;
 void setup() {
-	// put your setup code here, to run once:
-	pinMode(AIN1_RIGHT_MOTOR, OUTPUT);
-	pinMode(BIN1_LEFT_MOTOR, OUTPUT);
-	pinMode(AIN2_RIGHT_MOTOR, OUTPUT);
-	pinMode(BIN2_LEFT_MOTOR, OUTPUT);
-	pinMode(IR_DETECTOR, INPUT);
-	pinMode(ANTENNA_LED, OUTPUT);
-	lastError = 0;
-	averageMotorSpeed = 75;
-	Serial.begin(9600);
-	stallPWM = 65;
-	previousTime = millis();
+  // put your setup code here, to run once:
+  pinMode(AIN1_RIGHT_MOTOR, OUTPUT);
+  pinMode(BIN1_LEFT_MOTOR, OUTPUT);
+  pinMode(AIN2_RIGHT_MOTOR, OUTPUT);
+  pinMode(BIN2_LEFT_MOTOR, OUTPUT);
+  pinMode(IR_DETECTOR, INPUT);
+  pinMode(ANTENNA_LED, OUTPUT);
+  lastError = 0;
+  averageMotorSpeed = 75;
+  Serial.begin(9600);
+  stallPWM = 65;
+  previousTime = millis();
 
-	//MoveRight();
+  //MoveRight();
 
 
-	//SetMapElement(0, 0, true);
+  //SetMapElement(0, 0, true);
 
-	//Serial.println(AccessMapElement(36, 4));
-	//Serial.println(AccessMapElement(20, 4));
+  //Serial.println(AccessMapElement(36, 4));
+  //Serial.println(AccessMapElement(20, 4));
 
-	//Pathfinder pathfinder;
-	//PathfinderResult path = pathfinder.FindPath(Position(47, 19), Position(47, 18));
+  //Pathfinder pathfinder;
+  //PathfinderResult path = pathfinder.FindPath(Position(47, 19), Position(47, 18));
 
-	//Serial.println("Values:");
-	//for (int i = 0; i < path.size; i++) {
-	//	Serial.println(path.path[i]->y);
-	//}
+  //Serial.println("Values:");
+  //for (int i = 0; i < path.size; i++) {
+  //	Serial.println(path.path[i]->y);
+  //}
 
-	////  Expected output: 
-	////  19
-	////  18
-	////  17
-	////  16
-	////  15
-	////  14
-	////  13
-	////  12
-	////  11
-	////  10
+  ////  Expected output:
+  ////  19
+  ////  18
+  ////  17
+  ////  16
+  ////  15
+  ////  14
+  ////  13
+  ////  12
+  ////  11
+  ////  10
 
-	//Serial.print("Path Size: ");
-	//Serial.println(path.size);
+  //Serial.print("Path Size: ");
+  //Serial.println(path.size);
 
-	initializeEncoders();
-	interrupts();
+  initializeEncoders();
+  interrupts();
 
-	delay(2000);
+  delay(10000);
 }
 
 void loop() {
-	//Serial.print("Digital: ");
-	//Serial.println(digitalRead(IR_DETECTOR));
-	delay(10);
-	int currentTime;
+  //Serial.print("Digital: ");
+  //Serial.println(digitalRead(IR_DETECTOR));
+  delay(10);
+  int currentTime;
 
-	// TODO: Debugging code
-	//MotorSpeeds newMotorSpeeds;
-	//newMotorSpeeds.left = 90;
-	//newMotorSpeeds.right = 90;
+  // TODO: Debugging code
+  //MotorSpeeds newMotorSpeeds;
+  //newMotorSpeeds.left = 90;
+  //newMotorSpeeds.right = 90;
 
-	//if (newMotorSpeeds.left >= 0) {
-	//	analogWrite(BIN2_LEFT_MOTOR, 0);
-	//	analogWrite(BIN1_LEFT_MOTOR, newMotorSpeeds.left);//drives left motor forward
-	//}
-	//else {
-	//	analogWrite(BIN1_LEFT_MOTOR, 0);
-	//	analogWrite(BIN2_LEFT_MOTOR, -newMotorSpeeds.left);//drives left motor reverse
-	//}
+  //if (newMotorSpeeds.left >= 0) {
+  //	analogWrite(BIN2_LEFT_MOTOR, 0);
+  //	analogWrite(BIN1_LEFT_MOTOR, newMotorSpeeds.left);//drives left motor forward
+  //}
+  //else {
+  //	analogWrite(BIN1_LEFT_MOTOR, 0);
+  //	analogWrite(BIN2_LEFT_MOTOR, -newMotorSpeeds.left);//drives left motor reverse
+  //}
 
-	//if (newMotorSpeeds.right >= 0) {
-	//	analogWrite(AIN2_RIGHT_MOTOR, 0);
-	//	analogWrite(AIN1_RIGHT_MOTOR, newMotorSpeeds.right);//drives right motor forward
-	//}
-	//else {
-	//	analogWrite(AIN1_RIGHT_MOTOR, 0);
-	//	analogWrite(AIN2_RIGHT_MOTOR, -newMotorSpeeds.right);//drives right motor reverse
-	//}
+  //if (newMotorSpeeds.right >= 0) {
+  //	analogWrite(AIN2_RIGHT_MOTOR, 0);
+  //	analogWrite(AIN1_RIGHT_MOTOR, newMotorSpeeds.right);//drives right motor forward
+  //}
+  //else {
+  //	analogWrite(AIN1_RIGHT_MOTOR, 0);
+  //	analogWrite(AIN2_RIGHT_MOTOR, -newMotorSpeeds.right);//drives right motor reverse
+  //}
 
-	currentTime = millis();
-	//checkPointHandle(currentTime);
-	followLaneAnalog(currentTime);
-	ReadIntersectionSensors();
-	updateRelativeLocation();
+  currentTime = millis();
+  //checkPointHandle(currentTime);
+  followLaneAnalog(currentTime);
+  ReadIntersectionSensors();
+  updateRelativeLocation();
 
-	publishEncoderData(leftMotorCount, rightMotorCount);
+  publishEncoderData(leftMotorCount, rightMotorCount);
+  publishRelativeLocation();
 
-	while (Serial.available() > 0) {
-		int command = Serial.read();
-		processDebugCommand(command);
-	}
+  while (Serial.available() > 0) {
+    int command = Serial.read();
+    processDebugCommand(command);
+  }
 }

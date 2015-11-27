@@ -43,7 +43,7 @@
 #define WHEEL_RADIUS 0.035
 #define ROBOT_WIDTH 0.21
 
-#define WHEEL_GAP 0.2
+#define WHEEL_GAP 0.208
 
  //PID
  //#define Kp 3.4

@@ -42,5 +42,6 @@ void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float
 void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor);
 void publishEncoderData(int relativePositionX, int relativePositionY);
 void publishMap();
+void publishRelativeLocation();
 
 #endif

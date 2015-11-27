@@ -16,6 +16,8 @@ extern float readRight;
 
 extern float lastError;
 extern float integral;
+extern bool leftForward;
+extern bool rightForward;
 
 extern int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
 extern int stallPWM; //PWM at which the motor stalls
