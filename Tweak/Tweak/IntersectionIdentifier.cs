@@ -30,6 +30,9 @@ namespace Tweak
         IntersectionType currentTestIntersection;
         double lastTick;
 
+        int lastLeftEncoder;
+        int lastRightEncoder;
+
         IntersectionType intersection;
         public IntersectionType DetectedIntersection {
             get { return intersection; }
@@ -95,21 +98,30 @@ namespace Tweak
                 currentTestIntersection = IntersectionType.Cross;
             }
 
-            double currentTick = (encoderLeft + encoderRight) / 2;
-            if (currentTestIntersection != previousTestIntersection) {
-                previousTestIntersection = currentTestIntersection;
-                lastTick = currentTick;
+            if (Math.Abs(encoderLeft - lastLeftEncoder) > 75) {
+                DetectedIntersection = currentTestIntersection;
             } else {
-                double testTick = lastTick + GetEncoderDistanceTicks();
-                if (currentTick > testTick) {
-                    DetectedIntersection = currentTestIntersection;
+                double currentTick = (encoderLeft + encoderRight) / 2;
+                if (currentTestIntersection != previousTestIntersection) {
+                    DetectedIntersection = IntersectionType.None;
+
+                    previousTestIntersection = currentTestIntersection;
                     lastTick = currentTick;
+                } else {
+                    double testTick = lastTick + GetEncoderDistanceTicks();
+                    if (currentTick > testTick) {
+                        DetectedIntersection = currentTestIntersection;
+                        lastTick = currentTick;
+                    }
                 }
             }
+
+            lastLeftEncoder = encoderLeft;
+            lastRightEncoder = encoderRight;
         }
 
         private double GetEncoderDistanceTicks() {
-            double result = Math.Round(100.37 * 6 * (3f / 22));
+            double result = Math.Round(100.37 * 6 * (1f / 22));
 
             return result;
             //return 22 / 3 * 3/ 22;

@@ -137,7 +137,7 @@ void determineStallPWM() {
 			analogWrite(BIN1_LEFT_MOTOR, i);//drives left motor forward
 			analogWrite(AIN1_RIGHT_MOTOR, i);//drives right motor forward
 			i++;
-		} while (leftMotorCount < GEAR_RATIO * ENCODER_TEETH_COUNT / 100 || rightMotorCount < GEAR_RATIO * ENCODER_TEETH_COUNT / 100); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
+		} while (leftMotorCount < GEAR_RATIO * ENCODER_TEETH_COUNT / 50 || rightMotorCount < GEAR_RATIO * ENCODER_TEETH_COUNT / 50); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
 		stallPWM = i * 1.4;//1.2;
 		averageMotorSpeed = (255 - stallPWM)*0.22 + stallPWM;
 		leftMotorCount = 0;
