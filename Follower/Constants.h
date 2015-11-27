@@ -34,7 +34,7 @@
  **********************************************/
 #define CHECKPOINT_REACTION_DURATION 5000
 #define GEAR_RATIO 100.37
-#define ENCODER_TEETH_COUNT 12
+#define ENCODER_TEETH_COUNT 6
 #define CHECKPOINTS_TOTAL 2 //total number of checkpoints in the maze
 
 /**********************************************

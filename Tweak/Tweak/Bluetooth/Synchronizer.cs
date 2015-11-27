@@ -70,6 +70,17 @@ namespace Tweak.Bluetooth
             }
         }
 
+        int stallPWM;
+        public int StallPWM {
+            get { return stallPWM; }
+            set {
+                stallPWM = value;
+                RaisePropertyChanged();
+
+                SendCommand(BTCommand.StallPWM, stallPWM);
+            }
+        }
+
         string outputLogString;
         public string OutputLogString {
             get { return outputLogString; }
@@ -160,6 +171,24 @@ namespace Tweak.Bluetooth
             }
         }
 
+        int leftLineSensor;
+        public int LeftLineSensor {
+            get { return leftLineSensor; }
+            set {
+                leftLineSensor = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        int rightLineSensor;
+        public int RightLineSensor {
+            get { return rightLineSensor; }
+            set {
+                rightLineSensor = value;
+                RaisePropertyChanged();
+            }
+        }
+
         int leftMotorCount;
         public int LeftMotorCount {
             get { return leftMotorCount; }
@@ -225,6 +254,7 @@ namespace Tweak.Bluetooth
                             Kd = float.Parse(resultSegments[2]);
                             SpeedAdjust = float.Parse(resultSegments[3]);
                             AverageSpeed = Int32.Parse(resultSegments[4]);
+                            StallPWM = Int32.Parse(resultSegments[5]);
                         }
                         break;
                     case '?':
@@ -238,6 +268,9 @@ namespace Tweak.Bluetooth
                             Controller = float.Parse(resultSegments[3]);
                             LeftSpeed = float.Parse(resultSegments[4]);
                             RightSpeed = float.Parse(resultSegments[5]);
+
+                            LeftLineSensor = (int)float.Parse(resultSegments[6]);
+                            RightLineSensor = (int)float.Parse(resultSegments[7]);
                         }
                         break;
                     case '#':
@@ -253,7 +286,25 @@ namespace Tweak.Bluetooth
                                 IntersectionIdentifier.Start();
                             }
 
-                            IntersectionIdentifier.HandleIncomingData(frontIntersectionSensor, LeftIntersectionSensor, RightIntersectionSensor);
+                            IntersectionIdentifier.HandleIncomingData(frontIntersectionSensor, LeftIntersectionSensor, RightIntersectionSensor, LeftMotorCount, RightMotorCount);
+                        }
+                        break;
+                    case '*':
+                        {
+                            line = line.Substring(2);
+
+                            string[] resultSegments = line.Split('|');
+                            int width = (int)float.Parse(resultSegments[0]);
+                            int height = (int)float.Parse(resultSegments[1]);
+
+                            bool[,] map = new bool[width, height];
+                            for (int x = 0; x < width; x++) {
+                                for (int y = 0; y < height; y++) {
+                                    map[x, y] = bool.Parse(resultSegments[2 + (y * width + x)]);
+                                }
+                            }
+
+                            System.Diagnostics.Debug.WriteLine("Test");
                         }
                         break;
                     case '$':

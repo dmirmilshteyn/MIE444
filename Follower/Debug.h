@@ -10,6 +10,7 @@
 // **** Debug Commands ****
 // ************************
 #define DEBUG_REQUEST_SYNC '!'
+#define DEBUG_SYNC_MAP 'M'
 #define DEBUG_OUTPUT_STATE '0'
 
 #define DEBUG_SET_P '1'
@@ -23,6 +24,7 @@
 
 #define DEBUG_SPEED_ADJUST 'z'
 #define DEBUG_AVERAGE_SPEED 'x'
+#define DEBUG_STALL_PWM 'y'
 
 extern int averageMotorSpeed;
 
@@ -36,8 +38,9 @@ int readDebugCommand();
 
 void processDebugCommand(int command);
 
-void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller);
+void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor);
 void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor);
 void publishEncoderData(int relativePositionX, int relativePositionY);
+void publishMap();
 
 #endif

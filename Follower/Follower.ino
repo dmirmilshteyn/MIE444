@@ -16,9 +16,9 @@
 #include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
-float Kp = 0.6; //0.3;
+float Kp = 1; // 0.6; //0.3;
 float Ki = 0.00;
-float Kd = 450; //100;
+float Kd = 400; //332; //450; //100;
 
 float DERIVATIVE_SPEED_ADJUST = 0;
 void setup() {
@@ -30,7 +30,7 @@ void setup() {
 	pinMode(IR_DETECTOR, INPUT);
 	pinMode(ANTENNA_LED, OUTPUT);
 	lastError = 0;
-	averageMotorSpeed = 90;
+	averageMotorSpeed = 75;
 	Serial.begin(9600);
 	stallPWM = 65;
 	previousTime = millis();
@@ -68,6 +68,8 @@ void setup() {
 
 	initializeEncoders();
 	interrupts();
+
+	delay(2000);
 }
 
 void loop() {

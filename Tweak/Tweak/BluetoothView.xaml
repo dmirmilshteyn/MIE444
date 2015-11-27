@@ -38,6 +38,8 @@
                 <toolkit:NumericUpDown Value="{Binding ConnectedDevice.Synchronizer.SpeedAdjust, Mode=TwoWay}" SmallChange="0.005" ValueFormat="0.0000" HorizontalAlignment="Stretch" Maximum="9999" />
                 <TextBlock Text="Average Speed" FontWeight="Bold" HorizontalAlignment="Center" />
                 <toolkit:NumericUpDown Value="{Binding ConnectedDevice.Synchronizer.AverageSpeed, Mode=TwoWay}" SmallChange="1" ValueFormat="0" HorizontalAlignment="Stretch" Maximum="9999" />
+                <TextBlock Text="Stall PWM" FontWeight="Bold" HorizontalAlignment="Center" />
+                <toolkit:NumericUpDown Value="{Binding ConnectedDevice.Synchronizer.StallPWM, Mode=TwoWay}" SmallChange="1" ValueFormat="0" HorizontalAlignment="Stretch" Maximum="9999" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -46,6 +48,8 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
@@ -80,6 +84,12 @@
 
                     <TextBlock Grid.Column="3" Grid.Row="4" Text="Intersection" FontWeight="Bold" HorizontalAlignment="Center" />
                     <TextBlock Grid.Column="3" Grid.Row="5" Text="{Binding ConnectedDevice.Synchronizer.IntersectionIdentifier.DetectedIntersection}" HorizontalAlignment="Center" />
+
+                    <TextBlock Grid.Column="0" Grid.Row="6" Text="Left Line Sensor" FontWeight="Bold" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="0" Grid.Row="7" Text="{Binding ConnectedDevice.Synchronizer.LeftLineSensor}" HorizontalAlignment="Center" />
+
+                    <TextBlock Grid.Column="1" Grid.Row="6" Text="Right Line Sensor" FontWeight="Bold" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding ConnectedDevice.Synchronizer.RightLineSensor}" HorizontalAlignment="Center" />
                 </Grid>
                 <TextBlock Text="Raw" FontWeight="Bold" HorizontalAlignment="Center" />
                 <Grid>

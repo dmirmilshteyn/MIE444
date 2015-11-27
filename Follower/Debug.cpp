@@ -27,7 +27,7 @@ int readDebugCommand() {
 	}
 }
 
-void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller) {
+void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor) {
 	print("!?");
 	print(currentError);
 	print("|");
@@ -40,6 +40,10 @@ void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float
 	print(motorSpeeds.left);
 	print("|");
 	print(motorSpeeds.right);
+	print("|");
+	print(leftLineSensor);
+	print("|");
+	print(rightLineSensor);
 	println();
 }
 
@@ -61,8 +65,28 @@ void publishEncoderData(int leftMotorCount, int rightMotorCount) {
 	println();
 }
 
+void publishMap() {
+	print("!*");
+	Serial.print(MAP_TILES_WIDTH);
+	Serial.print("|");
+	Serial.print(MAP_TILES_HEIGHT);
+	/*for (int x = 0; x < MAP_TILES_WIDTH; x++) {
+		for (int y = 0; y < MAP_TILES_HEIGHT; y++) {
+			bool blocked = AccessMapElement(x, y);
+
+			Serial.print(blocked);
+			Serial.print("|");
+		}
+	}*/
+	Serial.println();
+}
+
 void processDebugCommand(int command) {
 	switch (command) {
+	case DEBUG_SYNC_MAP:
+		Serial.read();
+		//publishMap();
+		break;
 	case DEBUG_REQUEST_SYNC:
 		Serial.read();
 		Serial.print("!!");
@@ -75,6 +99,8 @@ void processDebugCommand(int command) {
 		Serial.print(DERIVATIVE_SPEED_ADJUST);
 		Serial.print("|");
 		Serial.print(averageMotorSpeed);
+		Serial.print("|");
+		Serial.print(stallPWM);
 		Serial.println();
 		break;
 	case DEBUG_OUTPUT_STATE:
@@ -111,10 +137,16 @@ void processDebugCommand(int command) {
 		println(DERIVATIVE_SPEED_ADJUST);
 		break;
 	case DEBUG_AVERAGE_SPEED:
-		averageMotorSpeed = Serial.parseInt();
+		/*averageMotorSpeed = */Serial.parseInt();
 		Serial.read();
 		print("Average Motor Speed = ");
 		println(averageMotorSpeed);
+		break;
+	case DEBUG_STALL_PWM:
+		stallPWM = Serial.parseInt();
+		Serial.read();
+		print("Stall PWM = ");
+		println(stallPWM);
 		break;
 	}
 }

@@ -14,10 +14,10 @@ namespace Tweak
     {
         public static readonly int FRONT_APPROACHING_THRESHOLD = 750;
         public static readonly int FRONT_ON_THRESHOLD = 850;
-        public static readonly int LEFT_APPROACHING_THRESHOLD = 750;
-        public static readonly int LEFT_ON_THRESHOLD = 900;
-        public static readonly int RIGHT_APPROACHING_THRESHOLD = 750;
-        public static readonly int RIGHT_ON_THRESHOLD = 900;
+        public static readonly int LEFT_APPROACHING_THRESHOLD = 650;//750;
+        public static readonly int LEFT_ON_THRESHOLD = 850;
+        public static readonly int RIGHT_APPROACHING_THRESHOLD = 650;//750;
+        public static readonly int RIGHT_ON_THRESHOLD = 850;
 
         public enum SensorLocation
         {
@@ -25,6 +25,10 @@ namespace Tweak
             Left,
             Right
         }
+
+        IntersectionType previousTestIntersection;
+        IntersectionType currentTestIntersection;
+        double lastTick;
 
         IntersectionType intersection;
         public IntersectionType DetectedIntersection {
@@ -56,44 +60,64 @@ namespace Tweak
             timer.Stop();
         }
 
-        public void HandleIncomingData(int frontSensor, int leftSensor, int rightSensor) {
-            IdentifyIntersection(timer.ElapsedMilliseconds, frontSensor, leftSensor, rightSensor);
+        public void HandleIncomingData(int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight) {
+            IdentifyIntersection(timer.ElapsedMilliseconds, frontSensor, leftSensor, rightSensor, encoderLeft, encoderRight);
         }
 
         int currentFront;
         int currentLeft;
         int currentRight;
 
-        private void IdentifyIntersection(long tick, int frontSensor, int leftSensor, int rightSensor) {
+        private void IdentifyIntersection(long tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight) {
             currentFront = frontSensor;
             currentLeft = leftSensor;
             currentRight = rightSensor;
 
-            DetectedIntersection = IntersectionType.None;
+            currentTestIntersection = IntersectionType.None;
 
-            if (IsOn(SensorLocation.Left)) {
-                DetectedIntersection = IntersectionType.LeftTurn;
+            if (IsOnOrApproaching(SensorLocation.Left)) {
+                currentTestIntersection = IntersectionType.LeftTurn;
+            } else if (IsOnOrApproaching(SensorLocation.Right)) {
+                currentTestIntersection = IntersectionType.RightTurn;
             }
 
-            if (IsOn(SensorLocation.Right)) {
-                DetectedIntersection = IntersectionType.RightTurn;
+            if (IsOnOrApproaching(SensorLocation.Front) && IsOnOrApproaching(SensorLocation.Left)) {
+                currentTestIntersection = IntersectionType.TLeft;
+            } else if (IsOnOrApproaching(SensorLocation.Front) && IsOnOrApproaching(SensorLocation.Right)) {
+                currentTestIntersection = IntersectionType.TRight;
             }
 
-            if (IsOn(SensorLocation.Front) && IsOn(SensorLocation.Left)) {
-                DetectedIntersection = IntersectionType.TLeft;
+            if (IsOnOrApproaching(SensorLocation.Left) && IsOnOrApproaching(SensorLocation.Right)) {
+                currentTestIntersection = IntersectionType.T;
             }
 
-            if (IsOn(SensorLocation.Front) && IsOn(SensorLocation.Right)) {
-                DetectedIntersection = IntersectionType.TRight;
+            if (IsOnOrApproaching(SensorLocation.Front) && IsOnOrApproaching(SensorLocation.Left) && IsOnOrApproaching(SensorLocation.Right)) {
+                currentTestIntersection = IntersectionType.Cross;
             }
 
-            if (IsOn(SensorLocation.Left) && IsOn(SensorLocation.Right)) {
-                DetectedIntersection = IntersectionType.T;
+            double currentTick = (encoderLeft + encoderRight) / 2;
+            if (currentTestIntersection != previousTestIntersection) {
+                previousTestIntersection = currentTestIntersection;
+                lastTick = currentTick;
+            } else {
+                double testTick = lastTick + GetEncoderDistanceTicks();
+                if (currentTick > testTick) {
+                    DetectedIntersection = currentTestIntersection;
+                    lastTick = currentTick;
+                }
             }
+        }
 
-            if (IsOn(SensorLocation.Front) && IsOn(SensorLocation.Left) && IsOn(SensorLocation.Right)) {
-                DetectedIntersection = IntersectionType.Cross;
-            }
+        private double GetEncoderDistanceTicks() {
+            double result = Math.Round(100.37 * 6 * (3f / 22));
+
+            return result;
+            //return 22 / 3 * 3/ 22;
+            //GEAR_RATIO* ENCODER_TEETH_COUNT = 100.37 * 12
+        }
+
+        private bool IsOnOrApproaching(SensorLocation sensorLocation) {
+            return (IsApproaching(sensorLocation) || IsOn(sensorLocation));
         }
 
         private bool IsApproaching(SensorLocation sensorLocation) {

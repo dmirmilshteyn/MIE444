@@ -9,11 +9,13 @@ namespace Tweak.Bluetooth
     enum BTCommand
     {
         RequestSync = '!',
+        SyncMap = 'M',
         OutputState = '0',
         SetP = '1',
         SetI = '2',
         SetD = '3',
         SpeedAdjust = 'z',
-        AverageSpeed = 'x'
+        AverageSpeed = 'x',
+        StallPWM = 'y'
     }
 }
