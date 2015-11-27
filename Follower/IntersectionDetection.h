@@ -7,7 +7,11 @@
 	#include "WProgram.h"
 #endif
 
+#include <math.h>
 #include "Constants.h"
+#include "Map.h"
+#include "Localization.h"
+
 #include "Debug.h"
 
 #define FRONT_APPROACHING_THRESHOLD 750;
@@ -17,8 +21,35 @@
 #define RIGHT_APPROACHING_THRESHOLD 650;
 #define RIGHT_ON_THRESHOLD 850;
 
-void ReadIntersectionSensors();
+#define SENSOR_LOCATION_FRONT 0
+#define SENSOR_LOCATION_LEFT 1
+#define SENSOR_LOCATION_RIGHT 2
+
+extern int detectedIntersection;
+
+extern int previousTestIntersection;
+extern int currentTestIntersection;
+
+extern int lastLeftEncoder;
+extern int lastRightEncoder;
+
+extern double lastTick;
+
+inline double GetEncoderDistanceTicks() {
+	return (GEAR_RATIO * ENCODER_TEETH_COUNT * (1.0 / 22));
+}
+
+void ReadIntersectionSensors(int tick);
 void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight);
+
+int GetCurrentSensorValue(int sensorLocation);
+int GetSensorOnThreshold(int sensorLocation);
+int GetSensorApproachingThreshold(int sensorLocation);
+
+bool IsSensorOn(int sensorLocation);
+bool IsSensorApproaching(int sensorLocation);
+bool IsSensorOnOrApproaching(int sensorLocation);
+
 
 #endif
 

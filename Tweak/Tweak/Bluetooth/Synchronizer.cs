@@ -282,11 +282,13 @@ namespace Tweak.Bluetooth
                             LeftIntersectionSensor = (int)float.Parse(resultSegments[1]);
                             RightIntersectionSensor = (int)float.Parse(resultSegments[2]);
 
-                            if (!IntersectionIdentifier.IsRunning) {
-                                IntersectionIdentifier.Start();
-                            }
+                            IntersectionIdentifier.DetectedIntersection = (IntersectionType)(int)float.Parse(resultSegments[3]);
 
-                            IntersectionIdentifier.HandleIncomingData(frontIntersectionSensor, LeftIntersectionSensor, RightIntersectionSensor, LeftMotorCount, RightMotorCount);
+                            //if (!IntersectionIdentifier.IsRunning) {
+                            //    IntersectionIdentifier.Start();
+                            //}
+
+                            //IntersectionIdentifier.HandleIncomingData(frontIntersectionSensor, LeftIntersectionSensor, RightIntersectionSensor, LeftMotorCount, RightMotorCount);
                         }
                         break;
                     case '*':
@@ -303,8 +305,6 @@ namespace Tweak.Bluetooth
                                     map[x, y] = bool.Parse(resultSegments[2 + (y * width + x)]);
                                 }
                             }
-
-                            System.Diagnostics.Debug.WriteLine("Test");
                         }
                         break;
                     case '$':
@@ -314,6 +314,17 @@ namespace Tweak.Bluetooth
                             string[] resultSegments = line.Split('|');
                             LeftMotorCount = (int)float.Parse(resultSegments[0]);
                             RightMotorCount = (int)float.Parse(resultSegments[1]);
+                        }
+                        break;
+                    case '&':
+                        {
+                            line = line.Substring(2);
+
+                            string[] resultSegments = line.Split('|');
+                            int relativePositionX = (int)float.Parse(resultSegments[0]);
+                            int relativePositionY = (int)float.Parse(resultSegments[1]);
+
+                            System.Diagnostics.Debug.WriteLine($"{relativePositionX} {relativePositionY}");
                         }
                         break;
                 }
