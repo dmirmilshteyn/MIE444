@@ -47,13 +47,15 @@ void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float
 	println();
 }
 
-void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor) {
+void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor, int detectedIntersection) {
 	print("!#");
 	print(frontSensor);
 	print("|");
 	print(leftSensor);
 	print("|");
 	print(rightSensor);
+	print("|");
+	print(detectedIntersection);
 	println();
 }
 
