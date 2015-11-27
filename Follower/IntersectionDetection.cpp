@@ -9,10 +9,14 @@ int currentRight = 0;
 int previousTestIntersection = INTERSECTION_TYPE_NONE;
 int currentTestIntersection = INTERSECTION_TYPE_NONE;
 
-int lastLeftEncoder = 0;
-int lastRightEncoder = 0;
+long lastLeftEncoder = 0;
+long lastRightEncoder = 0;
 
 double lastTick = 0;
+
+void ProcessDetectedIntersection(int detectedIntersectionType) {
+
+}
 
 void ReadIntersectionSensors(int tick) {
 	int sensorA = analogRead(LINE_SENSOR_1);
@@ -22,6 +26,10 @@ void ReadIntersectionSensors(int tick) {
 	publishIntersectionDetectionData(sensorA, sensorB, sensorC, detectedIntersection);
 
 	IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
+
+	if (detectedIntersection != INTERSECTION_TYPE_NONE) {
+		ProcessDetectedIntersection(detectedIntersection);
+	}
 }
 
 void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight) {

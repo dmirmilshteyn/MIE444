@@ -68,6 +68,8 @@ namespace Tweak
             ConnectCommand = new Command(ConnectCallback);
             SendCommand = new Command(SendCallback);
 
+            SearchCallback();
+
             ConnectButtonText = "Connect";
         }
 
@@ -87,9 +89,14 @@ namespace Tweak
 
         private async void ConnectCallback() {
             if (ConnectedDevice == null) {
-                ConnectedDevice = await bluetoothManager.Connect(SelectedDevice);
+                try {
+                    ConnectedDevice = await bluetoothManager.Connect(SelectedDevice);
 
-                ConnectButtonText = "Disconnect";
+                    ConnectButtonText = "Disconnect";
+                } catch {
+                    ConnectButtonText = "Failed... try again";
+                    ConnectedDevice = null;
+                }
             } else {
 
             }

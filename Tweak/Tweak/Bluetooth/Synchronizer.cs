@@ -282,7 +282,10 @@ namespace Tweak.Bluetooth
                             LeftIntersectionSensor = (int)float.Parse(resultSegments[1]);
                             RightIntersectionSensor = (int)float.Parse(resultSegments[2]);
 
-                            IntersectionIdentifier.DetectedIntersection = (IntersectionType)(int)float.Parse(resultSegments[3]);
+                            // TODO: Remove this! Support for older version of arduino code
+                            if (resultSegments.Length == 4) {
+                                IntersectionIdentifier.DetectedIntersection = (IntersectionType)(int)float.Parse(resultSegments[3]);
+                            }
 
                             //if (!IntersectionIdentifier.IsRunning) {
                             //    IntersectionIdentifier.Start();
@@ -321,8 +324,8 @@ namespace Tweak.Bluetooth
                             line = line.Substring(2);
 
                             string[] resultSegments = line.Split('|');
-                            int relativePositionX = (int)float.Parse(resultSegments[0]);
-                            int relativePositionY = (int)float.Parse(resultSegments[1]);
+                            float relativePositionX = float.Parse(resultSegments[0]);
+                            float relativePositionY = float.Parse(resultSegments[1]);
 
                             System.Diagnostics.Debug.WriteLine($"{relativePositionX} {relativePositionY}");
                         }
@@ -359,5 +362,44 @@ namespace Tweak.Bluetooth
                 HandleLine(builder.ToString());
             }
         }
+
+
+        // TODO: Remove this! Encoder testing code
+        //int previousLeftMotorCount = 0;
+        //int previousRightMotorCount = 0;
+        //double relativeHeadingAngle = 0;
+        //int relativeLocationX = 0;
+        //int relativeLocationY = 0;
+        //double relativeLocationXMeters = 0;
+        //double relativeLocationYMeters = 0;
+
+        //private void updateRelativeLocation() {
+        //    int leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
+        //    previousLeftMotorCount += leftEncoderDiff;
+        //    int rightEncoderDiff = rightMotorCount - previousRightMotorCount;
+        //    previousRightMotorCount += rightEncoderDiff;
+
+        //    double relativeHeadingAngleDiff;
+        //    double travelDist;
+
+        //    double leftEncoderDiffMeters = leftEncoderDiff / 6 / 100.37 * 0.035 * 2 * 3.14159265358979323846;
+        //    double rightEncoderDiffMeters = rightEncoderDiff / 6 / 100.37 * 0.035 * 2 * 3.14159265358979323846;
+
+        //    relativeHeadingAngleDiff = (rightEncoderDiffMeters - leftEncoderDiffMeters) / 0.28;
+
+        //    if (Math.Abs(relativeHeadingAngleDiff) > 0.001) {
+        //        travelDist = Math.Abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) * Math.Sqrt(2 - 2 * Math.Cos(relativeHeadingAngleDiff))) / (2 * relativeHeadingAngleDiff));
+        //    } else {
+        //        travelDist = Math.Abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) / (2)));
+        //    }
+
+        //    relativeLocationXMeters += Math.Cos(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
+        //    relativeLocationYMeters += Math.Sin(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
+
+        //    relativeLocationX = (int)Math.Round(relativeLocationXMeters / 0.025);
+        //    relativeLocationY = (int)Math.Round(relativeLocationYMeters / 0.025);
+
+        //    relativeHeadingAngle += relativeHeadingAngleDiff;
+        //}
     }
 }
