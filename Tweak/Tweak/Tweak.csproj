@@ -111,6 +111,10 @@
     <Compile Include="Bluetooth\BluetoothManager.cs" />
     <Compile Include="Bluetooth\BTCommand.cs" />
     <Compile Include="Bluetooth\ConnectedDevice.cs" />
+    <Compile Include="Bluetooth\RemoteMap.cs" />
+    <Compile Include="Bluetooth\RemoteMapViewer.xaml.cs">
+      <DependentUpon>RemoteMapViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Bluetooth\Synchronizer.cs" />
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="Command.cs" />
@@ -175,6 +179,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="BluetoothView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Bluetooth\RemoteMapViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
