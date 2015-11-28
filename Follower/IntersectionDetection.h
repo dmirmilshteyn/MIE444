@@ -30,8 +30,8 @@ extern int detectedIntersection;
 extern int previousTestIntersection;
 extern int currentTestIntersection;
 
-extern int lastLeftEncoder;
-extern int lastRightEncoder;
+extern long lastLeftEncoder;
+extern long lastRightEncoder;
 
 extern double lastTick;
 
@@ -41,6 +41,7 @@ inline double GetEncoderDistanceTicks() {
 
 void ReadIntersectionSensors(int tick);
 void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight);
+void ProcessDetectedIntersection(int detectedIntersectionType);
 
 int GetCurrentSensorValue(int sensorLocation);
 int GetSensorOnThreshold(int sensorLocation);
