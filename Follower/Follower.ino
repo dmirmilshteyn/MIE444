@@ -16,11 +16,11 @@
 #include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
-float Kp = 1; // 0.6; //0.3;
+float Kp = 1.2; // 0.6; //0.3;
 float Ki = 0.00;
-float Kd = 400; //332; //450; //100;
+float Kd = 500; //332; //450; //100;
 
-float DERIVATIVE_SPEED_ADJUST = 0;
+float DERIVATIVE_SPEED_ADJUST = 150;
 void setup() {
   // put your setup code here, to run once:
   pinMode(AIN1_RIGHT_MOTOR, OUTPUT);
@@ -69,7 +69,7 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  delay(10000);
+  delay(2000);
 }
 
 void loop() {

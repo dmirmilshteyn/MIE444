@@ -43,11 +43,13 @@ void followLaneAnalog(int currentTime) {
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
 
   //should make avg speed inversely proportional to the controller...will slow down if error is high
-
-  float adjustedSpeed = averageMotorSpeed - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
+  float speedOffsetFactor = -exp(-abs(controller) / 120) + 1;
+  float adjustedSpeed = averageMotorSpeed;// - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
   //float adjustedSpeed = averageMotorSpeed;
-  float speedOffset = abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
+  float speedOffset = speedOffsetFactor * (adjustedSpeed - stallPWM); //abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
   MotorSpeeds newMotorSpeeds;
+
+  Serial.println(speedOffset);
 
   /*int newLeftMotorSpeed;
     int newRightMotorSpeed;*/
@@ -91,10 +93,10 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 
     }*/
   //stops the car if it left the line (on white)
-  if (readLeft < 800 && readRight < 800) {
-    newMotorSpeeds.right = -(stallPWM + 60);
+  if (readLeft < 600 && readRight < 600) {
+    newMotorSpeeds.right = -(adjustedSpeed*1.22);//*1.22
 
-    newMotorSpeeds.left = (stallPWM + 5);
+    newMotorSpeeds.left = adjustedSpeed*0.8;//*0.8
 
   }
 
@@ -143,9 +145,9 @@ void determineStallPWM() {
       analogWrite(BIN1_LEFT_MOTOR, i);//drives left motor forward
       analogWrite(AIN1_RIGHT_MOTOR, i);//drives right motor forward
       i++;
-    } while (leftMotorCount < 5 || rightMotorCount < 5); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
-    stallPWM = i;//1.2;
-    averageMotorSpeed = (255 - stallPWM) * 0.17 + stallPWM;
+    } while (leftMotorCount < 10 || rightMotorCount < 10); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
+    stallPWM = 0;//i;// * 1.2;
+    averageMotorSpeed = 85;//(255 - stallPWM) * 0.2 + stallPWM;
     leftMotorCount = 0;
     rightMotorCount = 0;
     determineStallPWMDone = 1;
