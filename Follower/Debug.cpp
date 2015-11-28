@@ -2,31 +2,51 @@
 #include "Constants.h"
 
 inline void print(const char* message) {
+#ifdef PRINT_DEBUG_MESSAGES
   Serial.print(message);
+#endif
 }
 
 inline void print(float value) {
+#ifdef PRINT_DEBUG_MESSAGES
   Serial.print(value);
+#endif
+}
+
+inline void print(double value) {
+#ifdef PRINT_DEBUG_MESSAGES
+	Serial.print(value);
+#endif
 }
 
 inline void print(long value) {
+#ifdef PRINT_DEBUG_MESSAGES
 	Serial.print(value);
+#endif
 }
 
 inline void print(int value) {
+#ifdef PRINT_DEBUG_MESSAGES
 	Serial.print(value);
+#endif
 }
 
 inline void println() {
+#ifdef PRINT_DEBUG_MESSAGES
   Serial.println();
+#endif
 }
 
 inline void println(const char* message) {
+#ifdef PRINT_DEBUG_MESSAGES
   Serial.println(message);
+#endif
 }
 
 inline void println(float value) {
+#ifdef PRINT_DEBUG_MESSAGES
   Serial.print(value);
+#endif
 }
 
 int readDebugCommand() {
@@ -77,24 +97,24 @@ void publishEncoderData(long leftMotorCount, long rightMotorCount) {
 
 void publishMap() {
   print("!*");
-  Serial.print(MAP_TILES_WIDTH);
-  Serial.print("|");
-  Serial.print(MAP_TILES_HEIGHT);
+  print(MAP_TILES_WIDTH);
+  print("|");
+  print(MAP_TILES_HEIGHT);
   /*for (int x = 0; x < MAP_TILES_WIDTH; x++) {
   	for (int y = 0; y < MAP_TILES_HEIGHT; y++) {
   		bool blocked = AccessMapElement(x, y);
 
-  		Serial.print(blocked);
-  		Serial.print("|");
+  		print(blocked);
+  		print("|");
   	}
     }*/
-  Serial.println();
+  println();
 }
 void publishRelativeLocation() {
   print("!&");
-  Serial.print(relativeLocationXMeters);
-  Serial.print("|");
-  Serial.print(relativeLocationYMeters);
+  print(relativeLocationXMeters);
+  print("|");
+  print(relativeLocationYMeters);
   println();
 }
 
@@ -106,19 +126,19 @@ void processDebugCommand(int command) {
       break;
     case DEBUG_REQUEST_SYNC:
       Serial.read();
-      Serial.print("!!");
-      Serial.print(Kp);
-      Serial.print("|");
-      Serial.print(Ki);
-      Serial.print("|");
-      Serial.print(Kd);
-      Serial.print("|");
-      Serial.print(DERIVATIVE_SPEED_ADJUST);
-      Serial.print("|");
-      Serial.print(averageMotorSpeed);
-      Serial.print("|");
-      Serial.print(stallPWM);
-      Serial.println();
+	  print("!!");
+      print(Kp);
+      print("|");
+      print(Ki);
+      print("|");
+      print(Kd);
+      print("|");
+      print(DERIVATIVE_SPEED_ADJUST);
+      print("|");
+      print(averageMotorSpeed);
+      print("|");
+      print(stallPWM);
+      println();
       break;
     case DEBUG_OUTPUT_STATE:
       Serial.read();

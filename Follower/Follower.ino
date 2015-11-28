@@ -74,7 +74,7 @@ void setup() {
 }
 
 void loop() {
-  //Serial.print("Digital: ");
+  //print("Digital: ");
   //Serial.println(digitalRead(IR_DETECTOR));
   delay(10);
   int currentTime;

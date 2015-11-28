@@ -6,6 +6,8 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#define PRINT_DEBUG_MESSAGES
+
 // ************************
 // **** Debug Commands ****
 // ************************

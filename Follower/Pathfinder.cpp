@@ -22,20 +22,20 @@ PathfinderResult Pathfinder::FindPath(Position startPosition, Position goalPosit
 PathfinderResult Pathfinder::PerformSearch(Position startPosition, Position goalPosition) {
   LinkedList<PathNode*> *openSet = new LinkedList<PathNode*>();
 
-  Serial.println(sizeof(ListNode<PathNode*>));
+  println(sizeof(ListNode<PathNode*>));
   int nodeCount = 1;
 
-  Serial.print("Free Memory: ");
-  Serial.println(freeMemory());
+  print("Free Memory: ");
+  println(freeMemory());
 
   // Add the starting position
   openSet->add(new PathNode(startPosition.x, startPosition.y));
 
   while (openSet->size() > 0) {
-    Serial.print("Free Memory: ");
-    Serial.print(freeMemory());
-    Serial.print(", Node Count: ");
-    Serial.println(nodeCount);
+    print("Free Memory: ");
+    print(freeMemory());
+    print(", Node Count: ");
+    println(nodeCount);
     
     int currentNodeIndex = DetermineNextNode(openSet);
     PathNode *currentNode = openSet->remove(currentNodeIndex);
