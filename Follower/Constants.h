@@ -24,9 +24,9 @@
 //ANALOG PINS
 #define LINE_FOLLOW_SENSOR_LEFT 0
 #define LINE_FOLLOW_SENSOR_RIGHT 1
-#define LINE_SENSOR_1 2
-#define LINE_SENSOR_2 3
-#define LINE_SENSOR_3 4
+#define LINE_SENSOR_1 2 //front
+#define LINE_SENSOR_2 3 //left
+#define LINE_SENSOR_3 4 //right
 #define WALL_DISTANCE_SENSOR 5
 
 /**********************************************
