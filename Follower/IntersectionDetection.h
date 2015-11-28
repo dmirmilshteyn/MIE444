@@ -28,6 +28,9 @@
 
 extern int detectedIntersection;
 
+extern long lastIntersectionDetectionLeftEncoder;
+extern long lastIntersectionDetectionRightEncoder;
+
 extern int previousTestIntersection;
 extern int currentTestIntersection;
 

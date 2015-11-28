@@ -12,6 +12,9 @@ int currentTestIntersection = INTERSECTION_TYPE_NONE;
 long lastLeftEncoder = 0;
 long lastRightEncoder = 0;
 
+long lastIntersectionDetectionLeftEncoder = 0;
+long lastIntersectionDetectionRightEncoder = 0;
+
 double lastTick = 0;
 
 void ProcessDetectedIntersection(int detectedIntersectionType) {
@@ -46,10 +49,13 @@ void ReadIntersectionSensors(int tick) {
   currentRight = sensorC;
   
 	if (followerState == FOLLOWER_STATE_ONLINE) {
-		IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
+		if (leftMotorCount > lastIntersectionDetectionLeftEncoder + 600 / 4 &&
+			rightMotorCount > lastIntersectionDetectionRightEncoder + 600 / 4) {
+			IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
-		if (detectedIntersection != INTERSECTION_TYPE_NONE) {
-			ProcessDetectedIntersection(detectedIntersection);
+			if (detectedIntersection != INTERSECTION_TYPE_NONE) {
+				ProcessDetectedIntersection(detectedIntersection);
+			}
 		}
 	}
 }

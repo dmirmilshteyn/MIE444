@@ -65,9 +65,9 @@ void correctRelativeAngle() {
   }
 }
 void updateRelativeLocation() {
-  long int leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
+  int leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
   previousLeftMotorCount = leftEncoderDiff + previousLeftMotorCount;
-  long int rightEncoderDiff = rightMotorCount - previousRightMotorCount;
+  int rightEncoderDiff = rightMotorCount - previousRightMotorCount;
   previousRightMotorCount = rightEncoderDiff + previousRightMotorCount;
 
   double relativeHeadingAngleDiff;

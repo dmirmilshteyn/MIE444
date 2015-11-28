@@ -96,7 +96,7 @@ void updateFollowerState() {
 	if (readLeft < 600 && readRight < 600) {
 		followerState = FOLLOWER_STATE_OFFLINE;
 	}
-	else if (followerState == FOLLOWER_STATE_OFFLINE) {
+	else if (followerState == FOLLOWER_STATE_OFFLINE || followerState == FOLLOWER_STATE_REALIGN) {
 		followerState = FOLLOWER_STATE_ONLINE;
 	}
 }
@@ -132,7 +132,7 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 
 	  if (turnState == TURN_STATE_HIT_BLACK) {
 		  turnState = TURN_STATE_DEFAULT;
-		  followerState = FOLLOWER_STATE_ONLINE;
+		  followerState = FOLLOWER_STATE_REALIGN;
 
 		  motorSpeeds.left = 0;
 		  motorSpeeds.right = 0;
@@ -141,12 +141,12 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 		  if (followerState == FOLLOWER_STATE_LEFT) {
 			  // Turn left
 			  motorSpeeds.left = -averageMotorSpeed*1.22;
-			  motorSpeeds.right = averageMotorSpeed*0.8;
+			  motorSpeeds.right = averageMotorSpeed*1;
 		  }
 		  else if (followerState == FOLLOWER_STATE_RIGHT) {
 			  // Turn right
 			  motorSpeeds.right = -averageMotorSpeed*1.22;
-			  motorSpeeds.left = averageMotorSpeed*0.8;
+			  motorSpeeds.left = averageMotorSpeed*1;
 		  }
 	  }
   }
@@ -176,6 +176,9 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 
   if (motorSpeeds.left == 0 && motorSpeeds.right == 0) {
       delay(500);
+
+	  lastIntersectionDetectionLeftEncoder = leftMotorCount;
+	  lastIntersectionDetectionRightEncoder = rightMotorCount;
   }
 
   return motorSpeeds;
