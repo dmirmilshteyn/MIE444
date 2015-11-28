@@ -103,8 +103,10 @@ void loop() {
 
   currentTime = millis();
   //checkPointHandle(currentTime);
-  followLaneAnalog(currentTime);
+  updateFollowerState();
   ReadIntersectionSensors(currentTime);
+  followLaneAnalog(currentTime);
+  
   updateRelativeLocation();
 
   publishEncoderData(leftMotorCount, rightMotorCount);

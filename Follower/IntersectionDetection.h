@@ -11,6 +11,7 @@
 #include "Constants.h"
 #include "Map.h"
 #include "Localization.h"
+#include "LineFollower.h"
 
 #include "Debug.h"
 
