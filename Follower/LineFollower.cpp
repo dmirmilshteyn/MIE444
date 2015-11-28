@@ -205,7 +205,7 @@ void determineStallPWM() {
       i++;
     } while (leftMotorCount < 10 || rightMotorCount < 10); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
     stallPWM = 0;//i;// * 1.2;
-    averageMotorSpeed = 85;//(255 - stallPWM) * 0.2 + stallPWM;
+    averageMotorSpeed = 75;//(255 - stallPWM) * 0.2 + stallPWM;
     leftMotorCount = 0;
     rightMotorCount = 0;
     determineStallPWMDone = 1;

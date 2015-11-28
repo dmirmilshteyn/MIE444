@@ -7,7 +7,6 @@
 #include <math.h>
 #include "Constants.h"
 #include "Debug.h"
-#include "MotorController.h"
 #include "Mapping.h"
 #include "Pathfinder.h"
 #include "LineFollower.h"
@@ -69,7 +68,7 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  delay(2000);
+  delay(20000);
 }
 
 void loop() {

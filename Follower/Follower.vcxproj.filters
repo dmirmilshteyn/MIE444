@@ -36,9 +36,6 @@
     <ClInclude Include="MemoryFree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MotorController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Pathfinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,9 +66,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MemoryFree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MotorControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pathfinder.cpp">

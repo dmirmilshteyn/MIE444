@@ -156,9 +156,6 @@
     <ClInclude Include="MemoryFree.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="MotorController.h">
-      <FileType>CppCode</FileType>
-    </ClInclude>
     <ClInclude Include="Pathfinder.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -172,7 +169,6 @@
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="Mapping.cpp" />
     <ClCompile Include="MemoryFree.cpp" />
-    <ClCompile Include="MotorControl.cpp" />
     <ClCompile Include="Pathfinder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
