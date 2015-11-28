@@ -93,7 +93,7 @@ MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedO
 }
 
 void updateFollowerState() {
-	if (readLeft < 800 && readRight < 800) {
+	if (readLeft < 600 && readRight < 600) {
 		followerState = FOLLOWER_STATE_OFFLINE;
 	}
 	else if (followerState == FOLLOWER_STATE_OFFLINE) {
@@ -103,18 +103,18 @@ void updateFollowerState() {
 
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
   //should make avg speed inversely proportional to the controller...will slow down if error is high
-
-  float adjustedSpeed = averageMotorSpeed - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
+  float speedOffsetFactor = -exp(-abs(controller) / 120) + 1;
+  float adjustedSpeed = averageMotorSpeed;// - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
   //float adjustedSpeed = averageMotorSpeed;
-  float speedOffset = abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
+  float speedOffset = speedOffsetFactor * (adjustedSpeed - stallPWM); //abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
   
   MotorSpeeds motorSpeeds;
   if (followerState == FOLLOWER_STATE_ONLINE) {
 	  motorSpeeds = driveMotorsBasic(controller, adjustedSpeed, speedOffset);
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
-	  motorSpeeds.right = -(stallPWM + 60);
-	  motorSpeeds.left = (stallPWM + 5);
+	  motorSpeeds.right = -(adjustedSpeed*1.22);
+	  motorSpeeds.left = adjustedSpeed*0.8;
   }
   else if (followerState == FOLLOWER_STATE_LEFT || followerState == FOLLOWER_STATE_RIGHT) {
 	  switch (turnState) {
@@ -140,13 +140,13 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 	  else {
 		  if (followerState == FOLLOWER_STATE_LEFT) {
 			  // Turn left
-			  motorSpeeds.left = -averageMotorSpeed;
-			  motorSpeeds.right = averageMotorSpeed;
+			  motorSpeeds.left = -averageMotorSpeed*1.22;
+			  motorSpeeds.right = averageMotorSpeed*0.8;
 		  }
 		  else if (followerState == FOLLOWER_STATE_RIGHT) {
 			  // Turn right
-			  motorSpeeds.right = -averageMotorSpeed;
-			  motorSpeeds.left = averageMotorSpeed;
+			  motorSpeeds.right = -averageMotorSpeed*1.22;
+			  motorSpeeds.left = averageMotorSpeed*0.8;
 		  }
 	  }
   }
@@ -200,9 +200,9 @@ void determineStallPWM() {
       analogWrite(BIN1_LEFT_MOTOR, i);//drives left motor forward
       analogWrite(AIN1_RIGHT_MOTOR, i);//drives right motor forward
       i++;
-    } while (leftMotorCount < 15 || rightMotorCount < 15); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
-	stallPWM = i;//1.2;
-    averageMotorSpeed = (255 - stallPWM) * 0.17 + stallPWM;
+    } while (leftMotorCount < 10 || rightMotorCount < 10); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
+    stallPWM = 0;//i;// * 1.2;
+    averageMotorSpeed = 85;//(255 - stallPWM) * 0.2 + stallPWM;
     leftMotorCount = 0;
     rightMotorCount = 0;
     determineStallPWMDone = 1;
