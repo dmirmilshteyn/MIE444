@@ -28,6 +28,8 @@ void setup() {
   pinMode(BIN2_LEFT_MOTOR, OUTPUT);
   pinMode(IR_DETECTOR, INPUT);
   pinMode(ANTENNA_LED, OUTPUT);
+
+  pinMode(WALL_DISTANCE_SENSOR, INPUT);
   lastError = 0;
   averageMotorSpeed = 75;
   Serial.begin(9600);
