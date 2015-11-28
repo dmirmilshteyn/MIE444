@@ -17,36 +17,58 @@ void correctRelativeAngle();
 bool correctRelativeAngleDone = false;
 
 void initializeEncoders() {
+	pinMode(ENCODER_LEFT_MOTOR, INPUT);
+	digitalWrite(ENCODER_LEFT_MOTOR, HIGH);
+	pinMode(ENCODER_LEFT_MOTORB, INPUT);
+	digitalWrite(ENCODER_LEFT_MOTORB, HIGH);
+
+
+	pinMode(ENCODER_RIGHT_MOTOR, INPUT);
+	digitalWrite(ENCODER_RIGHT_MOTOR, HIGH);
+	pinMode(ENCODER_RIGHT_MOTORB, INPUT);
+	digitalWrite(ENCODER_RIGHT_MOTORB, HIGH);
+
   attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_MOTOR), handleLeftMotorInterupt, CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_MOTOR), handleRightMotorInterupt, CHANGE);
-
-  pinMode(ENCODER_LEFT_MOTORB, INPUT);
-  pinMode(ENCODER_RIGHT_MOTORB, INPUT);
 }
 
 void handleLeftMotorInterupt() {
   // Note: 1 wheel rotation = GEAR_RATIO * ENCODER_TEETH_COUNT = 100.37 * 12 = 1204.44 clicks
-  if (leftForward == true) {
+  /*if (leftForward == true) {
     leftMotorCount++;
   }
   else {
     leftMotorCount--;
-  }
-  /*if(digitalReadFast(ENCODER_LEFT_MOTORB)) leftMotorCount++;
+  }*/
+  /*if(digitalRead(ENCODER_LEFT_MOTORB)) leftMotorCount++;
     else leftMotorCount--;*/
+
+	if (digitalRead(ENCODER_LEFT_MOTOR) == digitalRead(ENCODER_LEFT_MOTORB)) {
+		leftMotorCount++;
+	}
+	else {
+		leftMotorCount--;
+	}
 
   // TODO: Handle direction
 }
 
 void handleRightMotorInterupt() {
-  if (rightForward == true) {
+  /*if (rightForward == true) {
     rightMotorCount++;
   }
   else {
     rightMotorCount--;
-  }
-  /*if(digitalReadFast(ENCODER_RIGHT_MOTORB)) rightMotorCount++;
+  }*/
+  /*if(digitalRead(ENCODER_RIGHT_MOTORB)) rightMotorCount++;
     else leftMotorCount--;*/
+
+	if (digitalRead(ENCODER_RIGHT_MOTOR) == digitalRead(ENCODER_RIGHT_MOTORB)) {
+		rightMotorCount++;
+	}
+	else {
+		rightMotorCount--;
+	}
   // TODO: Handle direction
 }
 
@@ -65,9 +87,9 @@ void correctRelativeAngle() {
   }
 }
 void updateRelativeLocation() {
-  long int leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
+  double leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
   previousLeftMotorCount = leftEncoderDiff + previousLeftMotorCount;
-  long int rightEncoderDiff = rightMotorCount - previousRightMotorCount;
+  double rightEncoderDiff = rightMotorCount - previousRightMotorCount;
   previousRightMotorCount = rightEncoderDiff + previousRightMotorCount;
 
   double relativeHeadingAngleDiff;

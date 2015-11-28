@@ -100,7 +100,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;C:\Users\Daniel\Documents\UofT\4F\MIE444\Project\Code\Follower;C:\Users\Daniel\Documents\Arduino\libraries\LinkedList;C:\Users\Daniel\Documents\Arduino\libraries\LinkedList\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\4jz4kxrh.kzy\Micro Platforms\default\debuggers;C:\Users\Daniel\Documents\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;C:\Users\Daniel\Documents\UofT\4F\MIE444\Project\Code\Follower;C:\Users\Daniel\Documents\Arduino\libraries\LinkedList;C:\Users\Daniel\Documents\Arduino\libraries\LinkedList\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\4jz4kxrh.kzy\Micro Platforms\default\debuggers;C:\Users\Daniel\Documents\Arduino\libraries;C:\Users\Daniel\Documents\UofT\4F\MIE444\Project\Code\Follower;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;C:\Users\Daniel\Documents\Arduino\libraries\LinkedList;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\4jz4kxrh.kzy\Micro Platforms\default\debuggers;C:\Users\Daniel\Documents\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\Users\Daniel\Documents\UofT\4F\MIE444\Project\Code\Follower\__vm\.Follower.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -156,9 +156,6 @@
     <ClInclude Include="MemoryFree.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="MotorController.h">
-      <FileType>CppCode</FileType>
-    </ClInclude>
     <ClInclude Include="Pathfinder.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -172,7 +169,6 @@
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="Mapping.cpp" />
     <ClCompile Include="MemoryFree.cpp" />
-    <ClCompile Include="MotorControl.cpp" />
     <ClCompile Include="Pathfinder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

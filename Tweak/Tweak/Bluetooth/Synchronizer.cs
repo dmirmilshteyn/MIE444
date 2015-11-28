@@ -332,7 +332,7 @@ namespace Tweak.Bluetooth
                         break;
                 }
             } else {
-                OutputLogString += line;
+                //OutputLogString += line;
             }
         }
 

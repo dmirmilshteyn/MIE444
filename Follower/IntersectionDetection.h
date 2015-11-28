@@ -11,6 +11,7 @@
 #include "Constants.h"
 #include "Map.h"
 #include "Localization.h"
+#include "LineFollower.h"
 
 #include "Debug.h"
 
@@ -26,6 +27,9 @@
 #define SENSOR_LOCATION_RIGHT 2
 
 extern int detectedIntersection;
+
+extern long lastIntersectionDetectionLeftEncoder;
+extern long lastIntersectionDetectionRightEncoder;
 
 extern int previousTestIntersection;
 extern int currentTestIntersection;

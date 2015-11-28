@@ -9,6 +9,14 @@ inline void print(float value) {
   Serial.print(value);
 }
 
+inline void print(long value) {
+	Serial.print(value);
+}
+
+inline void print(int value) {
+	Serial.print(value);
+}
+
 inline void println() {
   Serial.println();
 }
@@ -59,7 +67,7 @@ void publishIntersectionDetectionData(int frontSensor, int leftSensor, int right
 	println();
 }
 
-void publishEncoderData(int leftMotorCount, int rightMotorCount) {
+void publishEncoderData(long leftMotorCount, long rightMotorCount) {
   print("!$");
   print(leftMotorCount);
   print("|");

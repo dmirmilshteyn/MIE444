@@ -7,7 +7,6 @@
 #include <math.h>
 #include "Constants.h"
 #include "Debug.h"
-#include "MotorController.h"
 #include "Mapping.h"
 #include "Pathfinder.h"
 #include "LineFollower.h"
@@ -29,6 +28,8 @@ void setup() {
   pinMode(BIN2_LEFT_MOTOR, OUTPUT);
   pinMode(IR_DETECTOR, INPUT);
   pinMode(ANTENNA_LED, OUTPUT);
+
+  pinMode(WALL_DISTANCE_SENSOR, INPUT);
   lastError = 0;
   averageMotorSpeed = 75;
   Serial.begin(9600);
@@ -69,7 +70,7 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  delay(2000);
+  delay(20000);
 }
 
 void loop() {
@@ -103,8 +104,10 @@ void loop() {
 
   currentTime = millis();
   //checkPointHandle(currentTime);
-  followLaneAnalog(currentTime);
+  updateFollowerState();
   ReadIntersectionSensors(currentTime);
+  followLaneAnalog(currentTime);
+  
   updateRelativeLocation();
 
   publishEncoderData(leftMotorCount, rightMotorCount);

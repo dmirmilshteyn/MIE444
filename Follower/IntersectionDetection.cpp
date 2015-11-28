@@ -12,10 +12,29 @@ int currentTestIntersection = INTERSECTION_TYPE_NONE;
 long lastLeftEncoder = 0;
 long lastRightEncoder = 0;
 
+long lastIntersectionDetectionLeftEncoder = 0;
+long lastIntersectionDetectionRightEncoder = 0;
+
 double lastTick = 0;
 
 void ProcessDetectedIntersection(int detectedIntersectionType) {
-
+	switch (detectedIntersectionType) {
+	case INTERSECTION_TYPE_LEFTTURN:
+		followerState = FOLLOWER_STATE_LEFT;
+		break;
+	case INTERSECTION_TYPE_RIGHTTURN:
+		followerState = FOLLOWER_STATE_RIGHT;
+		break;
+	case INTERSECTION_TYPE_T:
+		followerState = FOLLOWER_STATE_LEFT;
+		break;
+	case INTERSECTION_TYPE_TRIGHT:
+		followerState = FOLLOWER_STATE_RIGHT;
+		break;
+	case INTERSECTION_TYPE_TLEFT:
+		followerState = FOLLOWER_STATE_LEFT;
+		break;
+	}
 }
 
 void ReadIntersectionSensors(int tick) {
@@ -25,18 +44,23 @@ void ReadIntersectionSensors(int tick) {
 
 	publishIntersectionDetectionData(sensorA, sensorB, sensorC, detectedIntersection);
 
-	IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
+  currentFront = sensorA;
+  currentLeft = sensorB;
+  currentRight = sensorC;
+  
+	if (followerState == FOLLOWER_STATE_ONLINE) {
+		if (leftMotorCount > lastIntersectionDetectionLeftEncoder + 600 / 4 &&
+			rightMotorCount > lastIntersectionDetectionRightEncoder + 600 / 4) {
+			IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
-	if (detectedIntersection != INTERSECTION_TYPE_NONE) {
-		ProcessDetectedIntersection(detectedIntersection);
+			if (detectedIntersection != INTERSECTION_TYPE_NONE) {
+				ProcessDetectedIntersection(detectedIntersection);
+			}
+		}
 	}
 }
 
 void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight) {
-	currentFront = frontSensor;
-	currentLeft = leftSensor;
-	currentRight = rightSensor;
-
 	currentTestIntersection = INTERSECTION_TYPE_NONE;
 
 	if (IsSensorOnOrApproaching(SENSOR_LOCATION_LEFT)) {
