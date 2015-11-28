@@ -98,7 +98,10 @@ namespace Tweak
                     ConnectedDevice = null;
                 }
             } else {
+                ConnectedDevice.Socket.Dispose();
+                ConnectedDevice = null;
 
+                ConnectButtonText = "Connect";
             }
         }
     }
