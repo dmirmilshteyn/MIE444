@@ -37,9 +37,11 @@ bool checkpointFound() {
   return condition;
 }
 void checkPointHandle(long currentTime) {
-  //  Serial.print(digitalRead(IR_DETECTOR));
-  //  Serial.print("  ");
-  //  Serial.println(analogRead(5));
+//    Serial.print(digitalRead(IR_DETECTOR));
+//    Serial.print("  ");
+//    Serial.println(analogRead(5));
+//****************need large potentiometer (>200K)**********
+
 
   //what the robot will do when it reaches the checkponint
   if (numCheckpointsFound < CHECKPOINTS_TOTAL && digitalRead(IR_DETECTOR) == 0 && checkpointEventActive == false) {
