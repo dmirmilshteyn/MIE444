@@ -28,7 +28,6 @@ void setup() {
   pinMode(BIN2_LEFT_MOTOR, OUTPUT);
   pinMode(IR_DETECTOR, INPUT);
   pinMode(ANTENNA_LED, OUTPUT);
-
   pinMode(WALL_DISTANCE_SENSOR, INPUT);
   lastError = 0;
   averageMotorSpeed = 75;
@@ -77,7 +76,7 @@ void loop() {
   //print("Digital: ");
   //Serial.println(digitalRead(IR_DETECTOR));
   delay(10);
-  int currentTime;
+  long currentTime;
 
   // TODO: Debugging code
   //MotorSpeeds newMotorSpeeds;
@@ -103,7 +102,7 @@ void loop() {
   //}
 
   currentTime = millis();
-  //checkPointHandle(currentTime);
+  checkPointHandle(currentTime);
   updateFollowerState();
   ReadIntersectionSensors(currentTime);
   followLaneAnalog(currentTime);

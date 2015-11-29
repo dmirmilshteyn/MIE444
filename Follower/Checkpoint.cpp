@@ -2,8 +2,8 @@
 
 bool checkpointFound();
 bool checkpointEventActive = false;
-int checkpointTime;
-int ledBlinkCount = 0;
+long checkpointTime;
+int ledBlinkCount;
 bool ledOn = false;
 int numCheckpointsFound = 0;
 struct storedCheckpoint storedCheckpoint[CHECKPOINTS_TOTAL];
@@ -22,18 +22,30 @@ void disableLED() {
 
 bool checkpointFound() {
   double checkpointDistance;
+  bool condition = false;
   for (int i = 0; i < numCheckpointsFound; i++) {
-    checkpointDistance = sqrt(pow((relativeLocationX * MAP_RESOLUTION) - (storedCheckpoint[i].x * MAP_RESOLUTION), 2) + pow((relativeLocationY * MAP_RESOLUTION) - (storedCheckpoint[i].y * MAP_RESOLUTION), 2));
-    if (checkpointDistance < 0.4) {
-      return true;
+    checkpointDistance = sqrt(pow((relativeLocationXMeters) - (storedCheckpoint[i].x * MAP_RESOLUTION), 2) + pow((relativeLocationYMeters) - (storedCheckpoint[i].y * MAP_RESOLUTION), 2));
+    if (checkpointDistance < 0.5) {
+      condition = true;
     }
   }
-  return false;
+//  Serial.print(relativeLocationXMeters);
+//  Serial.print("  ");
+//  Serial.print(relativeLocationYMeters);
+//  Serial.print("  ");
+//  Serial.println(condition);
+  return condition;
 }
-void checkPointHandle(int currentTime) {
+void checkPointHandle(long currentTime) {
+  //  Serial.print(digitalRead(IR_DETECTOR));
+  //  Serial.print("  ");
+  //  Serial.println(analogRead(5));
+
   //what the robot will do when it reaches the checkponint
-  if (numCheckpointsFound < CHECKPOINTS_TOTAL && !digitalRead(IR_DETECTOR)) {
-    if (!checkpointFound) {
+  if (numCheckpointsFound < CHECKPOINTS_TOTAL && digitalRead(IR_DETECTOR) == 0 && checkpointEventActive == false) {
+    //    Serial.println("test");
+    if (checkpointFound() == false) {
+      //      Serial.println("test2");
       //set current location of checkpoint as found
       storedCheckpoint[numCheckpointsFound].x = relativeLocationX;  //sets found checkpoint coordinates to current robot position
       storedCheckpoint[numCheckpointsFound].y = relativeLocationY;
@@ -41,18 +53,27 @@ void checkPointHandle(int currentTime) {
       numCheckpointsFound++;
       checkpointTime = currentTime;
       checkpointEventActive = true;
+      ledBlinkCount = 1;
+
     }
   }
   //following may not work if loop takes longer than 100ms
   if (checkpointEventActive && currentTime < (checkpointTime + CHECKPOINT_REACTION_DURATION)) {
 
-    if (roundToHundreds(currentTime) == roundToHundreds(checkpointTime + ledBlinkCount * 600)) {
+    int LEDonMillis = checkpointTime + ledBlinkCount * 600;
+    int LEDoffMillis = checkpointTime + (ledBlinkCount * 600) + 300;
+    //    Serial.print(roundToHundreds(currentTime));
+    //    Serial.print("  ");
+    //    Serial.print(roundToHundreds(LEDonMillis));
+    //    Serial.print("  ");
+    //    Serial.println(roundToHundreds(LEDoffMillis));
+    if (roundToHundreds(currentTime) == roundToHundreds(LEDonMillis)) {
       if (!ledOn) {
         enableLED();
       }
     }
 
-    else if (roundToHundreds(currentTime) == roundToHundreds(checkpointTime + (ledBlinkCount * 600) + 300)) {
+    else if (roundToHundreds(currentTime) == roundToHundreds(LEDoffMillis)) {
       if (ledOn) {
         disableLED();
         ledBlinkCount++;

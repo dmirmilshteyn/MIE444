@@ -20,7 +20,7 @@ float readRight;
 
 int determineStallPWMDone = 0;
 
-void followLaneAnalog(int currentTime) {
+void followLaneAnalog(long currentTime) {
   determineStallPWM();
   float timeDifference = currentTime - previousTime;
   if (timeDifference < 1) {

@@ -43,7 +43,7 @@ MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedO
 MotorSpeeds driveMotorsPID(float controller, float derivative);
 
 float getLaneError();
-void followLaneAnalog(int currentTime);
+void followLaneAnalog(long currentTime);
 void determineStallPWM();//will determine the stallPWM of the robot with the current payload and battery power. It will add speed to the motors until the robot starts moving.
 
 #endif

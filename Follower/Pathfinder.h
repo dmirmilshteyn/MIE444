@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "MappingConstants.h"
+#include "Debug.h"
 #include <LinkedList.h>
 
 #ifndef PATHFINDER_H
