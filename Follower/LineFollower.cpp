@@ -93,7 +93,7 @@ MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedO
 }
 
 void updateFollowerState() {
-	if (readLeft < 600 && readRight < 600) {
+	if (followerState == FOLLOWER_STATE_ONLINE && readLeft < 600 && readRight < 600) {
 		followerState = FOLLOWER_STATE_OFFLINE;
 	}
 	else if (followerState == FOLLOWER_STATE_OFFLINE || followerState == FOLLOWER_STATE_REALIGN) {
