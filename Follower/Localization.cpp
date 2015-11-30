@@ -176,9 +176,29 @@ void updateIntersectionLocalization(int intersectionType) {
 
 		if (expectedType > 0 && expectedType == intersectionType) {
 			// The current intersection is y
-			
-			//auto selectedIntersection = intersections[y];
+
+			// Calculate expected heading angle between the last and current intersection
+			byte lastIntersectionX = pgm_read_byte(&(intersections[x].intersectionX));
+			byte lastIntersectionY = pgm_read_byte(&(intersections[x].intersectionY));
+
+			byte currentIntersectionX = pgm_read_byte(&(intersections[y].intersectionX));
+			byte currentIntersectionY = pgm_read_byte(&(intersections[y].intersectionY));
+
+			double xDiff = currentIntersectionX - lastIntersectionX;
+			double yDiff = currentIntersectionY - lastIntersectionY;
+
+			// TODO: This is in degrees for debugging
+			double angle = atan2(yDiff, xDiff) * (180.0 / M_PI);
+
+			Serial.print("Last: ");
+			Serial.print(pgm_read_byte(&(intersections[x].id)));
+			Serial.print(", Current: ");
+			Serial.print(pgm_read_byte(&(intersections[y].id)));
+			Serial.print(", Angle: ");
+			Serial.println(angle);
+
 			// TODO: Perform realigmnent based on current location
+			// TODO: Check encoder-determined angle, and compare with calculated angle. If value is far away from the actual angle, this is likely not the correct intersection and should be skipped.
 
 			lastIntersectionMarkerId = y;
 			valid = true;
