@@ -54,20 +54,20 @@ void initializeEncoders() {
 	pinMode(ENCODER_RIGHT_MOTORB, INPUT);
 	digitalWrite(ENCODER_RIGHT_MOTORB, HIGH);
 
-  attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_MOTOR), handleLeftMotorInterupt, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_MOTOR), handleRightMotorInterupt, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_LEFT_MOTOR), handleLeftMotorInterupt, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_MOTOR), handleRightMotorInterupt, CHANGE);
 }
 
 void handleLeftMotorInterupt() {
-  // Note: 1 wheel rotation = GEAR_RATIO * ENCODER_TEETH_COUNT = 100.37 * 12 = 1204.44 clicks
-  /*if (leftForward == true) {
-    leftMotorCount++;
-  }
-  else {
-    leftMotorCount--;
-  }*/
-  /*if(digitalRead(ENCODER_LEFT_MOTORB)) leftMotorCount++;
-    else leftMotorCount--;*/
+	// Note: 1 wheel rotation = GEAR_RATIO * ENCODER_TEETH_COUNT = 100.37 * 12 = 1204.44 clicks
+	/*if (leftForward == true) {
+	  leftMotorCount++;
+	}
+	else {
+	  leftMotorCount--;
+	}*/
+	/*if(digitalRead(ENCODER_LEFT_MOTORB)) leftMotorCount++;
+	  else leftMotorCount--;*/
 
 	if (digitalRead(ENCODER_LEFT_MOTOR) == digitalRead(ENCODER_LEFT_MOTORB)) {
 		leftMotorCount++;
@@ -76,18 +76,18 @@ void handleLeftMotorInterupt() {
 		leftMotorCount--;
 	}
 
-  // TODO: Handle direction
+	// TODO: Handle direction
 }
 
 void handleRightMotorInterupt() {
-  /*if (rightForward == true) {
-    rightMotorCount++;
-  }
-  else {
-    rightMotorCount--;
-  }*/
-  /*if(digitalRead(ENCODER_RIGHT_MOTORB)) rightMotorCount++;
-    else leftMotorCount--;*/
+	/*if (rightForward == true) {
+	  rightMotorCount++;
+	}
+	else {
+	  rightMotorCount--;
+	}*/
+	/*if(digitalRead(ENCODER_RIGHT_MOTORB)) rightMotorCount++;
+	  else leftMotorCount--;*/
 
 	if (digitalRead(ENCODER_RIGHT_MOTOR) == digitalRead(ENCODER_RIGHT_MOTORB)) {
 		rightMotorCount++;
@@ -97,61 +97,61 @@ void handleRightMotorInterupt() {
 	}
 
 	leftMotorCount = rightMotorCount;
-  // TODO: Handle direction
+	// TODO: Handle direction
 }
 
 //if robot is placed at an angle with the line, this code will correct the angle and position after the robot has travelled 0.4m
 void correctRelativeAngle() {
-  double travelDistFromStart = sqrt(pow(relativeLocationXMeters, 2) + pow(relativeLocationYMeters, 2));
-  double relativeCorrectionAngle;
-  if (travelDistFromStart > 0.4) {
-    relativeCorrectionAngle = atan(relativeLocationYMeters / relativeLocationXMeters);
-    relativeHeadingAngle -= relativeCorrectionAngle;
-    relativeLocationXMeters = travelDistFromStart;
-    relativeLocationYMeters = 0;
-    relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
-    relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
-    correctRelativeAngleDone = true;
-  }
+	double travelDistFromStart = sqrt(pow(relativeLocationXMeters, 2) + pow(relativeLocationYMeters, 2));
+	double relativeCorrectionAngle;
+	if (travelDistFromStart > 0.4) {
+		relativeCorrectionAngle = atan(relativeLocationYMeters / relativeLocationXMeters);
+		relativeHeadingAngle -= relativeCorrectionAngle;
+		relativeLocationXMeters = travelDistFromStart;
+		relativeLocationYMeters = 0;
+		relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
+		relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
+		correctRelativeAngleDone = true;
+	}
 }
 void updateRelativeLocation() {
-  double leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
-  previousLeftMotorCount = leftEncoderDiff + previousLeftMotorCount;
-  double rightEncoderDiff = rightMotorCount - previousRightMotorCount;
-  previousRightMotorCount = rightEncoderDiff + previousRightMotorCount;
+	double leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
+	previousLeftMotorCount = leftEncoderDiff + previousLeftMotorCount;
+	double rightEncoderDiff = rightMotorCount - previousRightMotorCount;
+	previousRightMotorCount = rightEncoderDiff + previousRightMotorCount;
 
-  double relativeHeadingAngleDiff;
-  double travelDist;
+	double relativeHeadingAngleDiff;
+	double travelDist;
 
-  double leftEncoderDiffMeters = leftEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
-  double rightEncoderDiffMeters = rightEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
+	double leftEncoderDiffMeters = leftEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
+	double rightEncoderDiffMeters = rightEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
 
 
 
-  relativeHeadingAngleDiff = (rightEncoderDiffMeters - leftEncoderDiffMeters) / WHEEL_GAP;
+	relativeHeadingAngleDiff = (rightEncoderDiffMeters - leftEncoderDiffMeters) / WHEEL_GAP;
 
-  //Serial.print(relativeHeadingAngleDiff);
+	//Serial.print(relativeHeadingAngleDiff);
 
-  if (abs(relativeHeadingAngleDiff) > 0.001) {
-    travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) * sqrt(2 - 2 * cos(relativeHeadingAngleDiff))) / (2 * relativeHeadingAngleDiff));
-  }
-  else {
-    travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters)  / (2)));
-  }
+	if (abs(relativeHeadingAngleDiff) > 0.001) {
+		travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) * sqrt(2 - 2 * cos(relativeHeadingAngleDiff))) / (2 * relativeHeadingAngleDiff));
+	}
+	else {
+		travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) / (2)));
+	}
 
-  relativeLocationXMeters += cos(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
-  relativeLocationYMeters += sin(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
+	relativeLocationXMeters += cos(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
+	relativeLocationYMeters += sin(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
 
-  relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
-  relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
+	relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
+	relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
 
-  relativeHeadingAngle += relativeHeadingAngleDiff;
+	relativeHeadingAngle += relativeHeadingAngleDiff;
 
-  //Serial.print(" ");
-  //Serial.println(relativeHeadingAngle);
-  //  if (correctRelativeAngleDone == false) {
-  //    correctRelativeAngle();
-  //  }
+	//Serial.print(" ");
+	//Serial.println(relativeHeadingAngle);
+	//  if (correctRelativeAngleDone == false) {
+	//    correctRelativeAngle();
+	//  }
 }
 
 void pushDetectedIntersection(int intersectionType) {
