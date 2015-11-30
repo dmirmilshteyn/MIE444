@@ -107,6 +107,9 @@ namespace Tweak
                     writer.WriteLine("  byte y2;");
                     writer.WriteLine();
                     writer.WriteLine("  byte type;");
+                    writer.WriteLine();
+                    writer.WriteLine("  byte intersectionX;");
+                    writer.WriteLine("  byte intersectionY;");
                     writer.WriteLine("};");
                     writer.WriteLine();
 
@@ -115,9 +118,11 @@ namespace Tweak
                     for (int i = 0; i < map.IntersectionMarkers.Count; i++) {
                         writer.Write("  { ");
 
-                        //var intersectionLocations = map.Intersections[i].Export(map);
                         var marker = map.IntersectionMarkers[i];
-                        writer.Write($"{marker.IntersectionId}, {marker.X1}, {marker.Y1}, {marker.X2}, {marker.Y2}, {(int)marker.IntersectionType}");
+
+                        var intersectionLocation = DetermineIntersectionLocation(map.IntersectionMarkers, marker.IntersectionId);
+                       
+                        writer.Write($"{marker.IntersectionId}, {marker.X1}, {marker.Y1}, {marker.X2}, {marker.Y2}, {(int)marker.IntersectionType}, {intersectionLocation.X}, {intersectionLocation.Y}");
 
                         writer.Write(" }");
 
@@ -160,6 +165,25 @@ namespace Tweak
                     writer.WriteLine("#endif");
                 }
             }
+        }
+
+        private Position DetermineIntersectionLocation(IReadOnlyCollection<IntersectionMarker> markers, int targetIntersection) {
+            int xTotal = 0;
+            int yTotal = 0;
+
+            int xCount = 0;
+            int yCount = 0;
+            foreach (var marker in markers) {
+                if (marker.IntersectionId == targetIntersection) {
+                    xTotal += marker.X1 + marker.X2;
+                    yTotal += marker.Y1 + marker.Y2;
+
+                    xCount += 2;
+                    yCount += 2;
+                }
+            }
+
+            return new Position(xTotal / xCount, yTotal / yCount);
         }
     }
 }
