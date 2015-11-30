@@ -6,7 +6,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#define PRINT_DEBUG_MESSAGES
+//#define PRINT_DEBUG_MESSAGES
 //#define NOMOTORS
 
 // ************************
@@ -42,9 +42,9 @@ int readDebugCommand();
 void processDebugCommand(int command);
 
 void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor);
-void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor, int detectedIntersection);
+void publishIntersectionDetectionData(long currentTime, int frontSensor, int leftSensor, int rightSensor, int detectedIntersection);
 void publishEncoderData(long leftMotorCount, long rightMotorCount);
 void publishMap();
-void publishLocalizationData();
+void publishLocalizationData(long currentTime);
 
 #endif

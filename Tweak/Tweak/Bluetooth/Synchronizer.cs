@@ -328,12 +328,12 @@ namespace Tweak.Bluetooth
                             float relativePositionY = float.Parse(resultSegments[1]);
                             int currentIntersection = (int)float.Parse(resultSegments[2]);
 
-                            System.Diagnostics.Debug.WriteLine($"X: {relativePositionX}, Y: {relativePositionY}, Current Intersection: {currentIntersection}");
+                            System.Diagnostics.Debug.WriteLine($"{relativePositionX} {relativePositionY}");
                         }
                         break;
                 }
             } else {
-                OutputLogString += line;
+                //OutputLogString += line;
             }
         }
 

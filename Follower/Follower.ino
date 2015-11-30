@@ -136,7 +136,7 @@ void loop() {
   updateRelativeLocation();
 
   publishEncoderData(leftMotorCount, rightMotorCount);
-  publishLocalizationData();
+  publishLocalizationData(currentTime);
 
   while (Serial.available() > 0) {
     int command = Serial.read();

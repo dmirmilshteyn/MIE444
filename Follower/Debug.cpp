@@ -55,6 +55,9 @@ int readDebugCommand() {
   }
 }
 
+long lastLocalizationPublishTime = 0;
+long lastIntersectionPublishTime = 0;
+
 void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor) {
   print("!?");
   print(currentError);
@@ -75,16 +78,20 @@ void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float
   println();
 }
 
-void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor, int detectedIntersection) {
-	print("!#");
-	print(frontSensor);
-	print("|");
-	print(leftSensor);
-	print("|");
-	print(rightSensor);
-	print("|");
-	print(detectedIntersection);
-	println();
+void publishIntersectionDetectionData(long currentTime, int frontSensor, int leftSensor, int rightSensor, int detectedIntersection) {
+	if (currentTime > lastIntersectionPublishTime + 1000) {
+		lastIntersectionPublishTime = currentTime;
+
+		Serial.print("!#");
+		Serial.print(frontSensor);
+		Serial.print("|");
+		Serial.print(leftSensor);
+		Serial.print("|");
+		Serial.print(rightSensor);
+		Serial.print("|");
+		Serial.print(detectedIntersection);
+		Serial.println();
+	}
 }
 
 void publishEncoderData(long leftMotorCount, long rightMotorCount) {
@@ -110,16 +117,19 @@ void publishMap() {
     }*/
   println();
 }
-void publishLocalizationData() {
-  print("!&");
-  print(relativeLocationXMeters);
-  print("|");
-  print(relativeLocationYMeters);
-  print("|");
+void publishLocalizationData(long currentTime) {
+	if (currentTime > lastLocalizationPublishTime + 1000) {
+		lastLocalizationPublishTime = currentTime;
+		Serial.print("!&");
+		Serial.print(relativeLocationXMeters);
+		Serial.print("|");
+		Serial.print(relativeLocationYMeters);
+		Serial.print("|");
 
-  int currentIntersection = (int)pgm_read_byte(&(intersections[lastIntersectionMarkerId].id));
-  print(currentIntersection);
-  println();
+		int currentIntersection = (int)pgm_read_byte(&(intersections[lastIntersectionMarkerId].id));
+		Serial.print(currentIntersection);
+		Serial.println();
+	}
 }
 
 void processDebugCommand(int command) {
@@ -130,19 +140,19 @@ void processDebugCommand(int command) {
       break;
     case DEBUG_REQUEST_SYNC:
       Serial.read();
-	  print("!!");
-      print(Kp);
-      print("|");
-      print(Ki);
-      print("|");
-      print(Kd);
-      print("|");
-      print(DERIVATIVE_SPEED_ADJUST);
-      print("|");
-      print(averageMotorSpeed);
-      print("|");
-      print(stallPWM);
-      println();
+	  Serial.print("!!");
+	  Serial.print(Kp);
+	  Serial.print("|");
+	  Serial.print(Ki);
+	  Serial.print("|");
+	  Serial.print(Kd);
+	  Serial.print("|");
+	  Serial.print(DERIVATIVE_SPEED_ADJUST);
+	  Serial.print("|");
+	  Serial.print(averageMotorSpeed);
+	  Serial.print("|");
+	  Serial.print(stallPWM);
+      Serial.println();
       break;
     case DEBUG_OUTPUT_STATE:
       Serial.read();

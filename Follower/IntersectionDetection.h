@@ -43,7 +43,7 @@ inline double GetEncoderDistanceTicks() {
 	return (GEAR_RATIO * ENCODER_TEETH_COUNT * (1.0 / 22));
 }
 
-void ReadIntersectionSensors(int tick);
+void ReadIntersectionSensors(long tick);
 void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight);
 void ProcessDetectedIntersection(int detectedIntersectionType);
 

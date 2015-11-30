@@ -32,7 +32,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 		followerState = FOLLOWER_STATE_RIGHT;
 		break;
 	case INTERSECTION_TYPE_T:
-		followerState = FOLLOWER_STATE_LEFT;
+		followerState = FOLLOWER_STATE_RIGHT;
 		break;
 	case INTERSECTION_TYPE_TRIGHT:
 		followerState = FOLLOWER_STATE_RIGHT;
@@ -51,12 +51,12 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 #endif
 }
 
-void ReadIntersectionSensors(int tick) {
+void ReadIntersectionSensors(long tick) {
 	int sensorA = analogRead(LINE_SENSOR_1);
 	int sensorB = analogRead(LINE_SENSOR_2);
 	int sensorC = analogRead(LINE_SENSOR_3);
 
-	publishIntersectionDetectionData(sensorA, sensorB, sensorC, detectedIntersection);
+	publishIntersectionDetectionData(tick, sensorA, sensorB, sensorC, detectedIntersection);
 
   currentFront = sensorA;
   currentLeft = sensorB;
