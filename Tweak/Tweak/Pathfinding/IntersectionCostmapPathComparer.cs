@@ -9,12 +9,12 @@ namespace Tweak.Pathfinding
     class IntersectionCostmapPathComparer : IEqualityComparer<IntersectionCostmapPath>
     {
         public bool Equals(IntersectionCostmapPath x, IntersectionCostmapPath y) {
-            if (x.IntersectionIds.Count != y.IntersectionIds.Count) {
+            if (x.IntersectionNodes.Count != y.IntersectionNodes.Count) {
                 return false;
             }
 
-            for (int i = 0; i < x.IntersectionIds.Count; i++) {
-                if (x.IntersectionIds[i] != y.IntersectionIds[i]) {
+            for (int i = 0; i < x.IntersectionNodes.Count; i++) {
+                if (x.IntersectionNodes[i] != y.IntersectionNodes[i]) {
                     return false;
                 }
             }

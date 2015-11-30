@@ -96,8 +96,8 @@ namespace Tweak
             } else {
                 CodeGenerator codeGenerator = new CodeGenerator();
 
-                await codeGenerator.GenerateConstantsHeader(OutputDirectory, Project.Constants);
-                await codeGenerator.GenerateMapHeader(OutputDirectory, Project.Constants, project.Map);
+                await codeGenerator.GenerateConstantsHeader(OutputDirectory, Project.Constants, Project.Map);
+                await codeGenerator.GenerateMapHeader(OutputDirectory, Project.Constants, Project.Map);
             }
         }
 

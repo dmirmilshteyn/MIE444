@@ -13,7 +13,7 @@ namespace Tweak
     {
         public static readonly int TILES_PER_LINE = 15;
 
-        public async Task GenerateConstantsHeader(StorageFolder storageFolder, Constants constants) {
+        public async Task GenerateConstantsHeader(StorageFolder storageFolder, Constants constants, Map map) {
             using (Stream fileStream = await storageFolder.OpenStreamForWriteAsync("MappingConstants.h", CreationCollisionOption.ReplaceExisting)) {
                 using (StreamWriter writer = new StreamWriter(fileStream)) {
                     writer.WriteLine("/**********************************************");
@@ -38,6 +38,9 @@ namespace Tweak
 
                     writer.WriteLine($"#define MAP_TILES_WIDTH {map_tiles_width}");
                     writer.WriteLine($"#define MAP_TILES_HEIGHT {map_tiles_height}");
+                    writer.WriteLine();
+
+                    writer.WriteLine($"#define INTERSECTION_MARKER_COUNT {map.IntersectionMarkers.Count}");
                     writer.WriteLine();
 
                     writer.WriteLine("#endif");
@@ -108,7 +111,7 @@ namespace Tweak
                     writer.WriteLine();
 
                     // Write out the values for each intersection
-                    writer.WriteLine($"const PROGMEM intersection intersections[{map.IntersectionMarkers.Count}] = {{");
+                    writer.WriteLine($"const PROGMEM intersection intersections[INTERSECTION_MARKER_COUNT] = {{");
                     for (int i = 0; i < map.IntersectionMarkers.Count; i++) {
                         writer.Write("  { ");
 
@@ -128,14 +131,19 @@ namespace Tweak
 
                     // Build the intersection costmap
                     IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
-                    int[,] costmap = costmapGenerator.BuildCostmap(false);
+                    IntersectionGraphNode[,] costmap = costmapGenerator.BuildCostmap();
 
                     // Write out the costmap for intersections
-                    writer.WriteLine($"const PROGMEM byte intersection_cost_map[{costmap.GetLength(0)}][{costmap.GetLength(1)}] = {{");
+                    writer.WriteLine($"const PROGMEM int8_t intersection_cost_map[INTERSECTION_MARKER_COUNT][INTERSECTION_MARKER_COUNT][2] = {{");
                     for (int y = 0; y < costmap.GetLength(1); y++) {
                         writer.Write(" {");
                         for (int x = 0; x < costmap.GetLength(0); x++) {
-                            writer.Write($" {costmap[x, y]}");
+                            var graphNode = costmap[x, y];
+                            if (graphNode != null) {
+                                writer.Write($"  {{ {graphNode.Cost}, {(int)graphNode.IntersectionType} }}");
+                            } else {
+                                writer.Write("  { -1, 0 }");
+                            }
                             if (x != costmap.GetLength(0) - 1) {
                                 writer.Write(",");
                             }

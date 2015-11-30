@@ -7,6 +7,7 @@
 #include "WProgram.h"
 #endif
 
+#include <avr/pgmspace.h>
 #include "Constants.h"
 #include "MappingConstants.h"
 #include "Mapping.h"
@@ -33,13 +34,15 @@ extern void correctRelativeAngle();
 extern bool correctRelativeAngleDone;
 
 extern int currentPath;
+extern int lastIntersectionMarkerId;
 
 void initializeEncoders();
 void handleLeftMotorInterupt();
 void handleRightMotorInterupt();
 
 void PushDetectedIntersection(byte intersectionType);
-void TryToLocalize();
+void updateIntersectionLocalization(int intersectionType);
+int TryToLocalize();
 
 #endif
 

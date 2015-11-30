@@ -18,7 +18,11 @@ long lastIntersectionDetectionRightEncoder = 0;
 double lastTick = 0;
 
 void ProcessDetectedIntersection(int detectedIntersectionType) {
-	PushDetectedIntersection(detectedIntersectionType);
+	if (currentPath == -1) {
+		PushDetectedIntersection(detectedIntersectionType);
+	} else if (currentPath > -1) {
+		updateIntersectionLocalization(detectedIntersectionType);
+	}
 
 	switch (detectedIntersectionType) {
 	case INTERSECTION_TYPE_LEFTTURN:

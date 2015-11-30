@@ -16,4 +16,6 @@
 #define MAP_TILES_WIDTH 90
 #define MAP_TILES_HEIGHT 60
 
+#define INTERSECTION_MARKER_COUNT 54
+
 #endif

@@ -40,6 +40,9 @@ namespace Tweak.Pathfinding
                     } else {
                         nodeMap[x, y].Distance = -1;
                     }
+                    nodeMap[x, y].IntersectionCost = 1;
+                    nodeMap[x, y].IntersectionId = -1;
+                    nodeMap[x, y].MarkerId = -1;
                     nodeMap[x, y].Parent = null;
                 }
             }
@@ -60,15 +63,11 @@ namespace Tweak.Pathfinding
             return markers;
         }
 
-        public int[,] BuildCostmap(bool onlyUnique) {
+        public IntersectionGraphNode[,] BuildCostmap() {
             IReadOnlyList<IntersectionMarker> selectedIntersections;
-            if (onlyUnique) {
-                selectedIntersections = CountUniqueIntersectionMarkers();
-            } else {
-                selectedIntersections = intersectionMarkers;
-            }
+            selectedIntersections = intersectionMarkers;
 
-            int[,] costmap = new int[selectedIntersections.Count, selectedIntersections.Count];
+            IntersectionGraphNode[,] costmap = new IntersectionGraphNode[selectedIntersections.Count, selectedIntersections.Count];
 
             for (int x = 0; x < selectedIntersections.Count; x++) {
                 for (int y = 0; y < selectedIntersections.Count; y++) {
@@ -76,16 +75,35 @@ namespace Tweak.Pathfinding
                     var endingMarker = selectedIntersections[y];
 
                     if (startingMarker.IntersectionId == endingMarker.IntersectionId) {
-                        costmap[x, y] = -1;
+                        costmap[x, y] = null;
                         continue;
                     }
 
+                    Position openStartPosition = new Position(0, 0);
+
+                    int startX = Math.Min(startingMarker.X1, startingMarker.X2);
+                    int startY = Math.Min(startingMarker.Y1, startingMarker.Y2);
+                    int endX = Math.Max(startingMarker.X1, startingMarker.X2);
+                    int endY = Math.Max(startingMarker.Y1, startingMarker.Y2);
+                    for (int testX = startX; testX <= endX; testX++) {
+                        for (int testY = startY; testY <= endY; testY++) {
+                            if (testX >= 0 && testX < nodeMap.GetLength(0) &&
+                                testY >= 0 && testY < nodeMap.GetLength(1) &&
+                                !nodeMap[testX, testY].Closed) {
+                                openStartPosition.X = testX;
+                                openStartPosition.Y = testY;
+                            }
+                        }
+                    }
+
                     try {
-                        int? cost = BuildCostmapPath(new Position(startingMarker.X1, startingMarker.Y1), endingMarker.IntersectionId, -1).Where(path => path.Complete).FirstOrDefault()?.Cost;
-                        if (cost.HasValue) {
-                            costmap[x, y] = cost.Value;
+                        var path2 = BuildCostmapPath(openStartPosition, -1, 2);
+                        var path = path2.Where(p => p.IntersectionNodes.Count > 0 && p.IntersectionNodes[0].IntersectionId == startingMarker.IntersectionId && p.IntersectionNodes[p.IntersectionNodes.Count - 1].MarkerId == y).FirstOrDefault();
+                        //var path = .Where(p => p.IntersectionNodes.Count > 0 && p.IntersectionNodes[p.IntersectionNodes.Count-1].IntersectionId == startingMarker.IntersectionId && p.IntersectionNodes[0].MarkerId == x).FirstOrDefault();
+                        if (path != null) {
+                            costmap[x, y] = new IntersectionGraphNode(path.Cost, path.IntersectionNodes[path.IntersectionNodes.Count - 1].ExpectedIntersectionType);
                         } else {
-                            costmap[x, y] = 0;
+                            costmap[x, y] = null;
                         }
                     } catch (Exception ex) {
                         System.Diagnostics.Debug.WriteLine("Error");
@@ -130,14 +148,17 @@ namespace Tweak.Pathfinding
                         neighbourNode.Parent = nextNode;
                         neighbourNode.IntersectionCost = nextNode.IntersectionCost;
 
-                        int hittingIntersection = FindHittingIntersection(intersectionMarkers, neighbourPosition);
+                        int hittingIntersectionMarker = FindHittingIntersectionMarker(intersectionMarkers, neighbourPosition);
 
-                        if (hittingIntersection != -1) {
+                        if (hittingIntersectionMarker != -1) {
+                            int hittingIntersection = intersectionMarkers[hittingIntersectionMarker].IntersectionId;
+
                             if (!intersectionSet.Contains(hittingIntersection)) {
                                 intersectionSet.Add(hittingIntersection);
                             }
 
                             neighbourNode.IntersectionId = hittingIntersection;
+                            neighbourNode.MarkerId = hittingIntersectionMarker;
                             int lastIntersectionId = FindLastIntersectionId(neighbourPosition);
                             if (lastIntersectionId != -1 && lastIntersectionId != neighbourNode.IntersectionId) {
                                 // Only increase the cost if the last intersection marker was different
@@ -189,13 +210,13 @@ namespace Tweak.Pathfinding
         private IntersectionCostmapPath ReconstructPath(Position endingPosition, bool completePath) {
             int cost = 0;
 
-            List<int> intersectionIds = new List<int>();
+            List<IntersectionPathNode> intersectionIds = new List<IntersectionPathNode>();
 
             IntersectionCostmapNode currentNode = GetNode(endingPosition);
             while (currentNode.Parent != null) {
                 int intersectionId = currentNode.IntersectionId;
-                if (intersectionId > -1 && !intersectionIds.Contains(intersectionId)) {
-                    intersectionIds.Add(intersectionId);
+                if (intersectionId > -1 /*&& !intersectionIds.Contains(intersectionId)*/) {
+                    intersectionIds.Add(new IntersectionPathNode(intersectionId, intersectionMarkers[currentNode.MarkerId].IntersectionType, currentNode.MarkerId));
                 }
 
                 cost++;
@@ -224,10 +245,12 @@ namespace Tweak.Pathfinding
             yield return new Position(position.X + 1, position.Y + 1);
         }
 
-        private int FindHittingIntersection(IReadOnlyCollection<IntersectionMarker> intersections, Position testPosition) {
-            foreach (var marker in intersections) {
+        private int FindHittingIntersectionMarker(IReadOnlyList<IntersectionMarker> intersections, Position testPosition) {
+
+            for (int i = 0; i < intersections.Count; i++) {
+                var marker = intersections[i];
                 if (IsOnPoint(testPosition.X, testPosition.Y, marker.X1, marker.Y1, marker.X2, marker.Y2)) {
-                    return marker.IntersectionId;
+                    return i;
                 }
             }
 

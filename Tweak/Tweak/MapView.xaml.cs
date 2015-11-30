@@ -140,42 +140,50 @@ namespace Tweak
                     break;
                 case MapPlacementMode.Intersections:
                     {
-                        pointerPressed = false;
-                        if (!intersectionA.HasValue) {
-                            UIElement canvas = (UIElement)sender;
+                        if (e.KeyModifiers != Windows.System.VirtualKeyModifiers.Control) {
+                            pointerPressed = false;
+                            if (!intersectionA.HasValue) {
+                                UIElement canvas = (UIElement)sender;
 
-                            PointerPoint point = e.GetCurrentPoint(canvas);
+                                PointerPoint point = e.GetCurrentPoint(canvas);
 
-                            intersectionA = point.Position;
-                        } else if (!intersectionB.HasValue) {
-                            UIElement canvas = (UIElement)sender;
+                                intersectionA = point.Position;
+                            } else if (!intersectionB.HasValue) {
+                                UIElement canvas = (UIElement)sender;
 
-                            PointerPoint point = e.GetCurrentPoint(canvas);
-                            intersectionB = point.Position;
+                                PointerPoint point = e.GetCurrentPoint(canvas);
+                                intersectionB = point.Position;
 
-                            double width = intersectionB.Value.X - intersectionA.Value.X;
-                            double height = intersectionB.Value.Y - intersectionA.Value.Y;
+                                double width = intersectionB.Value.X - intersectionA.Value.X;
+                                double height = intersectionB.Value.Y - intersectionA.Value.Y;
 
-                            IntersectionMarker marker = new IntersectionMarker();
-                            IntersectionMarkerConfiguration configurationDialog = new IntersectionMarkerConfiguration();
-                            configurationDialog.DataContext = marker;
+                                IntersectionMarker marker = new IntersectionMarker();
+                                IntersectionMarkerConfiguration configurationDialog = new IntersectionMarkerConfiguration();
+                                configurationDialog.DataContext = marker;
 
-                            marker.X1 = (int)intersectionA.Value.X;
-                            marker.Y1 = (int)intersectionA.Value.Y;
-                            marker.X2 = (int)intersectionB.Value.X;
-                            marker.Y2 = (int)intersectionB.Value.Y;
+                                marker.X1 = (int)intersectionA.Value.X;
+                                marker.Y1 = (int)intersectionA.Value.Y;
+                                marker.X2 = (int)intersectionB.Value.X;
+                                marker.Y2 = (int)intersectionB.Value.Y;
 
-                            var result = await configurationDialog.ShowAsync();
-                            if (result == ContentDialogResult.Primary) {
-                                map.IntersectionMarkers.Add(marker);
+                                var result = await configurationDialog.ShowAsync();
+                                if (result == ContentDialogResult.Primary) {
+                                    map.IntersectionMarkers.Add(marker);
+                                }
+
+                                //Intersection intersection = new Intersection(intersectionA.Value.X, intersectionA.Value.Y, width, height);
+
+                                //map.Intersections.Add(intersection);
+
+                                intersectionA = null;
+                                intersectionB = null;
                             }
+                        } else {
+                            UIElement canvas = (UIElement)sender;
 
-                            //Intersection intersection = new Intersection(intersectionA.Value.X, intersectionA.Value.Y, width, height);
+                            PointerPoint point = e.GetCurrentPoint(canvas);
 
-                            //map.Intersections.Add(intersection);
-
-                            intersectionA = null;
-                            intersectionB = null;
+                            System.Diagnostics.Debug.WriteLine(FindHittingIntersectionMarker(map.IntersectionMarkers, new Position((int)point.Position.X, (int)point.Position.Y)));
                         }
                     }
                     break;
@@ -289,6 +297,27 @@ namespace Tweak
                     }
                 }
             }
+        }
+
+        private int FindHittingIntersectionMarker(IReadOnlyList<IntersectionMarker> intersections, Position testPosition) {
+
+            for (int i = 0; i < intersections.Count; i++) {
+                var marker = intersections[i];
+                if (IsOnPoint(testPosition.X, testPosition.Y, marker.X1, marker.Y1, marker.X2, marker.Y2)) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        bool IsOnPoint(int x, int y, int x1, int y1, int x2, int y2) {
+            if (x <= Math.Max(x1, x2) && x >= Math.Min(x1, x2)
+                && y <= Math.Max(y1, y2) && y >= Math.Min(y1, y2)) {
+                return true;
+            }
+
+            return false;
         }
     }
 }

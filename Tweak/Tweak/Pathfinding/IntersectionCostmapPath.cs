@@ -9,13 +9,13 @@ namespace Tweak.Pathfinding
     class IntersectionCostmapPath
     {
         public int Cost { get; set; }
-        public List<int> IntersectionIds { get; set; }
+        public List<IntersectionPathNode> IntersectionNodes { get; set; }
 
         public bool Complete { get; set; }
 
-        public IntersectionCostmapPath(int cost, List<int> intersectionIds, bool complete) {
+        public IntersectionCostmapPath(int cost, List<IntersectionPathNode> intersectionNodes, bool complete) {
             this.Cost = cost;
-            this.IntersectionIds = intersectionIds;
+            this.IntersectionNodes = intersectionNodes;
             this.Complete = complete;
         }
     }

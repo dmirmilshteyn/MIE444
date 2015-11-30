@@ -17,11 +17,13 @@ void correctRelativeAngle();
 bool correctRelativeAngleDone = false;
 
 int currentPath = -1;
+int lastIntersectionMarkerId = -1;
 
 // Absolute localization based on detected intersections
 int intersectionChain[MAX_PATH_LENGTH] = { 0 };
 int nextIntersectionIndex = 0;
 
+// Available, unique paths that are mapped to physical locations
 int intersectionPaths[PATH_COUNT][MAX_PATH_LENGTH] = {
 	{ INTERSECTION_TYPE_TRIGHT, -1 },
 	{ INTERSECTION_TYPE_TLEFT, -1 },
@@ -153,14 +155,45 @@ void updateRelativeLocation() {
 }
 
 void PushDetectedIntersection(byte intersectionType) {
-	if (currentPath == -1 && nextIntersectionIndex < MAX_PATH_LENGTH) {
+	if (nextIntersectionIndex < MAX_PATH_LENGTH) {
 		intersectionChain[nextIntersectionIndex++] = intersectionType;
 
-		TryToLocalize();
+		int result = TryToLocalize();
+		if (result > -1) {
+			// Localization was successful
+			lastIntersectionMarkerId = pathLocation[result][0];
+		}
 	}
 }
 
-void TryToLocalize() {
+void updateIntersectionLocalization(int intersectionType) {
+	// Try to identify the current intersection marker id
+
+	bool valid = false;
+	int x = lastIntersectionMarkerId;
+	for (int y = 0; y < INTERSECTION_MARKER_COUNT; y++) {
+		int expectedType = (int)pgm_read_byte(&(intersection_cost_map[y][x][1]));
+
+		if (expectedType > 0 && expectedType == intersectionType) {
+			// The current intersection is y
+			
+			//auto selectedIntersection = intersections[y];
+			// TODO: Perform realigmnent based on current location
+
+
+			lastIntersectionMarkerId = y;
+			valid = true;
+			break;
+		}
+	}
+
+	if (!valid) {
+		// TODO: Couldn't figure out location..
+		Serial.println("ERROR");
+	}
+}
+
+int TryToLocalize() {
 	for (int p = 0; p < PATH_COUNT; p++) {
 
 		bool pathValid = true;
@@ -176,9 +209,11 @@ void TryToLocalize() {
 
 		if (pathValid) {
 			currentPath = p;
-			break;
+			return currentPath;
 		}
 	}
+
+	return -1;
 }
 
 
