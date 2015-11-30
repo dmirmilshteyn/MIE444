@@ -141,12 +141,12 @@ namespace Tweak
                             }
                         }
                         writer.Write(" }");
-                        if (y != costmap.GetLength(1)) {
+                        if (y < costmap.GetLength(1) - 1) {
                             writer.Write(",");
                         }
                         writer.WriteLine();
                     }
-                    writer.WriteLine("}");
+                    writer.WriteLine("};");
 
                     writer.WriteLine();
                     writer.WriteLine("#endif");
