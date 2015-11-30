@@ -4,8 +4,8 @@ volatile long int leftMotorCount;
 volatile long int rightMotorCount;
 long int previousLeftMotorCount = 0;
 long int previousRightMotorCount = 0;
-int absoluteLocationX = 0;
-int absoluteLocationY = 0;
+int absoluteLocationX = -1;
+int absoluteLocationY = -1;
 double absoluteHeadingAngle = 0;
 int relativeLocationX = 0;
 int relativeLocationY = 0;
@@ -15,6 +15,30 @@ double relativeHeadingAngle = 0; //rads...right is negative, left is positive
 void updateRelativeLocation();
 void correctRelativeAngle();
 bool correctRelativeAngleDone = false;
+
+int currentPath = -1;
+
+// Absolute localization based on detected intersections
+int intersectionChain[MAX_PATH_LENGTH] = { 0 };
+int nextIntersectionIndex = 0;
+
+int intersectionPaths[PATH_COUNT][MAX_PATH_LENGTH] = {
+	{ INTERSECTION_TYPE_TRIGHT, -1 },
+	{ INTERSECTION_TYPE_TLEFT, -1 },
+	{ INTERSECTION_TYPE_T, INTERSECTION_TYPE_LEFTTURN },
+	{ INTERSECTION_TYPE_T, INTERSECTION_TYPE_TLEFT },
+	{ INTERSECTION_TYPE_T, INTERSECTION_TYPE_TRIGHT }
+};
+
+// Array is stored in the following structure:
+// { Intersection Id, Absolute Heading }
+float pathLocation[PATH_COUNT][2] = {
+	{ 14, 3 * M_PI / 2 }, // Starting with TRight
+	{ 21, M_PI / 2 }, // Starting with TLeft
+	{ 38, M_PI / 3 }, // Starting with T, then Left
+	{ 38, M_PI / 3 }, // Starting with T, then TLeft (this is an error case)
+	{ 24, 0 } // Starting with T, then TRight
+};
 
 void initializeEncoders() {
 	pinMode(ENCODER_LEFT_MOTOR, INPUT);
@@ -69,6 +93,8 @@ void handleRightMotorInterupt() {
 	else {
 		rightMotorCount--;
 	}
+
+	leftMotorCount = rightMotorCount;
   // TODO: Handle direction
 }
 
@@ -126,7 +152,34 @@ void updateRelativeLocation() {
   //  }
 }
 
+void PushDetectedIntersection(byte intersectionType) {
+	if (currentPath == -1 && nextIntersectionIndex < MAX_PATH_LENGTH) {
+		intersectionChain[nextIntersectionIndex++] = intersectionType;
 
+		TryToLocalize();
+	}
+}
+
+void TryToLocalize() {
+	for (int p = 0; p < PATH_COUNT; p++) {
+
+		bool pathValid = true;
+		for (int i = 0; i < MAX_PATH_LENGTH; i++) {
+			int currentIntersection = intersectionPaths[p][i];
+			if (currentIntersection != -1) {
+				if (currentIntersection != intersectionChain[i]) {
+					pathValid = false;
+					break;
+				}
+			}
+		}
+
+		if (pathValid) {
+			currentPath = p;
+			break;
+		}
+	}
+}
 
 
 

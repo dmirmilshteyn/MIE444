@@ -70,7 +70,7 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  delay(20000);
+  //delay(20000);
 }
 
 void loop() {
@@ -110,7 +110,7 @@ void loop() {
   updateRelativeLocation();
 
   publishEncoderData(leftMotorCount, rightMotorCount);
-  publishRelativeLocation();
+  publishLocalizationData();
 
   while (Serial.available() > 0) {
     int command = Serial.read();

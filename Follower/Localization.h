@@ -13,6 +13,9 @@
 #include "Math.h"
 #include "LineFollower.h"
 
+#define MAX_PATH_LENGTH 2
+#define PATH_COUNT 5
+
 extern volatile long int leftMotorCount;
 extern volatile long int rightMotorCount;
 extern long int previousLeftMotorCount;
@@ -29,9 +32,14 @@ extern void updateRelativeLocation();
 extern void correctRelativeAngle();
 extern bool correctRelativeAngleDone;
 
+extern int currentPath;
+
 void initializeEncoders();
 void handleLeftMotorInterupt();
 void handleRightMotorInterupt();
+
+void PushDetectedIntersection(byte intersectionType);
+void TryToLocalize();
 
 #endif
 
