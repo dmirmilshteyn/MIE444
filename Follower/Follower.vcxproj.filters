@@ -57,9 +57,6 @@
     <ClInclude Include="Localization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\Downloads\digitalWriteFastinterruptSafe\digitalWriteFast\digitalWriteFast.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mapping.cpp">

@@ -18,6 +18,8 @@ long lastIntersectionDetectionRightEncoder = 0;
 double lastTick = 0;
 
 void ProcessDetectedIntersection(int detectedIntersectionType) {
+	PushDetectedIntersection(detectedIntersectionType);
+
 	switch (detectedIntersectionType) {
 	case INTERSECTION_TYPE_LEFTTURN:
 		followerState = FOLLOWER_STATE_LEFT;
@@ -35,6 +37,14 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 		followerState = FOLLOWER_STATE_LEFT;
 		break;
 	}
+
+#ifdef NOMOTORS
+	followerState == FOLLOWER_STATE_ONLINE;
+	detectedIntersection = INTERSECTION_TYPE_NONE;
+
+	lastIntersectionDetectionLeftEncoder = leftMotorCount;
+	lastIntersectionDetectionRightEncoder = rightMotorCount;
+#endif
 }
 
 void ReadIntersectionSensors(int tick) {

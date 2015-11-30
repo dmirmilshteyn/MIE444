@@ -152,6 +152,7 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
   }
 
   //next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
+#ifndef NOMOTORS
   if (motorSpeeds.left >= 0) {
     leftForward = true;
     analogWrite(BIN2_LEFT_MOTOR, 0);
@@ -173,6 +174,7 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     analogWrite(AIN1_RIGHT_MOTOR, 0);
     analogWrite(AIN2_RIGHT_MOTOR, -motorSpeeds.right);//drives right motor reverse
   }
+#endif
 
   if (motorSpeeds.left == 0 && motorSpeeds.right == 0) {
       //delay(500);

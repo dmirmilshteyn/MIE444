@@ -35,4 +35,3 @@ void SetMapElement(int x, int y, bool value) {
 //
 //  map_tiles[position] = internal_value;
 }
-

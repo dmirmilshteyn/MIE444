@@ -110,11 +110,13 @@ void publishMap() {
     }*/
   println();
 }
-void publishRelativeLocation() {
+void publishLocalizationData() {
   print("!&");
   print(relativeLocationXMeters);
   print("|");
   print(relativeLocationYMeters);
+  print("|");
+  print(currentPath);
   println();
 }
 

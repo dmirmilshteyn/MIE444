@@ -7,6 +7,7 @@
 #define DEBUG_H
 
 #define PRINT_DEBUG_MESSAGES
+#define NOMOTORS
 
 // ************************
 // **** Debug Commands ****
@@ -44,6 +45,6 @@ void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float
 void publishIntersectionDetectionData(int frontSensor, int leftSensor, int rightSensor, int detectedIntersection);
 void publishEncoderData(long leftMotorCount, long rightMotorCount);
 void publishMap();
-void publishRelativeLocation();
+void publishLocalizationData();
 
 #endif
