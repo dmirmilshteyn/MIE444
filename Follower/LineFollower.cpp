@@ -200,12 +200,12 @@ void determineStallPWM() {
     int i = 0;
     analogWrite(BIN2_LEFT_MOTOR, 0);
     analogWrite(AIN2_RIGHT_MOTOR, 0);
-//    do {
-//      delay(5);
-//      analogWrite(BIN1_LEFT_MOTOR, i);//drives left motor forward
-//      analogWrite(AIN1_RIGHT_MOTOR, i);//drives right motor forward
-//      i++;
-//    } while (leftMotorCount < 10 || rightMotorCount < 10); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
+    do {
+      delay(5);
+      analogWrite(BIN1_LEFT_MOTOR, i);//drives left motor forward
+      analogWrite(AIN1_RIGHT_MOTOR, i);//drives right motor forward
+      i++;
+    } while (leftMotorCount < 10 || rightMotorCount < 10); //((previousLeftMotorCount - leftMotorCount) / (1 / 1000) < (1204 * 0.05));
     stallPWM = i;//i;// * 1.2;
     averageMotorSpeed = 100;//(255 - stallPWM) * 0.2 + stallPWM;
     leftMotorCount = 0;

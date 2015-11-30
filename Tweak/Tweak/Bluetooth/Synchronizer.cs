@@ -326,9 +326,9 @@ namespace Tweak.Bluetooth
                             string[] resultSegments = line.Split('|');
                             float relativePositionX = float.Parse(resultSegments[0]);
                             float relativePositionY = float.Parse(resultSegments[1]);
-                            int currentPath = (int)float.Parse(resultSegments[2]);
+                            int currentIntersection = (int)float.Parse(resultSegments[2]);
 
-                            System.Diagnostics.Debug.WriteLine($"X: {relativePositionX}, Y: {relativePositionY}, Current Path: {currentPath}");
+                            System.Diagnostics.Debug.WriteLine($"X: {relativePositionX}, Y: {relativePositionY}, Current Intersection: {currentIntersection}");
                         }
                         break;
                 }

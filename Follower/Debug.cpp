@@ -116,7 +116,9 @@ void publishLocalizationData() {
   print("|");
   print(relativeLocationYMeters);
   print("|");
-  print(currentPath);
+
+  int currentIntersection = (int)pgm_read_byte(&(intersections[lastIntersectionMarkerId].id));
+  print(currentIntersection);
   println();
 }
 

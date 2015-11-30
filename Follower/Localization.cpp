@@ -70,10 +70,10 @@ void handleLeftMotorInterupt() {
 	  else leftMotorCount--;*/
 
 	if (digitalRead(ENCODER_LEFT_MOTOR) == digitalRead(ENCODER_LEFT_MOTORB)) {
-		leftMotorCount++;
+		leftMotorCount--;
 	}
 	else {
-		leftMotorCount--;
+		leftMotorCount++;
 	}
 
 	// TODO: Handle direction
@@ -90,13 +90,12 @@ void handleRightMotorInterupt() {
 	  else leftMotorCount--;*/
 
 	if (digitalRead(ENCODER_RIGHT_MOTOR) == digitalRead(ENCODER_RIGHT_MOTORB)) {
-		rightMotorCount++;
-	}
-	else {
 		rightMotorCount--;
 	}
+	else {
+		rightMotorCount++;
+	}
 
-	leftMotorCount = rightMotorCount;
 	// TODO: Handle direction
 }
 
@@ -190,13 +189,13 @@ void updateIntersectionLocalization(int intersectionType) {
 			// TODO: This is in degrees for debugging
 			double angle = atan2(yDiff, xDiff) * (180.0 / M_PI);
 
-			Serial.print("Last: ");
+			/*Serial.print("Last: ");
 			Serial.print(pgm_read_byte(&(intersections[x].id)));
 			Serial.print(", Current: ");
 			Serial.print(pgm_read_byte(&(intersections[y].id)));
 			Serial.print(", Angle: ");
 			Serial.println(angle);
-
+*/
 			// TODO: Perform realigmnent based on current location
 			// TODO: Check encoder-determined angle, and compare with calculated angle. If value is far away from the actual angle, this is likely not the correct intersection and should be skipped.
 

@@ -70,7 +70,7 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  ProcessDetectedIntersection(INTERSECTION_TYPE_T);
+  /*ProcessDetectedIntersection(INTERSECTION_TYPE_T);
   ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
   ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
   ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
@@ -88,15 +88,15 @@ void setup() {
   ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
   ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
   ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);*/
 
-  Serial.print("Intersection: ");
+  /*Serial.print("Intersection: ");
   Serial.print(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
   Serial.print(", Marker: ");
-  Serial.println(lastIntersectionMarkerId);
+  Serial.println(lastIntersectionMarkerId);*/
   // Expected: 17
 
-  //delay(20000);
+  delay(20000);
 }
 
 void loop() {
