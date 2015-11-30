@@ -40,9 +40,9 @@ void initializeEncoders();
 void handleLeftMotorInterupt();
 void handleRightMotorInterupt();
 
-void PushDetectedIntersection(byte intersectionType);
+void pushDetectedIntersection(int intersectionType);
 void updateIntersectionLocalization(int intersectionType);
-int TryToLocalize();
+int tryToLocalize();
 
 #endif
 

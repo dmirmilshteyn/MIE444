@@ -19,7 +19,7 @@ double lastTick = 0;
 
 void ProcessDetectedIntersection(int detectedIntersectionType) {
 	if (currentPath == -1) {
-		PushDetectedIntersection(detectedIntersectionType);
+		pushDetectedIntersection(detectedIntersectionType);
 	} else if (currentPath > -1) {
 		updateIntersectionLocalization(detectedIntersectionType);
 	}

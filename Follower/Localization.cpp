@@ -154,11 +154,11 @@ void updateRelativeLocation() {
   //  }
 }
 
-void PushDetectedIntersection(byte intersectionType) {
+void pushDetectedIntersection(int intersectionType) {
 	if (nextIntersectionIndex < MAX_PATH_LENGTH) {
 		intersectionChain[nextIntersectionIndex++] = intersectionType;
 
-		int result = TryToLocalize();
+		int result = tryToLocalize();
 		if (result > -1) {
 			// Localization was successful
 			lastIntersectionMarkerId = pathLocation[result][0];
@@ -192,7 +192,7 @@ void updateIntersectionLocalization(int intersectionType) {
 	}
 }
 
-int TryToLocalize() {
+int tryToLocalize() {
 	for (int p = 0; p < PATH_COUNT; p++) {
 
 		bool pathValid = true;
