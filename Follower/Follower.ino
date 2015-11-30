@@ -29,6 +29,7 @@ void setup() {
   pinMode(IR_DETECTOR, INPUT);
   pinMode(ANTENNA_LED, OUTPUT);
   pinMode(WALL_DISTANCE_SENSOR, INPUT);
+  pinMode(12, INPUT);
   lastError = 0;
   averageMotorSpeed = 75;
   Serial.begin(9600);
@@ -94,8 +95,7 @@ void setup() {
 }
 
 void loop() {
-  //print("Digital: ");
-  //Serial.println(digitalRead(IR_DETECTOR));
+
   delay(10);
   long currentTime;
 
