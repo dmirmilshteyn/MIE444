@@ -96,9 +96,6 @@ namespace Tweak
             }
 
             for (int i = 0; i < map.StartPositions.Count; i++) {
-                if (i > 0) {
-                    continue;
-                }
                 StartPosition startPosition = map.StartPositions[i];
 
                 args.DrawingSession.DrawRectangle(new Rect(startPosition.X, startPosition.Y, 1, 1), Colors.Purple);
