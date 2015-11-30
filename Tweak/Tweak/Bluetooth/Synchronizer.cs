@@ -207,6 +207,15 @@ namespace Tweak.Bluetooth
             }
         }
 
+        int intersectionId;
+        public int IntersectionId {
+            get { return intersectionId; }
+            set {
+                intersectionId = value;
+                RaisePropertyChanged();
+            }
+        }
+
         IntersectionIdentifier intersectionIdentifier;
         public IntersectionIdentifier IntersectionIdentifier {
             get { return intersectionIdentifier; }
@@ -326,7 +335,7 @@ namespace Tweak.Bluetooth
                             string[] resultSegments = line.Split('|');
                             float relativePositionX = float.Parse(resultSegments[0]);
                             float relativePositionY = float.Parse(resultSegments[1]);
-                            int currentIntersection = (int)float.Parse(resultSegments[2]);
+                            IntersectionId = (int)float.Parse(resultSegments[2]);
 
                             System.Diagnostics.Debug.WriteLine($"{relativePositionX} {relativePositionY}");
                         }
