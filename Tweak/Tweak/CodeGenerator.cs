@@ -98,7 +98,7 @@ namespace Tweak
                     writer.WriteLine();
 
                     // Write out the intersection datatype
-                    writer.WriteLine("struct intersection {");
+                    writer.WriteLine("struct intersection_marker {");
                     writer.WriteLine("  byte id;");
                     writer.WriteLine();
                     writer.WriteLine("  byte x1;");
@@ -111,7 +111,7 @@ namespace Tweak
                     writer.WriteLine();
 
                     // Write out the values for each intersection
-                    writer.WriteLine($"const PROGMEM intersection intersections[INTERSECTION_MARKER_COUNT] = {{");
+                    writer.WriteLine($"const PROGMEM intersection_marker intersections[INTERSECTION_MARKER_COUNT] = {{");
                     for (int i = 0; i < map.IntersectionMarkers.Count; i++) {
                         writer.Write("  { ");
 
@@ -134,7 +134,7 @@ namespace Tweak
                     IntersectionGraphNode[,] costmap = costmapGenerator.BuildCostmap();
 
                     // Write out the costmap for intersections
-                    writer.WriteLine($"const PROGMEM int8_t intersection_cost_map[INTERSECTION_MARKER_COUNT][INTERSECTION_MARKER_COUNT][2] = {{");
+                    writer.WriteLine($"const PROGMEM int8_t intersection_graph[INTERSECTION_MARKER_COUNT][INTERSECTION_MARKER_COUNT][2] = {{");
                     for (int y = 0; y < costmap.GetLength(1); y++) {
                         writer.Write(" {");
                         for (int x = 0; x < costmap.GetLength(0); x++) {

@@ -172,7 +172,7 @@ void updateIntersectionLocalization(int intersectionType) {
 	bool valid = false;
 	int x = lastIntersectionMarkerId;
 	for (int y = 0; y < INTERSECTION_MARKER_COUNT; y++) {
-		int expectedType = (int)pgm_read_byte(&(intersection_cost_map[y][x][1]));
+		int expectedType = (int)pgm_read_byte(&(intersection_graph[y][x][1]));
 
 		if (expectedType > 0 && expectedType == intersectionType) {
 			// The current intersection is y
