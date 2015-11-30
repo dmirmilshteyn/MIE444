@@ -97,9 +97,7 @@ namespace Tweak.Pathfinding
                     }
 
                     try {
-                        var path2 = BuildCostmapPath(openStartPosition, -1, 2);
-                        var path = path2.Where(p => p.IntersectionNodes.Count > 0 && p.IntersectionNodes[0].IntersectionId == startingMarker.IntersectionId && p.IntersectionNodes[p.IntersectionNodes.Count - 1].MarkerId == y).FirstOrDefault();
-                        //var path = .Where(p => p.IntersectionNodes.Count > 0 && p.IntersectionNodes[p.IntersectionNodes.Count-1].IntersectionId == startingMarker.IntersectionId && p.IntersectionNodes[0].MarkerId == x).FirstOrDefault();
+                        var path = BuildCostmapPath(openStartPosition, -1, x, y, 2).Where(p => p.IntersectionNodes.Count > 0 && p.IntersectionNodes[0].IntersectionId == startingMarker.IntersectionId && p.IntersectionNodes[p.IntersectionNodes.Count - 1].MarkerId == y).FirstOrDefault();
                         if (path != null) {
                             costmap[x, y] = new IntersectionGraphNode(path.Cost, path.IntersectionNodes[path.IntersectionNodes.Count - 1].ExpectedIntersectionType);
                         } else {
@@ -115,10 +113,10 @@ namespace Tweak.Pathfinding
         }
 
         public IEnumerable<IntersectionCostmapPath> BuildCostmapPath(Position startPosition) {
-            return BuildCostmapPath(startPosition, -1, -1);
+            return BuildCostmapPath(startPosition, -1, -1, -1, -1);
         }
 
-        public IEnumerable<IntersectionCostmapPath> BuildCostmapPath(Position startPosition, int endingIntersection, int jumpMaximum) {
+        public IEnumerable<IntersectionCostmapPath> BuildCostmapPath(Position startPosition, int endingIntersection, int startingIntersectionMarker, int endingIntersectionMarker, int jumpMaximum) {
             var elements = new List<IntersectionCostmapPath>();
 
             ResetNodeMap();
@@ -129,6 +127,14 @@ namespace Tweak.Pathfinding
 
             var startNode = GetNode(startPosition);
             startNode.Distance = 1;
+
+            if (TestIfHittingIntersection(startPosition)) {
+                startNode.IntersectionCost++;
+
+                startNode.IntersectionId = intersectionMarkers[startingIntersectionMarker].IntersectionId;
+                startNode.MarkerId = startingIntersectionMarker;
+            }
+
             q.Enqueue(startPosition);
 
             while (q.Count > 0) {
@@ -148,39 +154,32 @@ namespace Tweak.Pathfinding
                         neighbourNode.Parent = nextNode;
                         neighbourNode.IntersectionCost = nextNode.IntersectionCost;
 
-                        int hittingIntersectionMarker = FindHittingIntersectionMarker(intersectionMarkers, neighbourPosition);
+                        TestIfHittingIntersection(neighbourPosition);
+                        if (neighbourNode.IntersectionId == intersectionMarkers[startingIntersectionMarker].IntersectionId) {
+                            neighbourNode.MarkerId = startingIntersectionMarker;
+                        }
 
-                        if (hittingIntersectionMarker != -1) {
-                            int hittingIntersection = intersectionMarkers[hittingIntersectionMarker].IntersectionId;
-
-                            if (!intersectionSet.Contains(hittingIntersection)) {
-                                intersectionSet.Add(hittingIntersection);
+                        if (neighbourNode.MarkerId != -1) {
+                            if (!intersectionSet.Contains(neighbourNode.IntersectionId)) {
+                                intersectionSet.Add(neighbourNode.IntersectionId);
                             }
 
-                            neighbourNode.IntersectionId = hittingIntersection;
-                            neighbourNode.MarkerId = hittingIntersectionMarker;
-                            int lastIntersectionId = FindLastIntersectionId(neighbourPosition);
-                            if (lastIntersectionId != -1 && lastIntersectionId != neighbourNode.IntersectionId) {
-                                // Only increase the cost if the last intersection marker was different
-                                neighbourNode.IntersectionCost = nextNode.IntersectionCost + 1;
-                            } else if (lastIntersectionId == -1) {
-                                // Initialize the first intersection
-                                //neighbourNode.IntersectionCost = 0;
-                            }
-
-                            if (jumpMaximum > -1 && neighbourNode.IntersectionCost >= jumpMaximum) {
+                            if (jumpMaximum > -1 && DetermineIntersectionCost(neighbourPosition) == jumpMaximum) {
                                 branchValid = false;
-                            }
-
-                            if (jumpMaximum > -1 && neighbourNode.IntersectionCost == jumpMaximum) {
                                 elements.Add(ReconstructPath(neighbourPosition, true));
                             }
+                            //if (jumpMaximum > -1 && neighbourNode.IntersectionCost >= jumpMaximum) {
+                            //    branchValid = false;
+                            //}
 
-                            if (endingIntersection != -1 && hittingIntersection == endingIntersection) {
-                                //yield return ReconstructPath(neighbourPosition, true);
-                                //yield break;
+                            //if (jumpMaximum > -1 && neighbourNode.IntersectionCost == jumpMaximum) {
+                            //    elements.Add(ReconstructPath(neighbourPosition, true));
+                            //}
+
+                            if ((endingIntersection != -1 && neighbourNode.IntersectionId == endingIntersection)
+                                || (endingIntersectionMarker != -1 && neighbourNode.MarkerId == endingIntersectionMarker)) {
                                 elements.Add(ReconstructPath(neighbourPosition, true));
-                                return elements;
+                                branchValid = false;
                             }
                         }
 
@@ -193,6 +192,59 @@ namespace Tweak.Pathfinding
 
             return elements;
             //yield return new IntersectionCostmapPath(0, new List<int>(), false);
+        }
+
+        private bool TestIfHittingIntersection(Position neighbourPosition) {
+            int hittingIntersectionMarker = FindHittingIntersectionMarker(intersectionMarkers, neighbourPosition);
+
+            if (hittingIntersectionMarker != -1) {
+                var neighbourNode = GetNode(neighbourPosition);
+
+                int hittingIntersection = intersectionMarkers[hittingIntersectionMarker].IntersectionId;
+
+                neighbourNode.IntersectionId = hittingIntersection;
+                neighbourNode.MarkerId = hittingIntersectionMarker;
+                int lastIntersectionId = FindLastIntersectionId(neighbourPosition);
+                if (lastIntersectionId != -1 && lastIntersectionId != neighbourNode.IntersectionId &&
+                    IsIntersectionInChain(neighbourPosition, hittingIntersection) == false) {
+                    // Only increase the cost if the last intersection marker was different
+                    neighbourNode.IntersectionCost++;
+                }
+            }
+
+            return (hittingIntersectionMarker != -1);
+        }
+
+        private int DetermineIntersectionCost(Position testPosition) {
+            int cost = 0;
+
+            List<int> intersectionIds = new List<int>();
+
+            var currentNode = GetNode(testPosition);
+            while (currentNode != null) {
+                if (currentNode.IntersectionId > -1 && intersectionIds.Where(n => n == currentNode.IntersectionId).Count() == 0) {
+                    cost++;
+
+                    intersectionIds.Add(currentNode.IntersectionId);
+                }
+
+                currentNode = currentNode.Parent;
+            }
+
+            return cost;
+        }
+
+        private bool IsIntersectionInChain(Position testPosition, int intersectionId) {
+            var currentNode = GetNode(testPosition);
+            while (currentNode != null) {
+                if (currentNode.IntersectionId == intersectionId) {
+                    return true;
+                }
+
+                currentNode = currentNode.Parent;
+            }
+
+            return false;
         }
 
         private int FindLastIntersectionId(Position testPosition) {
@@ -213,9 +265,9 @@ namespace Tweak.Pathfinding
             List<IntersectionPathNode> intersectionIds = new List<IntersectionPathNode>();
 
             IntersectionCostmapNode currentNode = GetNode(endingPosition);
-            while (currentNode.Parent != null) {
+            while (currentNode != null) {
                 int intersectionId = currentNode.IntersectionId;
-                if (intersectionId > -1 /*&& !intersectionIds.Contains(intersectionId)*/) {
+                if (intersectionId > -1 && intersectionIds.Where(n => n.IntersectionId == intersectionId).Count() == 0) {
                     intersectionIds.Add(new IntersectionPathNode(intersectionId, intersectionMarkers[currentNode.MarkerId].IntersectionType, currentNode.MarkerId));
                 }
 

@@ -85,11 +85,15 @@ void setup() {
   ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
   ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
   ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
 
   Serial.println(lastIntersectionMarkerId);
   Serial.print("Resultant intersection: ");
   Serial.println(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
-  // Expected: 14, it goes full circle!
+  // Expected: 17
 
   //delay(20000);
 }

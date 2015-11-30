@@ -180,7 +180,11 @@ void updateIntersectionLocalization(int intersectionType) {
 			//auto selectedIntersection = intersections[y];
 			// TODO: Perform realigmnent based on current location
 
-
+			Serial.print(expectedType);
+			Serial.print(", ");
+			Serial.print(x);
+			Serial.print(", ");
+			Serial.println(y);
 			lastIntersectionMarkerId = y;
 			valid = true;
 			break;

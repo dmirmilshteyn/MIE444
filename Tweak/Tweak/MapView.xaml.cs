@@ -213,7 +213,7 @@ namespace Tweak
                             List<Tuple<int, IntersectionCostmapPath>> allPaths = new List<Tuple<int, IntersectionCostmapPath>>();
 
                             for (int i = 0; i < map.StartPositions.Count; i++) {
-                                var paths = costmapGenerator.BuildCostmapPath(new Position(map.StartPositions[i].X, map.StartPositions[i].Y), -1, testDistance).Distinct(new IntersectionCostmapPathComparer());
+                                var paths = costmapGenerator.BuildCostmapPath(new Position(map.StartPositions[i].X, map.StartPositions[i].Y), -1,-1, -1, testDistance).Distinct(new IntersectionCostmapPathComparer());
 
                                 foreach (var path in paths) {
                                     allPaths.Add(Tuple.Create(i, path));
