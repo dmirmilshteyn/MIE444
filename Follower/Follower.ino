@@ -90,9 +90,10 @@ void setup() {
   ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
   ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
 
+  Serial.print("Intersection: ");
+  Serial.print(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
+  Serial.print(", Marker: ");
   Serial.println(lastIntersectionMarkerId);
-  Serial.print("Resultant intersection: ");
-  Serial.println(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
   // Expected: 17
 
   //delay(20000);
