@@ -70,6 +70,8 @@ void setup() {
   initializeEncoders();
   interrupts();
 
+  //Serial.println(pgm_read_byte(&(intersection_graph[11][14][0])));
+
   /*ProcessDetectedIntersection(INTERSECTION_TYPE_T);
   ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
   ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
@@ -96,7 +98,7 @@ void setup() {
   Serial.println(lastIntersectionMarkerId);*/
   // Expected: 17
 
-  delay(2000);
+  delay(15000);
 }
 
 void loop() {

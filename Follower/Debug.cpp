@@ -79,19 +79,19 @@ void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float
 }
 
 void publishIntersectionDetectionData(long currentTime, int frontSensor, int leftSensor, int rightSensor, int detectedIntersection) {
-	if (currentTime > lastIntersectionPublishTime + 1000) {
-		lastIntersectionPublishTime = currentTime;
-
-		Serial.print("!#");
-		Serial.print(frontSensor);
-		Serial.print("|");
-		Serial.print(leftSensor);
-		Serial.print("|");
-		Serial.print(rightSensor);
-		Serial.print("|");
-		Serial.print(detectedIntersection);
-		Serial.println();
-	}
+//	if (currentTime > lastIntersectionPublishTime + 1000) {
+//		lastIntersectionPublishTime = currentTime;
+//
+//		Serial.print("!#");
+//		Serial.print(frontSensor);
+//		Serial.print("|");
+//		Serial.print(leftSensor);
+//		Serial.print("|");
+//		Serial.print(rightSensor);
+//		Serial.print("|");
+//		Serial.print(detectedIntersection);
+//		Serial.println();
+//	}
 }
 
 void publishEncoderData(long leftMotorCount, long rightMotorCount) {
@@ -118,18 +118,18 @@ void publishMap() {
   println();
 }
 void publishLocalizationData(long currentTime) {
-	if (currentTime > lastLocalizationPublishTime + 1000) {
-		lastLocalizationPublishTime = currentTime;
-		Serial.print("!&");
-		Serial.print(relativeLocationXMeters);
-		Serial.print("|");
-		Serial.print(relativeLocationYMeters);
-		Serial.print("|");
-
-		int currentIntersection = (int)pgm_read_byte(&(intersections[lastIntersectionMarkerId].id));
-		Serial.print(currentIntersection);
-		Serial.println();
-	}
+//	if (currentTime > lastLocalizationPublishTime + 1000) {
+//		lastLocalizationPublishTime = currentTime;
+//		Serial.print("!&");
+//		Serial.print(relativeLocationXMeters);
+//		Serial.print("|");
+//		Serial.print(relativeLocationYMeters);
+//		Serial.print("|");
+//
+//		int currentIntersection = (int)pgm_read_byte(&(intersections[lastIntersectionMarkerId].id));
+//		Serial.print(currentIntersection);
+//		Serial.println();
+//	}
 }
 
 void processDebugCommand(int command) {

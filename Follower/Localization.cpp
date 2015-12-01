@@ -239,6 +239,10 @@ void updateIntersectionLocalization(int intersectionType) {
 
 
     lastIntersectionMarkerId = smallestDistanceMarkerID;
+    
+    Serial.println(lastIntersectionMarkerId);
+//    Serial.print("   ");
+//    Serial.println(intersections[lastIntersectionMarkerId].id);
   }
 }
 
