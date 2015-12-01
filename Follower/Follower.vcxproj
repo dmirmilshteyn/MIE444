@@ -141,6 +141,7 @@
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="IntersectionDetection.h" />
+    <ClInclude Include="IntersectionPathfinder.h" />
     <ClInclude Include="LineFollower.h" />
     <ClInclude Include="Localization.h" />
     <ClInclude Include="Map.h">
@@ -164,6 +165,7 @@
     <ClCompile Include="Checkpoint.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="IntersectionDetection.cpp" />
+    <ClCompile Include="IntersectionPathfinder.cpp" />
     <ClCompile Include="LineFollower.cpp" />
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="Mapping.cpp" />
