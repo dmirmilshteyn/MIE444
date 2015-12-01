@@ -201,9 +201,9 @@ void updateIntersectionLocalization(int intersectionType) {
       // TODO: Perform realigmnent (angle and location) based on current location
       // TODO: Check car location and compare with current intersection location. If value is far away, this is likely not the correct intersection and should be skipped.
 
-      double robotToInterectionDistance = sqrt(pow((absoluteLocationX) - (currentIntersectionX), 2) + pow((absoluteLocationY) - (currentIntersectionY), 2));
-      if (robotToInterectionDistance < smallestDistance) {
-        smallestDistance = robotToInterectionDistance;
+      double robotToIntersectionDistance = sqrt(pow((absoluteLocationX) - (currentIntersectionX), 2) + pow((absoluteLocationY) - (currentIntersectionY), 2));
+      if (robotToIntersectionDistance < smallestDistance) {
+        smallestDistance = robotToIntersectionDistance;
         smallestDistanceMarkerID = y;
       }
 
@@ -213,7 +213,7 @@ void updateIntersectionLocalization(int intersectionType) {
 
   if (smallestDistanceMarkerID == -1) {
     // TODO: Couldn't figure out location..
-    Serial.println("ERROR");
+    //Serial.println("ERROR");
   }
   else {
 
@@ -228,9 +228,11 @@ void updateIntersectionLocalization(int intersectionType) {
     double xDiff = currentIntersectionX - lastIntersectionX;
     double yDiff = currentIntersectionY - lastIntersectionY;
 
-    // TODO: This is in degrees for debugging
-    double angle = atan2(yDiff, xDiff);
 
+    double angle = atan2(yDiff, xDiff);
+    
+    // TODO: add special cases for angle where the line between 2 intersections isnt straight (i.e. arcs)
+    
     absoluteHeadingAngle = angle;
     absoluteLocationX = currentIntersectionX;
     absoluteLocationY = currentIntersectionY;
