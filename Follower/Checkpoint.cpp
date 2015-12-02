@@ -24,14 +24,14 @@ bool checkpointFound() {
   double checkpointDistance;
   bool condition = false;
   for (int i = 0; i < numCheckpointsFound; i++) {
-    checkpointDistance = sqrt(pow((relativeLocationXMeters) - (storedCheckpoint[i].x * MAP_RESOLUTION), 2) + pow((relativeLocationYMeters) - (storedCheckpoint[i].y * MAP_RESOLUTION), 2));
+    checkpointDistance = sqrt(pow((absoluteLocationXMeters) - (storedCheckpoint[i].x * MAP_RESOLUTION), 2) + pow((absoluteLocationYMeters) - (storedCheckpoint[i].y * MAP_RESOLUTION), 2));
     if (checkpointDistance < 0.5) {
       condition = true;
     }
   }
-//  Serial.print(relativeLocationXMeters);
+//  Serial.print(absoluteLocationXMeters);
 //  Serial.print("  ");
-//  Serial.print(relativeLocationYMeters);
+//  Serial.print(absoluteLocationYMeters);
 //  Serial.print("  ");
 //  Serial.println(condition);
   return condition;
@@ -49,8 +49,8 @@ void checkPointHandle(long currentTime) {
     if (checkpointFound() == false) {
       //      Serial.println("test2");
       //set current location of checkpoint as found
-      storedCheckpoint[numCheckpointsFound].x = relativeLocationX;  //sets found checkpoint coordinates to current robot position
-      storedCheckpoint[numCheckpointsFound].y = relativeLocationY;
+      storedCheckpoint[numCheckpointsFound].x = absoluteLocationX;  //sets found checkpoint coordinates to current robot position
+      storedCheckpoint[numCheckpointsFound].y = absoluteLocationY;
 
       numCheckpointsFound++;
       checkpointTime = currentTime;

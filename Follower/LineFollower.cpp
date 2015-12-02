@@ -9,11 +9,14 @@ float lastError;
 float integral;
 bool leftForward = true;
 bool rightForward = true;
+int wallSensorBuffer = 0;
+int wallBufferCounter = 0;
+double wallDistance = 0;
 
 int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
 int stallPWM;//PWM at which the motor stalls
 
-int previousTime;
+unsigned long previousTime;
 
 float readLeft;
 float readRight;
@@ -24,7 +27,7 @@ bool isRealigning = false;
 long lastRealignLeftMotorCount = 0;
 long lastRealignRightMotorCount = 0;
 
-void followLaneAnalog(long currentTime) {
+void followLaneAnalog(unsigned long currentTime) {
   determineStallPWM();
   float timeDifference = currentTime - previousTime;
   if (timeDifference < 1) {
@@ -35,14 +38,14 @@ void followLaneAnalog(long currentTime) {
   float controller;
 
 
-  integral = integral + (((currentError + lastError) / 2) * timeDifference);
+  //integral = integral + (((currentError + lastError) / 2) * timeDifference);
   derivative = (currentError - lastError) / timeDifference;
   lastError = currentError;
   controller = Kp * currentError + Ki * integral + Kd * derivative;
 
   MotorSpeeds motorSpeeds = driveMotorsPID(controller, derivative);
 
-  publishLaneFollowingData(motorSpeeds, currentError, integral, derivative, controller, readLeft, readRight);
+  publishLaneFollowingData(currentTime, motorSpeeds, currentError, integral, derivative, controller, readLeft, readRight);
 
   previousTime = currentTime;
 }
@@ -108,7 +111,7 @@ void updateFollowerState() {
     if (lastRealignLeftMotorCount == -1 && lastRealignRightMotorCount == -1) {
       lastRealignLeftMotorCount = leftMotorCount;
       lastRealignRightMotorCount = rightMotorCount;
-    } else if (leftMotorCount > lastRealignLeftMotorCount + 600 && rightMotorCount > lastRealignRightMotorCount + 600) {
+    } else if (leftMotorCount > lastRealignLeftMotorCount + 200 && rightMotorCount > lastRealignRightMotorCount + 200) {
       detectedIntersection = INTERSECTION_TYPE_NONE;
       isRealigning = false;
     }
@@ -130,10 +133,18 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
     motorSpeeds.right = -(adjustedSpeed * 1.2);
     motorSpeeds.left = adjustedSpeed * 1;
-    isRealigning = true;
+
+
+    //    isRealigning = true;
+    //    lastRealignLeftMotorCount = -1;
+    //    lastRealignRightMotorCount = -1;
+  }
+  else if(followerState == FOLLOWER_STATE_WALL_START_DONE){
+    motorSpeeds.right = 0;
+    motorSpeeds.left = 0;
   }
 
-  else if (followerState == FOLLOWER_STATE_LEFT || followerState == FOLLOWER_STATE_RIGHT || followerState == FOLLOWER_STATE_WALL) {
+  else if (followerState == FOLLOWER_STATE_LEFT || followerState == FOLLOWER_STATE_RIGHT || followerState == FOLLOWER_STATE_WALL_DEADEND) {
     switch (turnState) {
       case TURN_STATE_DEFAULT:
         if (IsSensorOnOrApproaching(SENSOR_LOCATION_FRONT) == false) {
@@ -153,9 +164,6 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 
       motorSpeeds.left = 0;
       motorSpeeds.right = 0;
-
-      lastRealignLeftMotorCount = -1;
-      lastRealignRightMotorCount = -1;
     }
     else {
       if (followerState == FOLLOWER_STATE_LEFT) {
@@ -168,8 +176,12 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
         motorSpeeds.right = -averageMotorSpeed * 0.6;
         motorSpeeds.left = averageMotorSpeed * 1.3;
       }
-      else if (followerState == FOLLOWER_STATE_WALL) {
+      else if (followerState == FOLLOWER_STATE_WALL_DEADEND) {
         // Turn right
+
+        isRealigning = true;
+        lastRealignLeftMotorCount = -1;
+        lastRealignRightMotorCount = -1;
         motorSpeeds.right = -(adjustedSpeed * 1.2);
         motorSpeeds.left = adjustedSpeed * 1;
       }
@@ -244,11 +256,32 @@ void determineStallPWM() {
 
 void wallDetection() {
   if (followerState == FOLLOWER_STATE_ONLINE) {
-    int wallDistance = analogRead(WALL_DISTANCE_SENSOR);
-    Serial.println(wallDistance);
-    if (wallDistance > 260) {
-      followerState = FOLLOWER_STATE_WALL;
+
+    wallSensorBuffer += analogRead(WALL_DISTANCE_SENSOR);
+    wallBufferCounter++;
+    if (wallBufferCounter >= 10) {
+      wallDistance = ((double)wallSensorBuffer) / wallBufferCounter;
+      wallBufferCounter = 0;
+      wallSensorBuffer = 0;
     }
+
+    Serial.print("  dist: ");
+    Serial.println(wallDistance);
+    if (wallDistance > 190 ) {
+      wallDistance = 0;
+      if (pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)) == pgm_read_byte(&(intersections[(int)pathLocation[currentPath][0]].id))) {
+        if (numCheckpointsFound < CHECKPOINTS_TOTAL) {
+          followerState = FOLLOWER_STATE_WALL_START_GOBACK;
+        }
+        else {
+          followerState = FOLLOWER_STATE_WALL_START_DONE;
+        }
+      }
+      else {
+        followerState = FOLLOWER_STATE_WALL_DEADEND;
+      }
+    }
+
   }
 }
 

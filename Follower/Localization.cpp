@@ -6,12 +6,9 @@ long int previousLeftMotorCount = 0;
 long int previousRightMotorCount = 0;
 int absoluteLocationX = -1;
 int absoluteLocationY = -1;
-double absoluteHeadingAngle = 0;
-int relativeLocationX = 0;
-int relativeLocationY = 0;
-double relativeLocationXMeters = 0; //************ADD*************
-double relativeLocationYMeters = 0; //************ADD*************
-double relativeHeadingAngle = 0; //rads...right is negative, left is positive
+double absoluteLocationXMeters = 0; //************ADD*************
+double absoluteLocationYMeters = 0; //************ADD*************
+double absoluteHeadingAngle = 0; //rads...right is positive, left is negative
 void updateRelativeLocation();
 void correctRelativeAngle();
 bool correctRelativeAngleDone = false;
@@ -35,10 +32,10 @@ int intersectionPaths[PATH_COUNT][MAX_PATH_LENGTH] = {
 // Array is stored in the following structure:
 // { Intersection Id, Absolute Heading }
 float pathLocation[PATH_COUNT][MAX_PATH_LENGTH + 1] = {
-  { 14, -1, 3 * M_PI / 2 }, // Starting with TRight
-  { 21, -1, M_PI / 2 }, // Starting with TLeft
-  { 39, 38, - M_PI / 4 }, // Starting with T, then Left
-  { 39, 38, - M_PI / 4 }, // Starting with T, then TLeft (this is an error case)
+  { 14, -1, M_PI / 2 }, // Starting with TRight
+  { 21, -1, -M_PI / 2 }, // Starting with TLeft
+  { 39, 38,  M_PI / 4 }, // Starting with T, then Left
+  { 39, 38,  M_PI / 4 }, // Starting with T, then TLeft (this is an error case)
   { 25, 24, 0 } // Starting with T, then TRight
 };
 
@@ -101,15 +98,15 @@ void handleRightMotorInterupt() {
 
 //if robot is placed at an angle with the line, this code will correct the angle and position after the robot has travelled 0.4m
 void correctRelativeAngle() {
-  double travelDistFromStart = sqrt(pow(relativeLocationXMeters, 2) + pow(relativeLocationYMeters, 2));
+  double travelDistFromStart = sqrt(pow(absoluteLocationXMeters, 2) + pow(absoluteLocationYMeters, 2));
   double relativeCorrectionAngle;
   if (travelDistFromStart > 0.4) {
-    relativeCorrectionAngle = atan(relativeLocationYMeters / relativeLocationXMeters);
-    relativeHeadingAngle -= relativeCorrectionAngle;
-    relativeLocationXMeters = travelDistFromStart;
-    relativeLocationYMeters = 0;
-    relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
-    relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
+    relativeCorrectionAngle = atan(absoluteLocationYMeters / absoluteLocationXMeters);
+    absoluteHeadingAngle -= relativeCorrectionAngle;
+    absoluteLocationXMeters = travelDistFromStart;
+    absoluteLocationYMeters = 0;
+    absoluteLocationX = round(absoluteLocationXMeters / MAP_RESOLUTION);
+    absoluteLocationY = round(absoluteLocationYMeters / MAP_RESOLUTION);
     correctRelativeAngleDone = true;
   }
 }
@@ -119,7 +116,7 @@ void updateRelativeLocation() {
   double rightEncoderDiff = rightMotorCount - previousRightMotorCount;
   previousRightMotorCount = rightEncoderDiff + previousRightMotorCount;
 
-  double relativeHeadingAngleDiff;
+  double absoluteHeadingAngleDiff;
   double travelDist;
 
   double leftEncoderDiffMeters = leftEncoderDiff / ENCODER_TEETH_COUNT / GEAR_RATIO * WHEEL_RADIUS * 2 * M_PI;
@@ -127,27 +124,27 @@ void updateRelativeLocation() {
 
 
 
-  relativeHeadingAngleDiff = (rightEncoderDiffMeters - leftEncoderDiffMeters) / WHEEL_GAP;
+  absoluteHeadingAngleDiff = (leftEncoderDiffMeters - rightEncoderDiffMeters) / WHEEL_GAP;
 
-  //Serial.print(relativeHeadingAngleDiff);
+  //Serial.print(absoluteHeadingAngleDiff);
 
-  if (abs(relativeHeadingAngleDiff) > 0.001) {
-    travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) * sqrt(2 - 2 * cos(relativeHeadingAngleDiff))) / (2 * relativeHeadingAngleDiff));
+  if (abs(absoluteHeadingAngleDiff) > 0.001) {
+    travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) * sqrt(2 - 2 * cos(absoluteHeadingAngleDiff))) / (2 * absoluteHeadingAngleDiff));
   }
   else {
     travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) / (2)));
   }
 
-  relativeLocationXMeters += cos(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
-  relativeLocationYMeters += sin(relativeHeadingAngle + relativeHeadingAngleDiff / 2) * travelDist;
+  absoluteLocationXMeters += cos(absoluteHeadingAngle + absoluteHeadingAngleDiff / 2) * travelDist;
+  absoluteLocationYMeters += sin(absoluteHeadingAngle + absoluteHeadingAngleDiff / 2) * travelDist;
 
-  relativeLocationX = round(relativeLocationXMeters / MAP_RESOLUTION);
-  relativeLocationY = round(relativeLocationYMeters / MAP_RESOLUTION);
+  absoluteLocationX = round(absoluteLocationXMeters / MAP_RESOLUTION);
+  absoluteLocationY = round(absoluteLocationYMeters / MAP_RESOLUTION);
 
-  relativeHeadingAngle += relativeHeadingAngleDiff;
+  absoluteHeadingAngle += absoluteHeadingAngleDiff;
 
   //Serial.print(" ");
-  //Serial.println(relativeHeadingAngle);
+  //Serial.println(absoluteHeadingAngle);
   //  if (correctRelativeAngleDone == false) {
   //    correctRelativeAngle();
   //  }
@@ -219,20 +216,23 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
       deadEndCase = 1;
       break;
     case 39:
-      angle = -M_PI/3;
+      angle = -M_PI / 3;
       deadEndCase = 1;
       break;
     case 10:
       angle = -M_PI;
       break;
     case 11:
-      angle = M_PI/2;
+      angle = M_PI / 2;
       break;
     case 43:
-      angle = -M_PI*0.9;
+      angle = -M_PI * 0.9;
+      break;
+    case 38:
+      angle = M_PI/4;
       break;
     case 7:
-      angle = M_PI*0.9;
+      angle = M_PI * 0.9;
       break;
     case 8:
       angle = 0;
@@ -248,8 +248,9 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
 
   lastIntersectionMarkerId = currentIntersectionMarkerId;
 
-  Serial.print(" angle");
-  Serial.println(absoluteHeadingAngle * 180 / M_PI);
+//  Serial.print(" angle");
+//  Serial.println(absoluteHeadingAngle * 180 / M_PI);
+//  Serial.println();
   //Serial.println(lastIntersectionMarkerId);
   //    Serial.print("   ");
   //    Serial.println(intersections[lastIntersectionMarkerId].id);
@@ -281,6 +282,8 @@ int tryToLocalize() {
         if (pathLocation[p][i] != -1) {
           absoluteLocationX = pgm_read_byte(&(intersections[(int)pathLocation[p][i]].intersectionX));
           absoluteLocationY = pgm_read_byte(&(intersections[(int)pathLocation[p][i]].intersectionY));
+          absoluteLocationXMeters = (double)absoluteLocationX*MAP_RESOLUTION;
+          absoluteLocationYMeters = (double)absoluteLocationY*MAP_RESOLUTION;
           break;
         }
 
