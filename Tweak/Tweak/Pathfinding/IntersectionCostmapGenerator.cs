@@ -97,7 +97,7 @@ namespace Tweak.Pathfinding
                     }
 
                     try {
-                        var path = BuildCostmapPath(openStartPosition, -1, x, y, 2).Where(p => p.IntersectionNodes.Count > 0 && p.IntersectionNodes[0].IntersectionId == startingMarker.IntersectionId && p.IntersectionNodes[p.IntersectionNodes.Count - 1].MarkerId == y).FirstOrDefault();
+                        var path = BuildCostmapPath(openStartPosition, -1, x, -1, 2).Where(p => p.IntersectionNodes.Count > 0 && p.IntersectionNodes[0].IntersectionId == startingMarker.IntersectionId && p.IntersectionNodes[p.IntersectionNodes.Count - 1].MarkerId == y).FirstOrDefault();
                         if (path != null) {
                             costmap[x, y] = new IntersectionGraphNode(path.Cost, path.IntersectionNodes[path.IntersectionNodes.Count - 1].ExpectedIntersectionType);
                         } else {
@@ -155,9 +155,9 @@ namespace Tweak.Pathfinding
                         neighbourNode.IntersectionCost = nextNode.IntersectionCost;
 
                         TestIfHittingIntersection(neighbourPosition);
-                        if (neighbourNode.IntersectionId == intersectionMarkers[startingIntersectionMarker].IntersectionId) {
-                            neighbourNode.MarkerId = startingIntersectionMarker;
-                        }
+                        //if (neighbourNode.IntersectionId == intersectionMarkers[startingIntersectionMarker].IntersectionId) {
+                        //    neighbourNode.MarkerId = startingIntersectionMarker;
+                        //}
 
                         if (neighbourNode.MarkerId != -1) {
                             if (!intersectionSet.Contains(neighbourNode.IntersectionId)) {
@@ -219,13 +219,46 @@ namespace Tweak.Pathfinding
             int cost = 0;
 
             List<int> intersectionIds = new List<int>();
+            HashSet<int> markerIds = new HashSet<int>();
 
             var currentNode = GetNode(testPosition);
-            while (currentNode != null) {
-                if (currentNode.IntersectionId > -1 && intersectionIds.Where(n => n == currentNode.IntersectionId).Count() == 0) {
-                    cost++;
 
-                    intersectionIds.Add(currentNode.IntersectionId);
+            int pastIntersectionId = -1;
+            int pastMarkerId = -1;
+            bool movingBackwards = false;
+
+            while (currentNode != null) {
+                if (currentNode.IntersectionId > -1) {
+                    if (pastIntersectionId == -1) {
+                        pastIntersectionId = currentNode.IntersectionId;
+                        pastMarkerId = currentNode.MarkerId;
+
+                        intersectionIds.Add(currentNode.IntersectionId);
+                        markerIds.Add(currentNode.MarkerId);
+
+                        cost++;
+                    } else if (pastIntersectionId == currentNode.IntersectionId) {
+                        // Moving backwards
+                        if (!movingBackwards && intersectionIds.Where(n => n == currentNode.IntersectionId).Count() == 0) {
+                            cost++;
+                        } else if (intersectionIds.Where(n => n == currentNode.IntersectionId).Count() == 1 && pastMarkerId != currentNode.MarkerId) {
+                            movingBackwards = true;
+                        }
+                    } else {
+                        // Moving forwards
+                        if ((movingBackwards && intersectionIds.Where(n => n == currentNode.IntersectionId).Count() == 0 && markerIds.Contains(currentNode.MarkerId) == false) || (intersectionIds.Where(n => n == currentNode.IntersectionId).Count() == 1 && markerIds.Contains(currentNode.MarkerId) == false)) {
+                            cost++;
+
+                            pastIntersectionId = currentNode.IntersectionId;
+                            pastMarkerId = currentNode.MarkerId;
+                        } else {
+                            if (intersectionIds.Contains(currentNode.IntersectionId) == false) {
+                                intersectionIds.Add(currentNode.IntersectionId);
+                            }
+                        }
+                    }
+
+                    markerIds.Add(currentNode.MarkerId);
                 }
 
                 currentNode = currentNode.Parent;
