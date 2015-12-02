@@ -67,7 +67,7 @@ void setup() {
   //Serial.println(path.size);
 
   IntersectionPathfinder pathfinder(M_PI / 2);
-  auto path = pathfinder.FindPath(14, 0);
+  auto path = pathfinder.FindPath(14, 15);
 
   Serial.println("Values:");
   for (int i = 0; i < path.size; i++) {
@@ -80,34 +80,32 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  //Serial.println(pgm_read_byte(&(intersection_graph[11][14][0])));
-
   //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
 
-  /*ProcessDetectedIntersection(INTERSECTION_TYPE_T);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_T);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);*/
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_T);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_T);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
 
-  /*Serial.print("Intersection: ");
-  Serial.print(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
-  Serial.print(", Marker: ");
-  Serial.println(lastIntersectionMarkerId);*/
+  //Serial.print("Intersection: ");
+  //Serial.print(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
+  //Serial.print(", Marker: ");
+  //Serial.println(lastIntersectionMarkerId);
   // Expected: 17
 
   delay(15000);
