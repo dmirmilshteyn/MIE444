@@ -82,7 +82,7 @@ void setup() {
 
   //Serial.println(pgm_read_byte(&(intersection_graph[11][14][0])));
 
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
 
   /*ProcessDetectedIntersection(INTERSECTION_TYPE_T);
   ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
