@@ -60,6 +60,9 @@ namespace Tweak
                     writer.WriteLine("#define MAP_H");
                     writer.WriteLine();
 
+                    writer.WriteLine("#include \"Arduino.h\"");
+                    writer.WriteLine("#include \"MappingConstants.h\"");
+
                     writer.WriteLine("// Map tiles are stored as a byte array, but should be manipulated as a BIT array.");
                     writer.WriteLine("// This is done to minimize memory usage as the Arduino Uno only has 2048 bytes available.");
                     writer.WriteLine();
@@ -114,6 +117,32 @@ namespace Tweak
                     writer.WriteLine();
 
                     // Write out the values for each intersection
+                    writer.WriteLine($"extern const intersection_marker intersections[INTERSECTION_MARKER_COUNT];");
+                    writer.WriteLine();
+
+                    // Build the intersection costmap
+                    IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
+                    IntersectionGraphNode[,] costmap = costmapGenerator.BuildCostmap();
+
+                    // Write out the costmap for intersections
+                    writer.WriteLine($"extern const int8_t intersection_graph[INTERSECTION_MARKER_COUNT][INTERSECTION_MARKER_COUNT][2];");
+
+                    writer.WriteLine();
+                    writer.WriteLine("#endif");
+                }
+            }
+
+            using (Stream fileStream = await storageFolder.OpenStreamForWriteAsync("Map.cpp", CreationCollisionOption.ReplaceExisting)) {
+                using (StreamWriter writer = new StreamWriter(fileStream)) {
+                    writer.WriteLine("/**********************************************");
+                    writer.WriteLine(" ** This is a generated file. Do not modify. **");
+                    writer.WriteLine(" **********************************************/");
+                    writer.WriteLine();
+
+                    writer.WriteLine("#include \"Map.h\"");
+                    writer.WriteLine();
+
+                    // Write out the values for each intersection
                     writer.WriteLine($"const PROGMEM intersection_marker intersections[INTERSECTION_MARKER_COUNT] = {{");
                     for (int i = 0; i < map.IntersectionMarkers.Count; i++) {
                         writer.Write("  { ");
@@ -121,7 +150,7 @@ namespace Tweak
                         var marker = map.IntersectionMarkers[i];
 
                         var intersectionLocation = DetermineIntersectionLocation(map.IntersectionMarkers, marker.IntersectionId);
-                       
+
                         writer.Write($"{marker.IntersectionId}, {marker.X1}, {marker.Y1}, {marker.X2}, {marker.Y2}, {(int)marker.IntersectionType}, {intersectionLocation.X}, {intersectionLocation.Y}");
 
                         writer.Write(" }");
@@ -160,9 +189,6 @@ namespace Tweak
                         writer.WriteLine();
                     }
                     writer.WriteLine("};");
-
-                    writer.WriteLine();
-                    writer.WriteLine("#endif");
                 }
             }
         }

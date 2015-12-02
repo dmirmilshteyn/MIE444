@@ -11,8 +11,7 @@
 #define LINE_WIDTH 0.05
 #define MAP_WIDTH 2
 #define MAP_HEIGHT 1.5
-#define MAP_RESOLUTION 0.024  //0.025 //should be 0.0222
-//#define MAP_RESOLUTIONY 0.026  //0.025 //should be 0.026
+#define MAP_RESOLUTION 0.024
 
 #define MAP_TILES_WIDTH 90
 #define MAP_TILES_HEIGHT 60
