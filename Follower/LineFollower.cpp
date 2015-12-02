@@ -18,6 +18,11 @@ int stallPWM;//PWM at which the motor stalls
 
 unsigned long previousTime;
 
+unsigned long wallIdentificationStartTime = 0;
+
+int wallSampleCount = 0;
+int wallSampleTotal = 0;
+
 float readLeft;
 float readRight;
 
@@ -99,7 +104,7 @@ MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedO
   return newMotorSpeeds;
 }
 
-void updateFollowerState() {
+void updateFollowerState(unsigned long currentTime) {
   if (readLeft < 600 && readRight < 600) {
     followerState = FOLLOWER_STATE_OFFLINE;
   }
@@ -115,6 +120,31 @@ void updateFollowerState() {
       detectedIntersection = INTERSECTION_TYPE_NONE;
       isRealigning = false;
     }
+  }
+
+  if (followerState == FOLLOWER_STATE_IDENTIFY_WALL) {
+	  if (currentTime > wallIdentificationStartTime + 1000) {
+		  bool isBlack = ((double)wallSampleCount / (double)wallSampleTotal) > 0.5;
+		  if (!isBlack) {
+				// TODO: Debugging for now
+			  numCheckpointsFound = CHECKPOINTS_TOTAL;
+			  // Detected a white wall -> this is the starting location
+		  //if (pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)) == pgm_read_byte(&(intersections[(int)pathLocation[currentPath][0]].id))) {
+			  if (numCheckpointsFound < CHECKPOINTS_TOTAL) {
+				  followerState = FOLLOWER_STATE_WALL_START_GOBACK;
+			  }
+			  else {
+				  followerState = FOLLOWER_STATE_WALL_START_DONE;
+			  }
+		  }
+		  else {
+			  // Detected a black wall - handle the deadend state
+			  followerState = FOLLOWER_STATE_WALL_DEADEND;
+		  }
+
+		  wallSampleCount = 0;
+		  wallSampleTotal = 0;
+	  }
   }
 }
 
@@ -184,8 +214,24 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
         lastRealignRightMotorCount = -1;
         motorSpeeds.right = -(adjustedSpeed * 1.2);
         motorSpeeds.left = adjustedSpeed * 1;
+
+
       }
     }
+  }
+  else if (followerState == FOLLOWER_STATE_IDENTIFY_WALL) {
+	  // While checking, stop the motors
+	  motorSpeeds.right = 0;
+	  motorSpeeds.left = 0;
+
+	  wallSampleCount += digitalRead(WALL_COLOUR_SENSOR);
+	  wallSampleTotal++;
+  }
+  else if (followerState == FOLLOWER_STATE_WALL_START_DONE) {
+	  // Aaaaannnnnndd we're done!
+
+	  motorSpeeds.right = 0;
+	  motorSpeeds.left = 0;
   }
 
   //next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
@@ -254,32 +300,26 @@ void determineStallPWM() {
 }
 
 
-void wallDetection() {
+void wallDetection(unsigned long currentTime) {
+
+	wallSensorBuffer += analogRead(WALL_DISTANCE_SENSOR);
+	wallBufferCounter++;
+	if (wallBufferCounter >= 10) {
+		wallDistance = ((double)wallSensorBuffer) / wallBufferCounter;
+		wallBufferCounter = 0;
+		wallSensorBuffer = 0;
+	}
+
+	/*Serial.print("dist: ");
+	Serial.print(wallDistance);*/
+
   if (followerState == FOLLOWER_STATE_ONLINE) {
-
-    wallSensorBuffer += analogRead(WALL_DISTANCE_SENSOR);
-    wallBufferCounter++;
-    if (wallBufferCounter >= 10) {
-      wallDistance = ((double)wallSensorBuffer) / wallBufferCounter;
-      wallBufferCounter = 0;
-      wallSensorBuffer = 0;
-    }
-
-    Serial.print("  dist: ");
-    Serial.println(wallDistance);
+	
     if (wallDistance > 190 ) {
       wallDistance = 0;
-      if (pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)) == pgm_read_byte(&(intersections[(int)pathLocation[currentPath][0]].id))) {
-        if (numCheckpointsFound < CHECKPOINTS_TOTAL) {
-          followerState = FOLLOWER_STATE_WALL_START_GOBACK;
-        }
-        else {
-          followerState = FOLLOWER_STATE_WALL_START_DONE;
-        }
-      }
-      else {
-        followerState = FOLLOWER_STATE_WALL_DEADEND;
-      }
+
+	  followerState = FOLLOWER_STATE_IDENTIFY_WALL;
+	  wallIdentificationStartTime = currentTime;
     }
 
   }

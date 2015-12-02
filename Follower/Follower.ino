@@ -28,7 +28,7 @@ void setup() {
   pinMode(IR_DETECTOR, INPUT);
   pinMode(ANTENNA_LED, OUTPUT);
   pinMode(WALL_DISTANCE_SENSOR, INPUT);
-  pinMode(12, INPUT);
+  pinMode(WALL_COLOUR_SENSOR, INPUT);
   lastError = 0;
   averageMotorSpeed = 75;
   Serial.begin(9600);
@@ -108,7 +108,7 @@ void setup() {
   //Serial.println(lastIntersectionMarkerId);
   // Expected: 17
 
-  delay(15000);
+  //delay(15000);
 }
 
 void loop() {
@@ -140,15 +140,19 @@ void loop() {
   //}
 
   currentTime = millis();
+
   checkPointHandle(currentTime);
-  updateFollowerState();
+  updateFollowerState(currentTime);
   ReadIntersectionSensors(currentTime);
   followLaneAnalog(currentTime);
+  wallDetection(currentTime);
   
   updateRelativeLocation();
 
   publishEncoderData(leftMotorCount, rightMotorCount);
   publishLocalizationData(currentTime);
+
+ 
 
   /*long loopTime = millis() - currentTime;
 
