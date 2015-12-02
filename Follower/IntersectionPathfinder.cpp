@@ -4,6 +4,10 @@ void IntersectionPathfinder::Initialize() {
 	// TODO: Create a constant that defines the max # of intersection ids
 
 	closed_nodes = new byte[INTERSECTION_MARKER_COUNT]{};
+
+	// Block off the middle area of the map because it makes the robot sad
+	closed_nodes[44] = 1;
+	closed_nodes[49] = 1;
 }
 
 void IntersectionPathfinder::Dispose() {
