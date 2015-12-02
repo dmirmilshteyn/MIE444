@@ -52,10 +52,11 @@ class IntersectionPathfinder {
 public:
 	IntersectionPathfinderResult FindPath(int startingMarkerId, int goalIntersectionId);
 
-	IntersectionPathfinder(double headingAngle);
+	IntersectionPathfinder(int previousMarkerId, double headingAngle);
 private:
 	byte *closed_nodes;
 	double _headingAngle;
+  int _previousMarkerId;
 
 	void Initialize(IntersectionPathNodeSet *trackingSet);
 	void Dispose(IntersectionPathNodeSet *tracking);
