@@ -69,9 +69,6 @@ void ReadIntersectionSensors(long tick) {
       IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
       if (detectedIntersection != INTERSECTION_TYPE_NONE) {
-
-        Serial.print("Final: ");
-        Serial.print(detectedIntersection);
         ProcessDetectedIntersection(detectedIntersection);
       }
     }
@@ -120,15 +117,8 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
         detectedIntersection = currentTestIntersection;
         verifyDetectedIntersection();
         lastTick = currentTick;
-
-
       }
-
-
-
     }
-
-
   }
 
   lastLeftEncoder = encoderLeft;
@@ -136,7 +126,6 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
 }
 
 void verifyDetectedIntersection() {
-
   if (detectedIntersection != INTERSECTION_TYPE_NONE && currentPath > -1) {
 
     Serial.print(" detected");
@@ -218,7 +207,6 @@ void verifyDetectedIntersection() {
           double robotToIntersectionDistance = sqrt(pow1 + pow2);
           robotToIntersectionDistance = robotToIntersectionDistance;
           if (robotToIntersectionDistance < smallestDistance) {
-
             Serial.print(" distance");
             Serial.print(robotToIntersectionDistance);
             Serial.print(" x:");
@@ -236,8 +224,6 @@ void verifyDetectedIntersection() {
             smallestDistance = robotToIntersectionDistance;
             smallestDistanceMarkerID = i;
           }
-
-
         }
       }
 

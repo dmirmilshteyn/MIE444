@@ -13,7 +13,7 @@ bool rightForward = true;
 int averageMotorSpeed;//avg PWM for both motors. Value is variable to control intersections and lane stability
 int stallPWM;//PWM at which the motor stalls
 
-int previousTime;
+unsigned long previousTime;
 
 float readLeft;
 float readRight;
@@ -24,7 +24,7 @@ bool isRealigning = false;
 long lastRealignLeftMotorCount = 0;
 long lastRealignRightMotorCount = 0;
 
-void followLaneAnalog(long currentTime) {
+void followLaneAnalog(unsigned long currentTime) {
   determineStallPWM();
   float timeDifference = currentTime - previousTime;
   if (timeDifference < 1) {
@@ -35,14 +35,14 @@ void followLaneAnalog(long currentTime) {
   float controller;
 
 
-  integral = integral + (((currentError + lastError) / 2) * timeDifference);
+  //integral = integral + (((currentError + lastError) / 2) * timeDifference);
   derivative = (currentError - lastError) / timeDifference;
   lastError = currentError;
   controller = Kp * currentError + Ki * integral + Kd * derivative;
 
   MotorSpeeds motorSpeeds = driveMotorsPID(controller, derivative);
 
-  publishLaneFollowingData(motorSpeeds, currentError, integral, derivative, controller, readLeft, readRight);
+  publishLaneFollowingData(currentTime, motorSpeeds, currentError, integral, derivative, controller, readLeft, readRight);
 
   previousTime = currentTime;
 }
@@ -104,7 +104,7 @@ void updateFollowerState() {
     followerState = FOLLOWER_STATE_ONLINE;
   }
 
-  if (isRealigning && readLeft >= 600 && readRight >= 600) {
+  /*if (isRealigning && readLeft >= 600 && readRight >= 600) {
     if (lastRealignLeftMotorCount == -1 && lastRealignRightMotorCount == -1) {
       lastRealignLeftMotorCount = leftMotorCount;
       lastRealignRightMotorCount = rightMotorCount;
@@ -112,7 +112,7 @@ void updateFollowerState() {
       detectedIntersection = INTERSECTION_TYPE_NONE;
       isRealigning = false;
     }
-  }
+  }*/
 }
 
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
@@ -130,6 +130,10 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
     motorSpeeds.right = -(adjustedSpeed * 1.2);
     motorSpeeds.left = adjustedSpeed * 1;
+
+	//isRealigning = true;
+	/*lastRealignLeftMotorCount = -1;
+	lastRealignRightMotorCount = -1;*/
   }
   else if (followerState == FOLLOWER_STATE_LEFT || followerState == FOLLOWER_STATE_RIGHT) {
     switch (turnState) {
@@ -148,13 +152,9 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     if (turnState == TURN_STATE_HIT_BLACK) {
       turnState = TURN_STATE_DEFAULT;
       followerState = FOLLOWER_STATE_ONLINE;
-      isRealigning = true;
 
       motorSpeeds.left = 0;
       motorSpeeds.right = 0;
-
-      lastRealignLeftMotorCount = -1;
-      lastRealignRightMotorCount = -1;
     }
     else {
       if (followerState == FOLLOWER_STATE_LEFT) {

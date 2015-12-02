@@ -342,6 +342,7 @@ namespace Tweak.Bluetooth
                         break;
                 }
             } else {
+                System.Diagnostics.Debug.WriteLine(line);
                 //OutputLogString += line;
             }
         }

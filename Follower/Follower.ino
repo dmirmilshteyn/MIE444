@@ -14,7 +14,7 @@
 #include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
-float Kp = 1.8; // 0.6; //0.3;
+float Kp = 2.0; // 0.6; //0.3;
 float Ki = 0.00;
 float Kd = 900; //332; //450; //100;
 
@@ -111,7 +111,7 @@ void setup() {
 void loop() {
 
   delay(10);
-  long currentTime;
+  unsigned long currentTime;
 
   // TODO: Debugging code
   //MotorSpeeds newMotorSpeeds;
@@ -146,6 +146,10 @@ void loop() {
 
   publishEncoderData(leftMotorCount, rightMotorCount);
   publishLocalizationData(currentTime);
+
+  /*long loopTime = millis() - currentTime;
+
+  Serial.println(loopTime);*/
 
   while (Serial.available() > 0) {
     int command = Serial.read();

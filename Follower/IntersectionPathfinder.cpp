@@ -94,7 +94,7 @@ IntersectionPathfinderResult IntersectionPathfinder::PerformSearch(int startingM
 
   delete openSet;
 
-  return IntersectionPathfinderResult(NULL, 0);
+  return IntersectionPathfinderResult(NULL, NULL, 0);
 }
 
 int IntersectionPathfinder::IndexOfSet(IntersectionPathNodeSet *set, int markerId) {
@@ -143,7 +143,14 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 
     currentNode = currentNode->parent;
   }
-  return IntersectionPathfinderResult(path, depth);
+
+  currentNode = endingNode;
+  int *pathTurns = new int[depth];
+  for (int i = 0; i < depth; i++) {
+
+  }
+
+  return IntersectionPathfinderResult(path, NULL, depth);
 }
 
 void IntersectionPathfinder::MarkBlocked(int markerId, bool value) {

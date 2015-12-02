@@ -57,41 +57,47 @@ int readDebugCommand() {
 
 long lastLocalizationPublishTime = 0;
 long lastIntersectionPublishTime = 0;
+long lastLaneFollowingPublishTime = 0;
 
-void publishLaneFollowingData(MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor) {
-  print("!?");
-  print(currentError);
-  print("|");
-  print(integral);
-  print("|");
-  print(derivative);
-  print("|");
-  print(controller);
-  print("|");
-  print(motorSpeeds.left);
-  print("|");
-  print(motorSpeeds.right);
-  print("|");
-  print(leftLineSensor);
-  print("|");
-  print(rightLineSensor);
-  println();
+void publishLaneFollowingData(long currentTime, MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor) {
+	return;
+	if (currentTime > lastLaneFollowingPublishTime + 1000) {
+		lastLaneFollowingPublishTime = currentTime;
+		Serial.print("!?");
+		Serial.print(currentError);
+		Serial.print("|");
+		Serial.print(integral);
+		Serial.print("|");
+		Serial.print(derivative);
+		Serial.print("|");
+		Serial.print(controller);
+		Serial.print("|");
+		Serial.print(motorSpeeds.left);
+		Serial.print("|");
+		Serial.print(motorSpeeds.right);
+		Serial.print("|");
+		Serial.print(leftLineSensor);
+		Serial.print("|");
+		Serial.print(rightLineSensor);
+		Serial.println();
+	}
 }
 
 void publishIntersectionDetectionData(long currentTime, int frontSensor, int leftSensor, int rightSensor, int detectedIntersection) {
-//	if (currentTime > lastIntersectionPublishTime + 1000) {
-//		lastIntersectionPublishTime = currentTime;
-//
-//		Serial.print("!#");
-//		Serial.print(frontSensor);
-//		Serial.print("|");
-//		Serial.print(leftSensor);
-//		Serial.print("|");
-//		Serial.print(rightSensor);
-//		Serial.print("|");
-//		Serial.print(detectedIntersection);
-//		Serial.println();
-//	}
+	return;
+	if (currentTime > lastIntersectionPublishTime + 1000) {
+		lastIntersectionPublishTime = currentTime;
+
+		Serial.print("!#");
+		Serial.print(frontSensor);
+		Serial.print("|");
+		Serial.print(leftSensor);
+		Serial.print("|");
+		Serial.print(rightSensor);
+		Serial.print("|");
+		Serial.print(detectedIntersection);
+		Serial.println();
+	}
 }
 
 void publishEncoderData(long leftMotorCount, long rightMotorCount) {
@@ -118,18 +124,19 @@ void publishMap() {
   println();
 }
 void publishLocalizationData(long currentTime) {
-//	if (currentTime > lastLocalizationPublishTime + 1000) {
-//		lastLocalizationPublishTime = currentTime;
-//		Serial.print("!&");
-//		Serial.print(relativeLocationXMeters);
-//		Serial.print("|");
-//		Serial.print(relativeLocationYMeters);
-//		Serial.print("|");
-//
-//		int currentIntersection = (int)pgm_read_byte(&(intersections[lastIntersectionMarkerId].id));
-//		Serial.print(currentIntersection);
-//		Serial.println();
-//	}
+	return;
+	if (currentTime > lastLocalizationPublishTime + 1000) {
+		lastLocalizationPublishTime = currentTime;
+		Serial.print("!&");
+		Serial.print(relativeLocationXMeters);
+		Serial.print("|");
+		Serial.print(relativeLocationYMeters);
+		Serial.print("|");
+
+		int currentIntersection = (int)pgm_read_byte(&(intersections[lastIntersectionMarkerId].id));
+		Serial.print(currentIntersection);
+		Serial.println();
+	}
 }
 
 void processDebugCommand(int command) {
