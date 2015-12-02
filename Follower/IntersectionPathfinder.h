@@ -38,6 +38,7 @@ public:
 	IntersectionPathNode* remove(int i);
 
 	IntersectionPathNodeSet();
+  ~IntersectionPathNodeSet();
 
 private:
 	int _size;
@@ -53,10 +54,10 @@ public:
 private:
 	byte *closed_nodes;
 
-	void Initialize();
-	void Dispose();
+	void Initialize(IntersectionPathNodeSet *trackingSet);
+	void Dispose(IntersectionPathNodeSet *tracking);
 
-	IntersectionPathfinderResult PerformSearch(int startingMarkerId, int goalIntersectionId);
+	IntersectionPathfinderResult PerformSearch(int startingMarkerId, int goalIntersectionId, IntersectionPathNodeSet *trackingSet);
 	int DetermineNextNode(IntersectionPathNodeSet *openSet);
 	IntersectionPathfinderResult ReconstructPath(IntersectionPathNode *endingNode);
 	int IndexOfSet(IntersectionPathNodeSet *set, int markerId);
