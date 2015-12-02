@@ -23,6 +23,7 @@
 
 
 extern int followerState;
+extern bool isRealigning;
 
 extern int previousTime;
 extern float readLeft;

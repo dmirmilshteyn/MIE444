@@ -20,6 +20,10 @@ float readRight;
 
 int determineStallPWMDone = 0;
 
+bool isRealigning = false;
+long lastRealignLeftMotorCount = 0;
+long lastRealignRightMotorCount = 0;
+
 void followLaneAnalog(long currentTime) {
   determineStallPWM();
   float timeDifference = currentTime - previousTime;
@@ -44,111 +48,126 @@ void followLaneAnalog(long currentTime) {
 }
 
 MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedOffset) {
-	MotorSpeeds newMotorSpeeds;
+  MotorSpeeds newMotorSpeeds;
 
-	/*int newLeftMotorSpeed;
-	int newRightMotorSpeed;*/
+  /*int newLeftMotorSpeed;
+    int newRightMotorSpeed;*/
 
-	if (controller <= 0) {
-		newMotorSpeeds.left = adjustedSpeed;
-		newMotorSpeeds.right = adjustedSpeed - speedOffset;
-	}
-	else if (controller > 0) {
-		newMotorSpeeds.left = adjustedSpeed - speedOffset;
-		newMotorSpeeds.right = adjustedSpeed;
-	}
+  if (controller <= 0) {
+    newMotorSpeeds.left = adjustedSpeed;
+    newMotorSpeeds.right = adjustedSpeed - speedOffset;
+  }
+  else if (controller > 0) {
+    newMotorSpeeds.left = adjustedSpeed - speedOffset;
+    newMotorSpeeds.right = adjustedSpeed;
+  }
 
-	//Controls what to do if the adjustedSpeed is too low
-	//Function will assume the car is stopped and will try to keep the car centered with the line
-	if (adjustedSpeed < stallPWM) {
-		if (abs(lastError) > 50) {
-			newMotorSpeeds.left = -signOf(controller) * (stallPWM + 10);
-			newMotorSpeeds.right = signOf(controller) * (stallPWM + 10);
-		}
-		else {
-			newMotorSpeeds.left = 0;
-			newMotorSpeeds.right = 0;
-		}
+  //Controls what to do if the adjustedSpeed is too low
+  //Function will assume the car is stopped and will try to keep the car centered with the line
+  if (adjustedSpeed < stallPWM) {
+    if (abs(lastError) > 50) {
+      newMotorSpeeds.left = -signOf(controller) * (stallPWM + 10);
+      newMotorSpeeds.right = signOf(controller) * (stallPWM + 10);
+    }
+    else {
+      newMotorSpeeds.left = 0;
+      newMotorSpeeds.right = 0;
+    }
 
-	}
-	//checks if any of the motors are below stall PWM and sets them to zero
-	else if (newMotorSpeeds.left < stallPWM || newMotorSpeeds.right < stallPWM) {
-		if (abs(newMotorSpeeds.left) < stallPWM) {
-			newMotorSpeeds.left = 0;
-		}
-		else if (abs(newMotorSpeeds.right) < stallPWM) {
-			newMotorSpeeds.right = 0;
-		}
-	}
+  }
+  //checks if any of the motors are below stall PWM and sets them to zero
+  else if (newMotorSpeeds.left < stallPWM || newMotorSpeeds.right < stallPWM) {
+    if (abs(newMotorSpeeds.left) < stallPWM) {
+      newMotorSpeeds.left = 0;
+    }
+    else if (abs(newMotorSpeeds.right) < stallPWM) {
+      newMotorSpeeds.right = 0;
+    }
+  }
 
-	/*if (readLeft < 750 && readRight < 750) {
-	newRightMotorSpeed = 0;
+  /*if (readLeft < 750 && readRight < 750) {
+    newRightMotorSpeed = 0;
 
-	newLeftMotorSpeed = 0;
+    newLeftMotorSpeed = 0;
 
-	}*/
-	//stops the car if it left the line (on white)
-	
-	return newMotorSpeeds;
+    }*/
+  //stops the car if it left the line (on white)
+
+  return newMotorSpeeds;
 }
 
 void updateFollowerState() {
-	if (readLeft < 600 && readRight < 600) {
-		followerState = FOLLOWER_STATE_OFFLINE;
-	}
-	else if (followerState == FOLLOWER_STATE_OFFLINE || followerState == FOLLOWER_STATE_REALIGN) {
-		followerState = FOLLOWER_STATE_ONLINE;
-	}
+  if (readLeft < 600 && readRight < 600) {
+    followerState = FOLLOWER_STATE_OFFLINE;
+  }
+  else if (followerState == FOLLOWER_STATE_OFFLINE) {
+    followerState = FOLLOWER_STATE_ONLINE;
+  }
+
+  if (isRealigning && readLeft >= 600 && readRight >= 600) {
+    if (lastRealignLeftMotorCount == -1 && lastRealignRightMotorCount == -1) {
+      lastRealignLeftMotorCount = leftMotorCount;
+      lastRealignRightMotorCount = rightMotorCount;
+    } else if (leftMotorCount > lastRealignLeftMotorCount + 600 && rightMotorCount > lastRealignRightMotorCount + 600) {
+      detectedIntersection = INTERSECTION_TYPE_NONE;
+      isRealigning = false;
+    }
+  }
 }
 
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
   //should make avg speed inversely proportional to the controller...will slow down if error is high
-  float speedOffsetFactor = -exp(-abs(controller) / 120) + 1;
+  float speedOffsetFactor = (-exp(-abs(controller) / 120) + 1) * 1.1;
+  if (speedOffsetFactor > 1)speedOffsetFactor = 1;
   float adjustedSpeed = averageMotorSpeed;// - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
   //float adjustedSpeed = averageMotorSpeed;
   float speedOffset = speedOffsetFactor * (adjustedSpeed); //abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
-  
+
   MotorSpeeds motorSpeeds;
   if (followerState == FOLLOWER_STATE_ONLINE) {
-	  motorSpeeds = driveMotorsBasic(controller, adjustedSpeed, speedOffset);
+    motorSpeeds = driveMotorsBasic(controller, adjustedSpeed, speedOffset);
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
-	  motorSpeeds.right = -(adjustedSpeed*1.2);
-	  motorSpeeds.left = adjustedSpeed*1;
+    motorSpeeds.right = -(adjustedSpeed * 1.2);
+    motorSpeeds.left = adjustedSpeed * 1;
   }
   else if (followerState == FOLLOWER_STATE_LEFT || followerState == FOLLOWER_STATE_RIGHT) {
-	  switch (turnState) {
-	  case TURN_STATE_DEFAULT:
-		  if (IsSensorOnOrApproaching(SENSOR_LOCATION_FRONT) == false) {
-			  turnState = TURN_STATE_HIT_WHITE;
-		  }
-		  break;
-	  case TURN_STATE_HIT_WHITE:
-		  if (IsSensorOnOrApproaching(SENSOR_LOCATION_FRONT)) {
-			  turnState = TURN_STATE_HIT_BLACK;
-		  }
-		  break;
-	  }
+    switch (turnState) {
+      case TURN_STATE_DEFAULT:
+        if (IsSensorOnOrApproaching(SENSOR_LOCATION_FRONT) == false) {
+          turnState = TURN_STATE_HIT_WHITE;
+        }
+        break;
+      case TURN_STATE_HIT_WHITE:
+        if (IsSensorOnOrApproaching(SENSOR_LOCATION_FRONT)) {
+          turnState = TURN_STATE_HIT_BLACK;
+        }
+        break;
+    }
 
-	  if (turnState == TURN_STATE_HIT_BLACK) {
-		  turnState = TURN_STATE_DEFAULT;
-		  followerState = FOLLOWER_STATE_REALIGN;
+    if (turnState == TURN_STATE_HIT_BLACK) {
+      turnState = TURN_STATE_DEFAULT;
+      followerState = FOLLOWER_STATE_ONLINE;
+      isRealigning = true;
 
-		  motorSpeeds.left = 0;
-		  motorSpeeds.right = 0;
-	  }
-	  else {
-		  if (followerState == FOLLOWER_STATE_LEFT) {
-			  // Turn left
-			  motorSpeeds.left = -averageMotorSpeed*0.6;
-			  motorSpeeds.right = averageMotorSpeed*1.3;
-		  }
-		  else if (followerState == FOLLOWER_STATE_RIGHT) {
-			  // Turn right
-			  motorSpeeds.right = -averageMotorSpeed*0.6;
-			  motorSpeeds.left = averageMotorSpeed*1.3;
-		  }
-	  }
+      motorSpeeds.left = 0;
+      motorSpeeds.right = 0;
+
+      lastRealignLeftMotorCount = -1;
+      lastRealignRightMotorCount = -1;
+    }
+    else {
+      if (followerState == FOLLOWER_STATE_LEFT) {
+        // Turn left
+        motorSpeeds.left = -averageMotorSpeed * 0.6;
+        motorSpeeds.right = averageMotorSpeed * 1.3;
+      }
+      else if (followerState == FOLLOWER_STATE_RIGHT) {
+        // Turn right
+        motorSpeeds.right = -averageMotorSpeed * 0.6;
+        motorSpeeds.left = averageMotorSpeed * 1.3;
+      }
+    }
   }
 
   //next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
@@ -177,10 +196,10 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 #endif
 
   if (motorSpeeds.left == 0 && motorSpeeds.right == 0) {
-      //delay(500);
+    //delay(2000);
 
-	  lastIntersectionDetectionLeftEncoder = leftMotorCount;
-	  lastIntersectionDetectionRightEncoder = rightMotorCount;
+    lastIntersectionDetectionLeftEncoder = leftMotorCount;
+    lastIntersectionDetectionRightEncoder = rightMotorCount;
   }
 
   return motorSpeeds;

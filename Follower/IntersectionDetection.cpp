@@ -63,14 +63,15 @@ void ReadIntersectionSensors(long tick) {
   currentLeft = sensorB;
   currentRight = sensorC;
 
-  if (followerState == FOLLOWER_STATE_ONLINE) {
+  if (followerState == FOLLOWER_STATE_ONLINE && !isRealigning) {
     if (leftMotorCount > lastIntersectionDetectionLeftEncoder + 600 / 4 &&
         rightMotorCount > lastIntersectionDetectionRightEncoder + 600 / 4) {
       IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
       if (detectedIntersection != INTERSECTION_TYPE_NONE) {
 
-
+        Serial.print("Final: ");
+        Serial.print(detectedIntersection);
         ProcessDetectedIntersection(detectedIntersection);
       }
     }
@@ -104,6 +105,7 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
 
   if (abs(encoderLeft - lastLeftEncoder) > 225) {
     detectedIntersection = currentTestIntersection;
+    verifyDetectedIntersection();
   }
   else {
     double currentTick = (encoderLeft + encoderRight) / 2;
@@ -148,11 +150,15 @@ void verifyDetectedIntersection() {
     byte lastIntersectionX = pgm_read_byte(&(intersections[x].intersectionX));
     byte lastIntersectionY = pgm_read_byte(&(intersections[x].intersectionY));
 
-    int smallestDistance = 1000;
+    double smallestDistance = 1000;
     int smallestDistanceMarkerID = -1;
     byte deadEndCase = 0;
-    double testDistance = sqrt(pow((absoluteLocationX) - (lastIntersectionX), 2) + pow((absoluteLocationY) - (lastIntersectionY), 2));
-    if (testDistance < 0.07) {
+
+    double pow3 = ((double)absoluteLocationX) * MAP_RESOLUTION - ((double)lastIntersectionX) * MAP_RESOLUTION;
+    double pow4 = ((double)absoluteLocationY) * MAP_RESOLUTION - ((double)lastIntersectionY) * MAP_RESOLUTION;
+    double testDistance = sqrt(pow(pow3, 2) + pow(pow4, 2));
+
+    if (testDistance < 0.2) {
 
       switch (lastIntersectionMarkerId) {
         case 0:
@@ -205,10 +211,28 @@ void verifyDetectedIntersection() {
         if ((int8_t)pgm_read_byte(&(intersection_graph[i][lastIntersectionMarkerId][0])) != -1) {
           byte neighborIntersectionX = pgm_read_byte(&(intersections[i].intersectionX));
           byte neighborIntersectionY = pgm_read_byte(&(intersections[i].intersectionY));
-
-          double robotToIntersectionDistance = sqrt(pow((absoluteLocationX) - (neighborIntersectionX), 2) + pow((absoluteLocationY) - (neighborIntersectionY), 2));
-          robotToIntersectionDistance = robotToIntersectionDistance * MAP_RESOLUTION;
+          double pow1 = ((double)absoluteLocationX) * MAP_RESOLUTION - ((double)neighborIntersectionX) * MAP_RESOLUTION;
+          pow1 = pow(pow1, 2);
+          double pow2 = ((double)absoluteLocationY) * MAP_RESOLUTION - ((double)neighborIntersectionY) * MAP_RESOLUTION;
+          pow2 = pow(pow2, 2);
+          double robotToIntersectionDistance = sqrt(pow1 + pow2);
+          robotToIntersectionDistance = robotToIntersectionDistance;
           if (robotToIntersectionDistance < smallestDistance) {
+
+            Serial.print(" distance");
+            Serial.print(robotToIntersectionDistance);
+            Serial.print(" x:");
+            Serial.print(absoluteLocationX);
+            Serial.print(" y:");
+            Serial.print(absoluteLocationY);
+            Serial.print("     x:");
+            Serial.print(neighborIntersectionX);
+            Serial.print(" y:");
+            Serial.print(neighborIntersectionY);
+            Serial.print("     pow1:");
+            Serial.print(pow1);
+            Serial.print(" pow2:");
+            Serial.println(pow2);
             smallestDistance = robotToIntersectionDistance;
             smallestDistanceMarkerID = i;
           }
@@ -217,13 +241,16 @@ void verifyDetectedIntersection() {
         }
       }
 
-      if (smallestDistance < 0.10) {
+      if (smallestDistance < 0.2) {
         detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
         detectedMarkerId = smallestDistanceMarkerID;
         Serial.print(" last");
         Serial.println(lastIntersectionMarkerId);
         Serial.print(" check");
         Serial.println(detectedMarkerId);
+      }
+      else {
+        Serial.print("check didnt work");
       }
     }
   }

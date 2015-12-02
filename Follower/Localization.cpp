@@ -179,7 +179,7 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
 
   bool valid = false;
   int x = lastIntersectionMarkerId;
-  int smallestDistance = 1000;
+  double smallestDistance = 1000;
   int smallestDistanceMarkerID = -1;
 
 
