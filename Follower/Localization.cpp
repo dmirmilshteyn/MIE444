@@ -165,7 +165,7 @@ void pushDetectedIntersection(int intersectionType) {
 
         lastIntersectionMarkerId = pathLocation[result][i];
         if (pathLocation[result][i] == -1) {
-          lastIntersectionMarkerId = pathLocation[result][i-1];
+          lastIntersectionMarkerId = pathLocation[result][i - 1];
           break;
         }
 
@@ -174,76 +174,86 @@ void pushDetectedIntersection(int intersectionType) {
   }
 }
 
-void updateIntersectionLocalization(int intersectionType) {
+void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   // Try to identify the current intersection marker id
 
   bool valid = false;
   int x = lastIntersectionMarkerId;
   int smallestDistance = 1000;
   int smallestDistanceMarkerID = -1;
-  for (int y = 0; y < INTERSECTION_MARKER_COUNT; y++) {
-    int expectedType = (int)pgm_read_byte(&(intersection_graph[y][x][1]));
-
-    if (expectedType > 0 && expectedType == intersectionType) {
-      // The current intersection is y
-
-      byte currentIntersectionX = pgm_read_byte(&(intersections[y].intersectionX));
-      byte currentIntersectionY = pgm_read_byte(&(intersections[y].intersectionY));
 
 
-      /*Serial.print("Last: ");
-        Serial.print(pgm_read_byte(&(intersections[x].id)));
-        Serial.print(", Current: ");
-        Serial.print(pgm_read_byte(&(intersections[y].id)));
-        Serial.print(", Angle: ");
-        Serial.println(angle);
-      */
-      // TODO: Perform realigmnent (angle and location) based on current location
-      // TODO: Check car location and compare with current intersection location. If value is far away, this is likely not the correct intersection and should be skipped.
+  //angle and position correction
+  // Calculate expected heading angle between the last and current intersection
+  byte lastIntersectionX = pgm_read_byte(&(intersections[x].intersectionX));
+  byte lastIntersectionY = pgm_read_byte(&(intersections[x].intersectionY));
 
-      double robotToIntersectionDistance = sqrt(pow((absoluteLocationX) - (currentIntersectionX), 2) + pow((absoluteLocationY) - (currentIntersectionY), 2));
-      if (robotToIntersectionDistance < smallestDistance) {
-        smallestDistance = robotToIntersectionDistance;
-        smallestDistanceMarkerID = y;
-      }
+  byte currentIntersectionX = pgm_read_byte(&(intersections[currentIntersectionMarkerId].intersectionX));
+  byte currentIntersectionY = pgm_read_byte(&(intersections[currentIntersectionMarkerId].intersectionY));
 
-    }
+  double xDiff = currentIntersectionX - lastIntersectionX;
+  double yDiff = currentIntersectionY - lastIntersectionY;
+
+
+  double angle = atan2(yDiff, xDiff);
+  byte deadEndCase = 0;
+  switch (currentIntersectionMarkerId) {
+    case 3:
+      angle = 0;
+      deadEndCase = 1;
+      break;
+    case 25:
+      angle = -M_PI;
+      deadEndCase = 1;
+      break;
+    case 21:
+      angle = -M_PI;
+      deadEndCase = 1;
+      break;
+    case 14:
+      angle = M_PI;
+      deadEndCase = 1;
+      break;
+    case 9:
+      angle = -M_PI;
+      deadEndCase = 1;
+      break;
+    case 39:
+      angle = -M_PI/3;
+      deadEndCase = 1;
+      break;
+    case 10:
+      angle = -M_PI;
+      break;
+    case 11:
+      angle = M_PI/2;
+      break;
+    case 43:
+      angle = -M_PI*0.9;
+      break;
+    case 7:
+      angle = M_PI*0.9;
+      break;
+    case 8:
+      angle = 0;
+      break;
   }
 
+  // TODO: add special cases for angle where the line between 2 intersections isnt straight (i.e. arcs)
 
-  if (smallestDistanceMarkerID == -1) {
-    // TODO: Couldn't figure out location..
-    //Serial.println("ERROR");
-  }
-  else {
-
-    //angle and position correction
-    // Calculate expected heading angle between the last and current intersection
-    byte lastIntersectionX = pgm_read_byte(&(intersections[x].intersectionX));
-    byte lastIntersectionY = pgm_read_byte(&(intersections[x].intersectionY));
-
-    byte currentIntersectionX = pgm_read_byte(&(intersections[smallestDistanceMarkerID].intersectionX));
-    byte currentIntersectionY = pgm_read_byte(&(intersections[smallestDistanceMarkerID].intersectionY));
-
-    double xDiff = currentIntersectionX - lastIntersectionX;
-    double yDiff = currentIntersectionY - lastIntersectionY;
+  absoluteHeadingAngle = angle;
+  absoluteLocationX = currentIntersectionX;
+  absoluteLocationY = currentIntersectionY;
 
 
-    double angle = atan2(yDiff, xDiff);
-    
-    // TODO: add special cases for angle where the line between 2 intersections isnt straight (i.e. arcs)
-    
-    absoluteHeadingAngle = angle;
-    absoluteLocationX = currentIntersectionX;
-    absoluteLocationY = currentIntersectionY;
+  lastIntersectionMarkerId = currentIntersectionMarkerId;
 
+  Serial.print(" angle");
+  Serial.println(absoluteHeadingAngle * 180 / M_PI);
+  //Serial.println(lastIntersectionMarkerId);
+  //    Serial.print("   ");
+  //    Serial.println(intersections[lastIntersectionMarkerId].id);
 
-    lastIntersectionMarkerId = smallestDistanceMarkerID;
-    
-    Serial.println(lastIntersectionMarkerId);
-//    Serial.print("   ");
-//    Serial.println(intersections[lastIntersectionMarkerId].id);
-  }
 }
 
 int tryToLocalize() {

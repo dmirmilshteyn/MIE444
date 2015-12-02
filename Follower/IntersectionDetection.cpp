@@ -1,6 +1,7 @@
 #include "IntersectionDetection.h"
 
 int detectedIntersection = INTERSECTION_TYPE_NONE;
+int detectedMarkerId = -1;
 
 int currentFront = 0;
 int currentLeft = 0;
@@ -21,7 +22,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
   if (currentPath == -1) {
     pushDetectedIntersection(detectedIntersectionType);
   } else if (currentPath > -1) {
-    updateIntersectionLocalization(detectedIntersectionType);
+    updateIntersectionLocalization(detectedMarkerId);
   }
 
   switch (detectedIntersectionType) {
@@ -68,6 +69,8 @@ void ReadIntersectionSensors(long tick) {
       IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
       if (detectedIntersection != INTERSECTION_TYPE_NONE) {
+
+
         ProcessDetectedIntersection(detectedIntersection);
       }
     }
@@ -99,7 +102,7 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
     currentTestIntersection = INTERSECTION_TYPE_CROSS;
   }
 
-  if (abs(encoderLeft - lastLeftEncoder) > 75) {
+  if (abs(encoderLeft - lastLeftEncoder) > 225) {
     detectedIntersection = currentTestIntersection;
   }
   else {
@@ -113,43 +116,10 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
       double testTick = lastTick + GetEncoderDistanceTicks();
       if (currentTick > testTick) {
         detectedIntersection = currentTestIntersection;
+        verifyDetectedIntersection();
         lastTick = currentTick;
 
-        if (detectedIntersection != INTERSECTION_TYPE_NONE && currentPath > -1) {
-          // TODO: verify that correct intersection was detected with encoders
-          // get previous intersection marker ID x and y values. get neighboring intersection marker x and y values and compare with robot location.
-          // the smallest radius is the matched intersection.
-          // might need to limit the radius if the robot detects an intersection where there isnt one.
 
-          int x = lastIntersectionMarkerId;
-          byte lastIntersectionX = pgm_read_byte(&(intersections[x].intersectionX));
-          byte lastIntersectionY = pgm_read_byte(&(intersections[x].intersectionY));
-
-          int smallestDistance = 1000;
-          int smallestDistanceMarkerID = -1;
-          for (int i = 0; i < INTERSECTION_MARKER_COUNT; i++) {
-            if (pgm_read_byte(&(intersection_graph[i][lastIntersectionMarkerId][0])) != -1) {
-              byte neighborIntersectionX = pgm_read_byte(&(intersections[i].intersectionX));
-              byte neighborIntersectionY = pgm_read_byte(&(intersections[i].intersectionY));
-
-              double robotToIntersectionDistance = sqrt(pow((absoluteLocationX) - (neighborIntersectionX), 2) + pow((absoluteLocationY) - (neighborIntersectionY), 2));
-              robotToIntersectionDistance = robotToIntersectionDistance * MAP_RESOLUTION;
-              if (robotToIntersectionDistance < smallestDistance) {
-                smallestDistance = robotToIntersectionDistance;
-                smallestDistanceMarkerID = i;
-              }
-
-
-            }
-          }
-          if (smallestDistance < 0.012) {
-            detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
-            Serial.print(" last");
-            Serial.println(lastIntersectionMarkerId);
-            Serial.print(" check");
-            Serial.println(smallestDistanceMarkerID);
-          }
-        }
       }
 
 
@@ -161,6 +131,103 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
 
   lastLeftEncoder = encoderLeft;
   lastRightEncoder = encoderRight;
+}
+
+void verifyDetectedIntersection() {
+
+  if (detectedIntersection != INTERSECTION_TYPE_NONE && currentPath > -1) {
+
+    Serial.print(" detected");
+    Serial.println(detectedIntersection);
+    // TODO: verify that correct intersection was detected with encoders
+    // get previous intersection marker ID x and y values. get neighboring intersection marker x and y values and compare with robot location.
+    // the smallest radius is the matched intersection.
+    // might need to limit the radius if the robot detects an intersection where there isnt one.
+
+    int x = lastIntersectionMarkerId;
+    byte lastIntersectionX = pgm_read_byte(&(intersections[x].intersectionX));
+    byte lastIntersectionY = pgm_read_byte(&(intersections[x].intersectionY));
+
+    int smallestDistance = 1000;
+    int smallestDistanceMarkerID = -1;
+    byte deadEndCase = 0;
+    double testDistance = sqrt(pow((absoluteLocationX) - (lastIntersectionX), 2) + pow((absoluteLocationY) - (lastIntersectionY), 2));
+    if (testDistance < 0.07) {
+
+      switch (lastIntersectionMarkerId) {
+        case 0:
+        case 1:
+        case 2:
+          detectedMarkerId = 3;
+          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          deadEndCase = 1;
+          break;
+        case 27:
+        case 26:
+          detectedMarkerId = 25;
+          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          deadEndCase = 1;
+          break;
+        case 19:
+        case 20:
+          detectedMarkerId = 21;
+          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          deadEndCase = 1;
+          break;
+        case 13:
+        case 15:
+          detectedMarkerId = 14;
+          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          deadEndCase = 1;
+          break;
+        case 8:
+        case 10:
+          detectedMarkerId = 9;
+          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          deadEndCase = 1;
+          break;
+        case 40:
+        case 41:
+          detectedMarkerId = 39;
+          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          deadEndCase = 1;
+          break;
+      }
+      if (deadEndCase == 1) {
+        Serial.print(" last");
+        Serial.println(lastIntersectionMarkerId);
+        Serial.print(" check");
+        Serial.println(detectedMarkerId);
+      }
+    }
+    if (deadEndCase == 0) {
+      for (int i = 0; i < INTERSECTION_MARKER_COUNT; i++) {
+        if ((int8_t)pgm_read_byte(&(intersection_graph[i][lastIntersectionMarkerId][0])) != -1) {
+          byte neighborIntersectionX = pgm_read_byte(&(intersections[i].intersectionX));
+          byte neighborIntersectionY = pgm_read_byte(&(intersections[i].intersectionY));
+
+          double robotToIntersectionDistance = sqrt(pow((absoluteLocationX) - (neighborIntersectionX), 2) + pow((absoluteLocationY) - (neighborIntersectionY), 2));
+          robotToIntersectionDistance = robotToIntersectionDistance * MAP_RESOLUTION;
+          if (robotToIntersectionDistance < smallestDistance) {
+            smallestDistance = robotToIntersectionDistance;
+            smallestDistanceMarkerID = i;
+          }
+
+
+        }
+      }
+
+      if (smallestDistance < 0.10) {
+        detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+        detectedMarkerId = smallestDistanceMarkerID;
+        Serial.print(" last");
+        Serial.println(lastIntersectionMarkerId);
+        Serial.print(" check");
+        Serial.println(detectedMarkerId);
+      }
+    }
+  }
+
 }
 
 int GetCurrentSensorValue(int sensorLocation) {

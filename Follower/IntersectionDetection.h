@@ -27,6 +27,7 @@
 #define SENSOR_LOCATION_RIGHT 2
 
 extern int detectedIntersection;
+extern int detectedMarkerId;
 
 extern long lastIntersectionDetectionLeftEncoder;
 extern long lastIntersectionDetectionRightEncoder;
@@ -46,6 +47,7 @@ inline double GetEncoderDistanceTicks() {
 void ReadIntersectionSensors(long tick);
 void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight);
 void ProcessDetectedIntersection(int detectedIntersectionType);
+void verifyDetectedIntersection();
 
 int GetCurrentSensorValue(int sensorLocation);
 int GetSensorOnThreshold(int sensorLocation);
