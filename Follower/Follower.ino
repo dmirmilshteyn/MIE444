@@ -66,15 +66,13 @@ void setup() {
   //Serial.print("Path Size: ");
   //Serial.println(path.size);
 
-  /*IntersectionPathfinder pathfinder;
-  pathfinder.FindPath(39, 38);*/
+  IntersectionPathfinder pathfinder;
+  auto path = pathfinder.FindPath(14, 0);
 
-  Serial.println((int8_t)pgm_read_byte(&(intersection_graph[3][0][0])));
-
- /* Serial.println("Values:");
+  Serial.println("Values:");
   for (int i = 0; i < path.size; i++) {
   	Serial.println(path.path[i]);
-  }*/
+  }
 
   initializeEncoders();
   interrupts();

@@ -23,15 +23,16 @@ struct IntersectionPathfinderResult {
 struct IntersectionPathNode {
 	IntersectionPathNode *parent;
 
-	byte intersectionMarkerId;
-	byte g;
+	int intersectionMarkerId;
+	int g;
 
-	IntersectionPathNode(byte intersectionMarkerId, int g, IntersectionPathNode *parent) : intersectionMarkerId(intersectionMarkerId), g(g), parent(parent) { }
+	IntersectionPathNode(int intersectionMarkerId, int g, IntersectionPathNode *parent) : intersectionMarkerId(intersectionMarkerId), g(g), parent(parent) { }
 };
 
 class IntersectionPathNodeSet {
 public:
 	int size();
+	int setSize();
 	IntersectionPathNode* get(int i);
 	void add(IntersectionPathNode *node);
 	IntersectionPathNode* remove(int i);

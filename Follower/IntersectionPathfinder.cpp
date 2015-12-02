@@ -3,7 +3,7 @@
 void IntersectionPathfinder::Initialize() {
 	// TODO: Create a constant that defines the max # of intersection ids
 
-	closed_nodes = new byte[(int)ceil(INTERSECTION_MARKER_COUNT / 8.0)];
+	closed_nodes = new byte[INTERSECTION_MARKER_COUNT]{};
 }
 
 void IntersectionPathfinder::Dispose() {
@@ -22,7 +22,9 @@ IntersectionPathfinderResult IntersectionPathfinder::PerformSearch(int startingM
 	IntersectionPathNodeSet *openSet = new IntersectionPathNodeSet();
 
 	// Add the starting position
-	openSet->add(new IntersectionPathNode(startingMarkerId, 0, NULL));
+	IntersectionPathNode *startingNode = new IntersectionPathNode(startingMarkerId, 0, NULL);
+
+	openSet->add(startingNode);
 
 	while (openSet->size() > 0) {
 		int currentNodeIndex = DetermineNextNode(openSet);
@@ -36,7 +38,7 @@ IntersectionPathfinderResult IntersectionPathfinder::PerformSearch(int startingM
 		MarkBlocked(currentNode->intersectionMarkerId, true);
 
 		for (int y = 0; y < INTERSECTION_MARKER_COUNT; y++) {
-			int cost = pgm_read_byte(&(intersection_graph[y][currentNode->intersectionMarkerId][0]));
+			int cost = (int)(int8_t)pgm_read_byte(&(intersection_graph[y][currentNode->intersectionMarkerId][0]));
 
 			// Check: is cost > -1? If so, this node is a neighbour of the current node
 			if (cost > -1) {
@@ -46,8 +48,9 @@ IntersectionPathfinderResult IntersectionPathfinder::PerformSearch(int startingM
 					continue;
 				}
 
-				int totalCost = /* TODO: previous cost */0 + cost;
+				int totalCost = currentNode->g + cost;
 				int neighbourIndex = IndexOfSet(openSet, y);
+
 				if (neighbourIndex == -1) {
 					// Discover a new node
 					IntersectionPathNode *setNode = new IntersectionPathNode(y, totalCost, currentNode);
@@ -55,7 +58,7 @@ IntersectionPathfinderResult IntersectionPathfinder::PerformSearch(int startingM
 					openSet->add(setNode);
 				}
 				else {
-					auto neighbourNode = openSet->get(neighbourIndex);
+					IntersectionPathNode *neighbourNode = openSet->get(neighbourIndex);
 
 					if (totalCost <= neighbourNode->g) {
 						neighbourNode->parent = currentNode;
@@ -70,10 +73,12 @@ IntersectionPathfinderResult IntersectionPathfinder::PerformSearch(int startingM
 }
 
 int IntersectionPathfinder::IndexOfSet(IntersectionPathNodeSet *set, int markerId) {
-	for (int i = 0; i < set->size(); i++) {
-		auto node = set->get(i);
-		if (node->intersectionMarkerId == markerId) {
-			return i;
+	for (int i = 0; i < set->setSize(); i++) {
+		IntersectionPathNode *node = set->get(i);
+		if (node != NULL) {
+			if (node->intersectionMarkerId == markerId) {
+				return i;
+			}
 		}
 	}
 
@@ -84,11 +89,13 @@ int IntersectionPathfinder::DetermineNextNode(IntersectionPathNodeSet *openSet) 
 	IntersectionPathNode *bestNode = NULL;
 	int setIndex = -1;
 
-	for (int i = 0; i < openSet->size(); i++) {
+	for (int i = 0; i < openSet->setSize(); i++) {
 		IntersectionPathNode *testNode = openSet->get(i);
-		if (setIndex == -1 || testNode->g < bestNode->g) {
-			bestNode = testNode;
-			setIndex = i;
+		if (testNode != NULL) {
+			if (setIndex == -1 || testNode->g < bestNode->g) {
+				bestNode = testNode;
+				setIndex = i;
+			}
 		}
 	}
 
@@ -105,7 +112,7 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 
 	currentNode = endingNode;
 
-	int *path = new int[depth]();
+	int *path = new int[depth];
 	for (int i = depth - 1; i >= 0; i--) {
 		path[i] = currentNode->intersectionMarkerId;
 
@@ -115,7 +122,7 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 }
 
 void IntersectionPathfinder::MarkBlocked(int markerId, bool value) {
-	int position = markerId / 8;
+	/*int position = markerId / 8;
 	int offset = markerId % 8;
 
 	byte internal_value = closed_nodes[position];
@@ -127,25 +134,32 @@ void IntersectionPathfinder::MarkBlocked(int markerId, bool value) {
 		internal_value = internal_value & ~(1 << offset);
 	}
 
-	closed_nodes[position] = internal_value;
+	closed_nodes[position] = internal_value;*/
+	closed_nodes[markerId] = 1;
 }
 
 bool IntersectionPathfinder::IsBlocked(int markerId) {
-	int position = markerId / 8;
+	/*int position = markerId / 8;
 	int offset = markerId % 8;
 
 	byte internal_value = closed_nodes[position];
 
-	return internal_value & (1 << offset);
+	return internal_value & (1 << offset);*/
+	return (closed_nodes[markerId] == 1);
 }
 
 IntersectionPathNodeSet::IntersectionPathNodeSet() {
 	_setCount = 100;
+	_size = 0;
 	_set = new IntersectionPathNode*[_setCount] {};
 }
 
 int IntersectionPathNodeSet::size() {
 	return _size;
+}
+
+int IntersectionPathNodeSet::setSize() {
+	return _setCount;
 }
 
 IntersectionPathNode* IntersectionPathNodeSet::get(int i) {
@@ -156,13 +170,17 @@ void IntersectionPathNodeSet::add(IntersectionPathNode *node) {
 	for (int i = 0; i < _setCount; i++) {
 		if (_set[i] == NULL) {
 			_set[i] = node;
+
+			_size++;
+			break;
 		}
-	}
+	}	
 }
 
 IntersectionPathNode* IntersectionPathNodeSet::remove(int i) {
-	auto result = _set[i];
+	IntersectionPathNode *result = _set[i];
 
+	_size--;
 	_set[i] = NULL;
 
 	return result;
