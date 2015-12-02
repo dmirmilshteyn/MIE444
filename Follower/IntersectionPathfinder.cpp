@@ -1,14 +1,22 @@
 #include "IntersectionPathfinder.h"
 #include "MemoryFree.h"
 
+IntersectionPathfinder::IntersectionPathfinder(double headingAngle) {
+	_headingAngle = headingAngle;
+}
+
 void IntersectionPathfinder::Initialize(IntersectionPathNodeSet *trackingSet) {
-  // TODO: Create a constant that defines the max # of intersection ids
+	// TODO: Create a constant that defines the max # of intersection ids
 
-  closed_nodes = new byte[INTERSECTION_MARKER_COUNT] {};
+	closed_nodes = new byte[INTERSECTION_MARKER_COUNT]{};
 
-  // Block off the middle area of the map because it makes the robot sad
-  closed_nodes[44] = 1;
-  closed_nodes[49] = 1;
+	// Block off the middle area of the map because it makes the robot sad
+	closed_nodes[44] = 1;
+	closed_nodes[49] = 1;
+
+	// Close off the TLeft because it causes conflicts 
+	closed_nodes[19] = 1;
+	closed_nodes[22] = 1;
 }
 
 void IntersectionPathfinder::Dispose(IntersectionPathNodeSet *trackingSet) {
@@ -127,6 +135,17 @@ int IntersectionPathfinder::DetermineNextNode(IntersectionPathNodeSet *openSet) 
   return setIndex;
 }
 
+//Normalizes any number to an arbitrary range 
+//by assuming the range wraps around when going below min or above max 
+double normalise(const double value, const double start, const double end)
+{
+	const double width = end - start;   // 
+	const double offsetValue = value - start;   // value relative to 0
+
+	return (offsetValue - (floor(offsetValue / width) * width)) + start;
+	// + start to reset back to start of original range
+}
+
 IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(IntersectionPathNode *endingNode) {
   int depth = 0;
   IntersectionPathNode *currentNode = endingNode;
@@ -137,6 +156,7 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 
   currentNode = endingNode;
 
+  // TODO: Properly dispose of these paths
   int *path = new int[depth];
   for (int i = depth - 1; i >= 0; i--) {
     path[i] = currentNode->intersectionMarkerId;
@@ -145,13 +165,31 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
   }
 
   currentNode = endingNode;
-  int *pathTurns = new int[depth];
-  for (int i = 0; i < depth; i++) {
+  double testHeadingAngle = _headingAngle;
 
+  float *pathTurns = new float[depth];
+  for (int i = 1; i < depth; i++) {
+	  byte upcomingIntersectionX = pgm_read_byte(&(intersections[path[i]].intersectionX));
+	  byte upcomingIntersectionY = pgm_read_byte(&(intersections[path[i]].intersectionY));
+
+	  byte currentIntersectionX = pgm_read_byte(&(intersections[path[i - 1]].intersectionX));
+	  byte currentIntersectionY = pgm_read_byte(&(intersections[path[i - 1]].intersectionY));
+
+	  double xDiff = upcomingIntersectionX - currentIntersectionX;
+	  double yDiff = upcomingIntersectionY - currentIntersectionY;
+
+	  double angle = atan2(yDiff, xDiff);
+
+	  testHeadingAngle = angle;
+
+	  pathTurns[i - 1] = angle;
   }
+  pathTurns[depth - 1] = 0;
 
-  return IntersectionPathfinderResult(path, NULL, depth);
+  return IntersectionPathfinderResult(path, pathTurns, depth);
 }
+
+
 
 void IntersectionPathfinder::MarkBlocked(int markerId, bool value) {
   /*int position = markerId / 8;

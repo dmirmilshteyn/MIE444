@@ -15,10 +15,10 @@
 
 struct IntersectionPathfinderResult {
 	int *path;
-	int *pathTurns;
+	float *pathTurns;
 	int size;
 
-	IntersectionPathfinderResult(int *path, int *pathTurns, int size) : path(path), pathTurns(pathTurns), size(size) { }
+	IntersectionPathfinderResult(int *path, float *pathTurns, int size) : path(path), pathTurns(pathTurns), size(size) { }
 };
 
 struct IntersectionPathNode {
@@ -52,8 +52,10 @@ class IntersectionPathfinder {
 public:
 	IntersectionPathfinderResult FindPath(int startingMarkerId, int goalIntersectionId);
 
+	IntersectionPathfinder(double headingAngle);
 private:
 	byte *closed_nodes;
+	double _headingAngle;
 
 	void Initialize(IntersectionPathNodeSet *trackingSet);
 	void Dispose(IntersectionPathNodeSet *tracking);

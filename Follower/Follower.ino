@@ -66,18 +66,23 @@ void setup() {
   //Serial.print("Path Size: ");
   //Serial.println(path.size);
 
-  IntersectionPathfinder pathfinder;
-  auto path = pathfinder.FindPath(28, 0);
+  IntersectionPathfinder pathfinder(M_PI / 2);
+  auto path = pathfinder.FindPath(14, 0);
 
   Serial.println("Values:");
   for (int i = 0; i < path.size; i++) {
-  	Serial.println(pgm_read_byte(&(intersections[path.path[i]].id)));
+	  Serial.print("Intersection: ");
+  	  Serial.print(pgm_read_byte(&(intersections[path.path[i]].id)));
+	  Serial.print(", Target Angle: ");
+	  Serial.println(path.pathTurns[i]);
   }
 
   initializeEncoders();
   interrupts();
 
   //Serial.println(pgm_read_byte(&(intersection_graph[11][14][0])));
+
+  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
 
   /*ProcessDetectedIntersection(INTERSECTION_TYPE_T);
   ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
