@@ -220,19 +220,19 @@ void verifyDetectedIntersection() {
           if (robotToIntersectionDistance < smallestDistance) {
 
             Serial.print(" distance");
-            Serial.print(robotToIntersectionDistance);
-            Serial.print(" x:");
-            Serial.print(absoluteLocationX);
-            Serial.print(" y:");
-            Serial.print(absoluteLocationY);
-            Serial.print("     x:");
-            Serial.print(neighborIntersectionX);
-            Serial.print(" y:");
-            Serial.print(neighborIntersectionY);
-            Serial.print("     pow1:");
-            Serial.print(pow1);
-            Serial.print(" pow2:");
-            Serial.println(pow2);
+            Serial.println(robotToIntersectionDistance);
+//            Serial.print(" x:");
+//            Serial.print(absoluteLocationX);
+//            Serial.print(" y:");
+//            Serial.print(absoluteLocationY);
+//            Serial.print("     x:");
+//            Serial.print(neighborIntersectionX);
+//            Serial.print(" y:");
+//            Serial.print(neighborIntersectionY);
+//            Serial.print("     pow1:");
+//            Serial.print(pow1);
+//            Serial.print(" pow2:");
+//            Serial.println(pow2);
             smallestDistance = robotToIntersectionDistance;
             smallestDistanceMarkerID = i;
           }

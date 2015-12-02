@@ -71,7 +71,7 @@ void setup() {
 
   Serial.println("Values:");
   for (int i = 0; i < path.size; i++) {
-  	Serial.println(pgm_read_byte(&(intersections[path.path[i]].id)));
+    Serial.println(pgm_read_byte(&(intersections[path.path[i]].id)));
   }
 
   initializeEncoders();
@@ -80,29 +80,29 @@ void setup() {
   //Serial.println(pgm_read_byte(&(intersection_graph[11][14][0])));
 
   /*ProcessDetectedIntersection(INTERSECTION_TYPE_T);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_T);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
-  ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);*/
+    ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_T);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_TLEFT);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_CROSS);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+    ProcessDetectedIntersection(INTERSECTION_TYPE_RIGHTTURN);*/
 
   /*Serial.print("Intersection: ");
-  Serial.print(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
-  Serial.print(", Marker: ");
-  Serial.println(lastIntersectionMarkerId);*/
+    Serial.print(pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)));
+    Serial.print(", Marker: ");
+    Serial.println(lastIntersectionMarkerId);*/
   // Expected: 17
 
   delay(15000);
@@ -141,7 +141,8 @@ void loop() {
   updateFollowerState();
   ReadIntersectionSensors(currentTime);
   followLaneAnalog(currentTime);
-  
+  wallDetection();
+
   updateRelativeLocation();
 
   publishEncoderData(leftMotorCount, rightMotorCount);

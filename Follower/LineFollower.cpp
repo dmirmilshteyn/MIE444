@@ -130,8 +130,10 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
     motorSpeeds.right = -(adjustedSpeed * 1.2);
     motorSpeeds.left = adjustedSpeed * 1;
+    isRealigning = true;
   }
-  else if (followerState == FOLLOWER_STATE_LEFT || followerState == FOLLOWER_STATE_RIGHT) {
+
+  else if (followerState == FOLLOWER_STATE_LEFT || followerState == FOLLOWER_STATE_RIGHT || followerState == FOLLOWER_STATE_WALL) {
     switch (turnState) {
       case TURN_STATE_DEFAULT:
         if (IsSensorOnOrApproaching(SENSOR_LOCATION_FRONT) == false) {
@@ -148,7 +150,6 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     if (turnState == TURN_STATE_HIT_BLACK) {
       turnState = TURN_STATE_DEFAULT;
       followerState = FOLLOWER_STATE_ONLINE;
-      isRealigning = true;
 
       motorSpeeds.left = 0;
       motorSpeeds.right = 0;
@@ -166,6 +167,11 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
         // Turn right
         motorSpeeds.right = -averageMotorSpeed * 0.6;
         motorSpeeds.left = averageMotorSpeed * 1.3;
+      }
+      else if (followerState == FOLLOWER_STATE_WALL) {
+        // Turn right
+        motorSpeeds.right = -(adjustedSpeed * 1.2);
+        motorSpeeds.left = adjustedSpeed * 1;
       }
     }
   }
@@ -234,3 +240,21 @@ void determineStallPWM() {
     //publishSyncData();
   }
 }
+
+
+void wallDetection() {
+  if (followerState == FOLLOWER_STATE_ONLINE) {
+    int wallDistance = analogRead(WALL_DISTANCE_SENSOR);
+    Serial.println(wallDistance);
+    if (wallDistance > 260) {
+      followerState = FOLLOWER_STATE_WALL;
+    }
+  }
+}
+
+
+
+
+
+
+
