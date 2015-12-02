@@ -1,16 +1,15 @@
 
+#include "IntersectionPathfinder.h"
 #include "Localization.h"
 #include "Checkpoint.h"
 #include "IntersectionDetection.h"
 #include "LineFollower.h"
-#include <LinkedList.h>
 #include <math.h>
 #include "Constants.h"
 #include "Debug.h"
-#include "Mapping.h"
-#include "Pathfinder.h"
 #include "LineFollower.h"
 #include "Checkpoint.h"
+#include "IntersectionPathfinder.h"
 #include "IntersectionDetection.h"
 #include "Localization.h"
 
@@ -66,6 +65,14 @@ void setup() {
 
   //Serial.print("Path Size: ");
   //Serial.println(path.size);
+
+  IntersectionPathfinder pathfinder;
+  auto path = pathfinder.FindPath(28, 0);
+
+  Serial.println("Values:");
+  for (int i = 0; i < path.size; i++) {
+  	Serial.println(pgm_read_byte(&(intersections[path.path[i]].id)));
+  }
 
   initializeEncoders();
   interrupts();

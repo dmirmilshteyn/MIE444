@@ -10,7 +10,6 @@
 #include <avr/pgmspace.h>
 #include "Constants.h"
 #include "MappingConstants.h"
-#include "Mapping.h"
 #include "Math.h"
 #include "LineFollower.h"
 
