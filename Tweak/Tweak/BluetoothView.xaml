@@ -94,6 +94,24 @@
                     <TextBlock Grid.Column="3" Grid.Row="6" Text="Intersection Id" FontWeight="Bold" HorizontalAlignment="Center" />
                     <TextBlock Grid.Column="3" Grid.Row="7" Text="{Binding ConnectedDevice.Synchronizer.IntersectionId}" HorizontalAlignment="Center" />
                 </Grid>
+                <TextBlock Text="Path Plan" FontWeight="Bold" HorizontalAlignment="Center" />
+                <ItemsControl ItemsSource="{Binding ConnectedDevice.Synchronizer.PathPlan}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Intersection Id: " />
+                    <TextBlock Grid.Column="1" Text="Marker Id: " />
+                    <TextBlock Grid.Column="2" Text="Turn Direction: " />
+                </Grid>
                 <TextBlock Text="Raw" FontWeight="Bold" HorizontalAlignment="Center" />
                 <Grid Visibility="Collapsed">
                     <Grid.ColumnDefinitions>

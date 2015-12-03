@@ -3,8 +3,7 @@
 #include "MemoryFree.h"
 #include "Localization.h"
 
-IntersectionPathfinder::IntersectionPathfinder(int previousMarkerId, double headingAngle) {
-  _previousMarkerId = previousMarkerId;
+IntersectionPathfinder::IntersectionPathfinder(double headingAngle) {
   _headingAngle = headingAngle;
 }
 
@@ -138,125 +137,121 @@ int IntersectionPathfinder::DetermineNextNode(IntersectionPathNodeSet *openSet) 
   return setIndex;
 }
 
-//Normalizes any number to an arbitrary range
-//by assuming the range wraps around when going below min or above max
-
-
 IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(IntersectionPathNode *endingNode) {
-  int depth = 0;
-  IntersectionPathNode *currentNode = endingNode;
-  while (currentNode != NULL) {
-    depth++;
-    currentNode = currentNode->parent;
-  }
+	int depth = 0;
+	IntersectionPathNode *currentNode = endingNode;
+	while (currentNode != NULL) {
+		depth++;
+		currentNode = currentNode->parent;
+	}
 
-  currentNode = endingNode;
+	currentNode = endingNode;
 
-  // TODO: Properly dispose of these paths
-  int *path = new int[depth];
-  for (int i = depth - 1; i >= 0; i--) {
-    path[i] = currentNode->intersectionMarkerId;
+	// TODO: Properly dispose of these paths
+	int *path = new int[depth];
+	for (int i = depth - 1; i >= 0; i--) {
+		path[i] = currentNode->intersectionMarkerId;
 
-    currentNode = currentNode->parent;
-  }
+		currentNode = currentNode->parent;
+	}
 
-  currentNode = endingNode;
-  double testHeadingAngle = _headingAngle;
+	currentNode = endingNode;
+	double testHeadingAngle = _headingAngle;
 
-  float *pathTurns = new float[depth];
+	float *pathTurns = new float[depth];
 
-  //  { 14, -1, M_PI / 2 }, // Starting with TRight
-  //  { 21, -1, -M_PI / 2 }, // Starting with TLeft
-  //  { 39, 38,  M_PI / 4 }, // Starting with T, then Left
-  //  { 39, 38,  M_PI / 4 }, // Starting with T, then TLeft (this is an error case)
-  //  { 25, 24, 0 } // Starting with T, then TRight
-  currentPath = 0;
-  byte upcomingIntersectionX = pgm_read_byte(&(intersections[path[1]].intersectionX));
-  byte upcomingIntersectionY = pgm_read_byte(&(intersections[path[1]].intersectionY));
+	//  { 14, -1, M_PI / 2 }, // Starting with TRight
+	//  { 21, -1, -M_PI / 2 }, // Starting with TLeft
+	//  { 39, 38,  M_PI / 4 }, // Starting with T, then Left
+	//  { 39, 38,  M_PI / 4 }, // Starting with T, then TLeft (this is an error case)
+	//  { 25, 24, 0 } // Starting with T, then TRight
+	currentPath = 0;
+	byte upcomingIntersectionX = pgm_read_byte(&(intersections[path[1]].intersectionX));
+	byte upcomingIntersectionY = pgm_read_byte(&(intersections[path[1]].intersectionY));
 
-  byte currentIntersectionX = pgm_read_byte(&(intersections[path[0]].intersectionX));
-  byte currentIntersectionY = pgm_read_byte(&(intersections[path[0]].intersectionY));
+	byte currentIntersectionX = pgm_read_byte(&(intersections[path[0]].intersectionX));
+	byte currentIntersectionY = pgm_read_byte(&(intersections[path[0]].intersectionY));
 
-  double xDiff = upcomingIntersectionX - currentIntersectionX;
-  double yDiff = upcomingIntersectionY - currentIntersectionY;
+	double xDiff = upcomingIntersectionX - currentIntersectionX;
+	double yDiff = upcomingIntersectionY - currentIntersectionY;
 
-  double upcomingAngle = atan2(yDiff, xDiff);
+	double upcomingAngle = atan2(yDiff, xDiff);
 
-  double previousAngle = pathLocation[currentPath][2];
+	double previousAngle = _headingAngle;//pathLocation[currentPath][2];
 
-    Serial.print(" pre ");
-    Serial.print(previousAngle);
-    Serial.print(" up ");
-    Serial.println(upcomingAngle);
-  double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
-  if (angle > M_PI) {
-    angle -= 2 * M_PI;
-  }
-  else if (angle < -M_PI) {
-    angle += 2 * M_PI;
-  }
-  if (abs(angle) < 20 * M_PI / 180) {
-    pathTurns[0] = PATH_STRAIGHT;
-  }
-  else if (angle > 0) {
-    pathTurns[0] = PATH_RIGHT;
-  }
-  else if (angle < 0) {
-    pathTurns[0] = PATH_LEFT;
-  }
-  double previousIntersectionX = 0;
-  double previousIntersectionY = 0;
-  for (int i = 2; i < depth; i++) {
-    upcomingIntersectionX = pgm_read_byte(&(intersections[path[i]].intersectionX));
-    upcomingIntersectionY = pgm_read_byte(&(intersections[path[i]].intersectionY));
+	Serial.print(" pre ");
+	Serial.print(previousAngle);
+	Serial.print(" up ");
+	Serial.println(upcomingAngle);
+	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
+	if (angle > M_PI) {
+		angle -= 2 * M_PI;
+	}
+	else if (angle < -M_PI) {
+		angle += 2 * M_PI;
+	}
+	if (abs(angle) < 20 * M_PI / 180) {
+		pathTurns[0] = PATH_STRAIGHT;
+	}
+	else if (angle > 0) {
+		pathTurns[0] = PATH_RIGHT;
+	}
+	else if (angle < 0) {
+		pathTurns[0] = PATH_LEFT;
+	}
+	double previousIntersectionX = 0;
+	double previousIntersectionY = 0;
+	for (int i = 2; i < depth; i++) {
+		upcomingIntersectionX = pgm_read_byte(&(intersections[path[i]].intersectionX));
+		upcomingIntersectionY = pgm_read_byte(&(intersections[path[i]].intersectionY));
 
-    currentIntersectionX = pgm_read_byte(&(intersections[path[i - 1]].intersectionX));
-    currentIntersectionY = pgm_read_byte(&(intersections[path[i - 1]].intersectionY));
+		currentIntersectionX = pgm_read_byte(&(intersections[path[i - 1]].intersectionX));
+		currentIntersectionY = pgm_read_byte(&(intersections[path[i - 1]].intersectionY));
 
-    previousIntersectionX = pgm_read_byte(&(intersections[path[i - 2]].intersectionX));
-    previousIntersectionY = pgm_read_byte(&(intersections[path[i - 2]].intersectionY));
+		previousIntersectionX = pgm_read_byte(&(intersections[path[i - 2]].intersectionX));
+		previousIntersectionY = pgm_read_byte(&(intersections[path[i - 2]].intersectionY));
 
-    xDiff = upcomingIntersectionX - currentIntersectionX;
-    yDiff = upcomingIntersectionY - currentIntersectionY;
+		xDiff = upcomingIntersectionX - currentIntersectionX;
+		yDiff = upcomingIntersectionY - currentIntersectionY;
 
-    upcomingAngle = atan2(yDiff, xDiff);
+		upcomingAngle = atan2(yDiff, xDiff);
 
-    xDiff = currentIntersectionX - previousIntersectionX;
-    yDiff = currentIntersectionY - previousIntersectionY;
+		xDiff = currentIntersectionX - previousIntersectionX;
+		yDiff = currentIntersectionY - previousIntersectionY;
 
-    previousAngle = atan2(yDiff, xDiff);
+		previousAngle = atan2(yDiff, xDiff);
 
-    Serial.print(" pre ");
-    Serial.print(previousAngle);
-    Serial.print(" up ");
-    Serial.println(upcomingAngle);
+		Serial.print(" pre ");
+		Serial.print(previousAngle);
+		Serial.print(" up ");
+		Serial.println(upcomingAngle);
 
-    angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
+		angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
 
 
-    if (abs(angle) < 20 * M_PI / 180) {
-      pathTurns[0] = PATH_STRAIGHT;
-    }
-    else if (angle > 0) {
-      pathTurns[0] = PATH_RIGHT;
-    }
-    if (abs(angle) < 20 * M_PI / 180) {
-      pathTurns[i-1] = PATH_STRAIGHT;
-    }
-    else if (angle > 0) {
-      pathTurns[i-1] = PATH_RIGHT;
-    }
-    else if (angle < 0) {
-      pathTurns[i-1] = PATH_LEFT;
-    }
-    testHeadingAngle = angle;
+		if (angle > M_PI) {
+			angle -= 2 * M_PI;
+		}
+		else if (angle < -M_PI) {
+			angle += 2 * M_PI;
+		}
+		if (abs(angle) < 20 * M_PI / 180) {
+			pathTurns[i - 1] = PATH_STRAIGHT;
+		}
+		else if (angle > 0) {
+			pathTurns[i - 1] = PATH_RIGHT;
+		}
+		else if (angle < 0) {
+			pathTurns[i - 1] = PATH_LEFT;
+		}
+		testHeadingAngle = angle;
 
-    _headingAngle;
-    //pathTurns[i - 1] = angle;
-  }
-  pathTurns[depth - 1] = 0;
+		_headingAngle;
+		//pathTurns[i - 1] = angle;
+	}
+	pathTurns[depth - 1] = 0;
 
-  return IntersectionPathfinderResult(path, pathTurns, depth);
+	return IntersectionPathfinderResult(path, pathTurns, depth);
 }
 
 

@@ -111,6 +111,8 @@
     <Compile Include="Bluetooth\BluetoothManager.cs" />
     <Compile Include="Bluetooth\BTCommand.cs" />
     <Compile Include="Bluetooth\ConnectedDevice.cs" />
+    <Compile Include="Bluetooth\PathPlan.cs" />
+    <Compile Include="Bluetooth\PathPlanNode.cs" />
     <Compile Include="Bluetooth\RemoteMap.cs" />
     <Compile Include="Bluetooth\RemoteMapViewer.xaml.cs">
       <DependentUpon>RemoteMapViewer.xaml</DependentUpon>
@@ -158,6 +160,7 @@
     <Compile Include="StartPosition.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileCollection.cs" />
+    <Compile Include="TurnDirection.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

@@ -1,10 +1,11 @@
+#ifndef DEBUG_H
+#define DEBUG_H
+
 #include "Arduino.h"
 #include "LineFollower.h"
 #include "Core.h"
 #include "Localization.h"
-
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "IntersectionPathfinder.h"
 
 //#define PRINT_DEBUG_MESSAGES
 //#define PRINT_DEBUG_MESSAGES_2
@@ -47,5 +48,7 @@ void publishIntersectionDetectionData(long currentTime, int frontSensor, int lef
 void publishEncoderData(long leftMotorCount, long rightMotorCount);
 void publishMap();
 void publishLocalizationData(long currentTime);
+void publishPathInformation(long currentTime, IntersectionPathfinderResult path);
+void publishCurrentPathPlanNodeIndex(int currentPathPlanNodeIndex);
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef _CORE_h
 #define _CORE_h
 
+#include <math.h>
+
 struct MotorSpeeds {
 	int left;
 	int right;
@@ -15,5 +17,7 @@ struct MotorSpeeds {
 //returns -1 if negative
 #define signOf(num) \
 	(num >= 0) ? 1 : -1
+
+double normalise(const double value, const double start, const double end);
 
 #endif

@@ -216,6 +216,24 @@ namespace Tweak.Bluetooth
             }
         }
 
+        PathPlan pathPlan;
+        public PathPlan PathPlan {
+            get { return pathPlan; }
+            set {
+                pathPlan = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        PathPlanNode currentPathPlanNode;
+        public PathPlanNode CurrentPathPlanNode {
+            get { return currentPathPlanNode; }
+            set {
+                currentPathPlanNode = value;
+                RaisePropertyChanged();
+            }
+        }
+
         IntersectionIdentifier intersectionIdentifier;
         public IntersectionIdentifier IntersectionIdentifier {
             get { return intersectionIdentifier; }
@@ -230,6 +248,7 @@ namespace Tweak.Bluetooth
         public Synchronizer(StreamSocket socket) {
             this.socket = socket;
             this.intersectionIdentifier = new IntersectionIdentifier();
+            this.PathPlan = new PathPlan();
 
             this.dataWriter = new DataWriter(socket.OutputStream);
             this.dataReader = new DataReader(socket.InputStream);
@@ -252,8 +271,7 @@ namespace Tweak.Bluetooth
         private void HandleLine(string line) {
             if (line.StartsWith("!")) {
                 switch (line[1]) {
-                    case '!':
-                        {
+                    case '!': {
                             line = line.Substring(2);
 
                             string[] resultSegments = line.Split('|');
@@ -266,8 +284,7 @@ namespace Tweak.Bluetooth
                             StallPWM = Int32.Parse(resultSegments[5]);
                         }
                         break;
-                    case '?':
-                        {
+                    case '?': {
                             line = line.Substring(2);
 
                             string[] resultSegments = line.Split('|');
@@ -282,8 +299,7 @@ namespace Tweak.Bluetooth
                             RightLineSensor = (int)float.Parse(resultSegments[7]);
                         }
                         break;
-                    case '#':
-                        {
+                    case '#': {
                             line = line.Substring(2);
 
                             string[] resultSegments = line.Split('|');
@@ -303,8 +319,7 @@ namespace Tweak.Bluetooth
                             //IntersectionIdentifier.HandleIncomingData(frontIntersectionSensor, LeftIntersectionSensor, RightIntersectionSensor, LeftMotorCount, RightMotorCount);
                         }
                         break;
-                    case '*':
-                        {
+                    case '*': {
                             line = line.Substring(2);
 
                             string[] resultSegments = line.Split('|');
@@ -319,8 +334,7 @@ namespace Tweak.Bluetooth
                             }
                         }
                         break;
-                    case '$':
-                        {
+                    case '$': {
                             line = line.Substring(2);
 
                             string[] resultSegments = line.Split('|');
@@ -328,8 +342,7 @@ namespace Tweak.Bluetooth
                             RightMotorCount = (int)float.Parse(resultSegments[1]);
                         }
                         break;
-                    case '&':
-                        {
+                    case '&': {
                             line = line.Substring(2);
 
                             string[] resultSegments = line.Split('|');
@@ -338,6 +351,39 @@ namespace Tweak.Bluetooth
                             IntersectionId = (int)float.Parse(resultSegments[2]);
 
                             System.Diagnostics.Debug.WriteLine($"{relativePositionX} {relativePositionY}");
+                        }
+                        break;
+                    case '^': {
+                            line = line.Substring(2);
+
+                            string[] resultSegments = line.Split('|');
+                            int size = (int)float.Parse(resultSegments[0]);
+
+                            int offset = 1;
+                            PathPlan.Plan.Clear();
+                            for (int i = 0; i < size; i++) {
+                                int markerId = (int)float.Parse(resultSegments[offset + i]);
+                                int intersectionid = (int)float.Parse(resultSegments[offset + i + 1]);
+                                TurnDirection turnDirection = (TurnDirection)(int)float.Parse(resultSegments[offset + i + 2]);
+
+                                PathPlan.Plan.Add(new PathPlanNode()
+                                {
+                                    MarkerId = markerId,
+                                    IntersectionId = intersectionid,
+                                    TurnDirection = turnDirection
+                                });
+                            }
+                        }
+                        break;
+                    case '+': {
+                            line = line.Substring(2);
+
+                            string[] resultSegments = line.Split('|');
+                            int currentPathPlanNodeIndex = (int)float.Parse(resultSegments[0]);
+
+                            if (currentPathPlanNodeIndex != -1 && PathPlan.Plan.Count > currentPathPlanNodeIndex) {
+                                CurrentPathPlanNode = PathPlan.Plan[currentPathPlanNodeIndex];
+                            }
                         }
                         break;
                 }

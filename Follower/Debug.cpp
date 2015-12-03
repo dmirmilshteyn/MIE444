@@ -58,6 +58,7 @@ int readDebugCommand() {
 long lastLocalizationPublishTime = 0;
 long lastIntersectionPublishTime = 0;
 long lastLaneFollowingPublishTime = 0;
+long lastPathPublishTime = 0;
 
 void publishLaneFollowingData(long currentTime, MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor) {
   return;
@@ -144,6 +145,30 @@ void publishLocalizationData(long currentTime) {
     Serial.println();
 #endif
   }
+}
+
+void publishPathInformation(long currentTime, IntersectionPathfinderResult path) {
+	lastPathPublishTime = currentTime;
+	Serial.print("!^");
+	Serial.print(path.size);
+
+	for (int i = 0; i < path.size; i++) {
+		Serial.print("|");
+		Serial.print(path.path[i]);
+		Serial.print("|");
+		Serial.print(pgm_read_byte(&(intersections[path.path[i]].id)));
+		Serial.print("|");
+		Serial.print(path.pathTurns[i]);
+	}
+
+	Serial.println();
+}
+
+void publishCurrentPathPlanNodeIndex(int currentPathPlanNodeIndex) {
+	Serial.print("!+");
+	Serial.print(currentPathPlanNodeIndex);
+
+	Serial.println();
 }
 
 void processDebugCommand(int command) {
