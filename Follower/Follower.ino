@@ -1,4 +1,5 @@
 
+#include "Planner.h"
 #include "IntersectionPathfinder.h"
 #include "Localization.h"
 #include "Checkpoint.h"

@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Localization.h"
 #include "LineFollower.h"
+#include "Planner.h"
 
 #include "Debug.h"
 
@@ -46,7 +47,7 @@ inline double GetEncoderDistanceTicks() {
 
 void ReadIntersectionSensors(long tick);
 void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, long encoderLeft, long encoderRight);
-void ProcessDetectedIntersection(int detectedIntersectionType);
+
 void verifyDetectedIntersection();
 
 int GetCurrentSensorValue(int sensorLocation);
