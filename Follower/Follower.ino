@@ -162,4 +162,15 @@ void loop() {
     int command = Serial.read();
     processDebugCommand(command);
   }
+
+  Serial.print(absoluteLocationX);
+  Serial.print(" ");
+  Serial.print(-absoluteLocationY);
+  Serial.print(" ");
+  Serial.println(absoluteHeadingAngle * 180 / M_PI);
+
+
+
+
+  
 }
