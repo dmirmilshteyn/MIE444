@@ -200,7 +200,7 @@ void verifyDetectedIntersection() {
         Serial.print(" lastS");
         Serial.print(lastIntersectionMarkerId);
         Serial.print(" checkS");
-        Serial.print(detectedMarkerId);
+        Serial.println(detectedMarkerId);
       }
     }
     if (deadEndCase == 0) {
