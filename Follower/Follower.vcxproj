@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Checkpoint.cpp" />
+    <ClCompile Include="Core.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="IntersectionDetection.cpp" />
     <ClCompile Include="IntersectionPathfinder.cpp" />

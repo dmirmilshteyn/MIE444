@@ -340,14 +340,3 @@ bool IsSensorApproaching(int sensorLocation) {
 bool IsSensorOnOrApproaching(int sensorLocation) {
   return (IsSensorApproaching(sensorLocation) || IsSensorOn(sensorLocation));
 }
-
-
-double normalise(const double value, const double start, const double end)
-{
-  const double width = end - start;   //
-  const double offsetValue = value - start;   // value relative to 0
-
-  return (offsetValue - (floor(offsetValue / width) * width)) + start;
-  // + start to reset back to start of original range
-}
-
