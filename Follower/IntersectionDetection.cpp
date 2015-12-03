@@ -100,11 +100,11 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
     currentTestIntersection = INTERSECTION_TYPE_CROSS;
   }
 
-  if (abs(encoderLeft - lastLeftEncoder) > 225) {
-    detectedIntersection = currentTestIntersection;
-    verifyDetectedIntersection();
-  }
-  else {
+//  if (abs(encoderLeft - lastLeftEncoder) > 225) {
+//    detectedIntersection = currentTestIntersection;
+//    verifyDetectedIntersection();
+//  }
+//  else {
     double currentTick = (encoderLeft + encoderRight) / 2;
     if (currentTestIntersection != previousTestIntersection) {
       detectedIntersection = INTERSECTION_TYPE_NONE;
@@ -119,10 +119,10 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
         lastTick = currentTick;
       }
     }
-  }
+//  }
 
-  lastLeftEncoder = encoderLeft;
-  lastRightEncoder = encoderRight;
+//  lastLeftEncoder = encoderLeft;
+//  lastRightEncoder = encoderRight;
 }
 
 void verifyDetectedIntersection() {
@@ -154,37 +154,37 @@ void verifyDetectedIntersection() {
         case 1:
         case 2:
           detectedMarkerId = 3;
-          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
           break;
         case 27:
         case 26:
           detectedMarkerId = 25;
-          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
           break;
         case 19:
         case 20:
           detectedMarkerId = 21;
-          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
           break;
         case 13:
         case 15:
           detectedMarkerId = 14;
-          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
           break;
         case 8:
         case 10:
           detectedMarkerId = 9;
-          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
           break;
         case 40:
         case 41:
           detectedMarkerId = 39;
-          detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
+          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
           break;
       }
