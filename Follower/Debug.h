@@ -7,6 +7,7 @@
 #define DEBUG_H
 
 //#define PRINT_DEBUG_MESSAGES
+//#define PRINT_DEBUG_MESSAGES_2
 //#define NOMOTORS
 
 // ************************

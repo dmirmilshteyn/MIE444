@@ -113,7 +113,7 @@ void setup() {
 
 void loop() {
 
-  delay(10);
+  //delay(10);
   unsigned long currentTime;
 
   // TODO: Debugging code
