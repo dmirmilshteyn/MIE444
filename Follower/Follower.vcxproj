@@ -147,9 +147,6 @@
     <ClInclude Include="Map.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="Mapping.h">
-      <FileType>CppCode</FileType>
-    </ClInclude>
     <ClInclude Include="MappingConstants.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -170,9 +167,7 @@
     <ClCompile Include="LineFollower.cpp" />
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Mapping.cpp" />
     <ClCompile Include="MemoryFree.cpp" />
-    <ClCompile Include="Pathfinder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
