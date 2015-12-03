@@ -57,6 +57,7 @@ bool IsSensorOn(int sensorLocation);
 bool IsSensorApproaching(int sensorLocation);
 bool IsSensorOnOrApproaching(int sensorLocation);
 
+double normalise(const double value, const double start, const double end);
 
 #endif
 
