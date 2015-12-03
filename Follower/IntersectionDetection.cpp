@@ -75,7 +75,7 @@ void ReadIntersectionSensors(long tick) {
   }
 }
 
-void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight) {
+void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, long encoderLeft, long encoderRight) {
   currentTestIntersection = INTERSECTION_TYPE_NONE;
 
   if (IsSensorOnOrApproaching(SENSOR_LOCATION_LEFT)) {
@@ -100,36 +100,36 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
     currentTestIntersection = INTERSECTION_TYPE_CROSS;
   }
 
-//  if (abs(encoderLeft - lastLeftEncoder) > 225) {
-//    detectedIntersection = currentTestIntersection;
-//    verifyDetectedIntersection();
-//  }
-//  else {
-    double currentTick = (encoderLeft + encoderRight) / 2;
-    if (currentTestIntersection != previousTestIntersection) {
-      detectedIntersection = INTERSECTION_TYPE_NONE;
-      previousTestIntersection = currentTestIntersection;
+  //  if (abs(encoderLeft - lastLeftEncoder) > 225) {
+  //    detectedIntersection = currentTestIntersection;
+  //    verifyDetectedIntersection();
+  //  }
+  //  else {
+  double currentTick = (encoderLeft + encoderRight) / 2;
+  if (currentTestIntersection != previousTestIntersection) {
+    detectedIntersection = INTERSECTION_TYPE_NONE;
+    previousTestIntersection = currentTestIntersection;
+    lastTick = currentTick;
+  }
+  else {
+    double testTick = lastTick + GetEncoderDistanceTicks();
+    if (currentTick > testTick) {
+      detectedIntersection = currentTestIntersection;
+      verifyDetectedIntersection();
       lastTick = currentTick;
     }
-    else {
-      double testTick = lastTick + GetEncoderDistanceTicks();
-      if (currentTick > testTick) {
-        detectedIntersection = currentTestIntersection;
-        verifyDetectedIntersection();
-        lastTick = currentTick;
-      }
-    }
-//  }
+  }
+  //  }
 
-//  lastLeftEncoder = encoderLeft;
-//  lastRightEncoder = encoderRight;
+  //  lastLeftEncoder = encoderLeft;
+  //  lastRightEncoder = encoderRight;
 }
 
 void verifyDetectedIntersection() {
   if (detectedIntersection != INTERSECTION_TYPE_NONE && currentPath > -1) {
 
-//    Serial.print(" detected");
-//    Serial.println(detectedIntersection);
+    //    Serial.print(" detected");
+    //    Serial.println(detectedIntersection);
     // TODO: verify that correct intersection was detected with encoders
     // get previous intersection marker ID x and y values. get neighboring intersection marker x and y values and compare with robot location.
     // the smallest radius is the matched intersection.
@@ -140,6 +140,8 @@ void verifyDetectedIntersection() {
     byte lastIntersectionY = pgm_read_byte(&(intersections[x].intersectionY));
 
     double smallestDistance = 1000;
+    double smallestAngle = 1000;
+
     int smallestDistanceMarkerID = -1;
     byte deadEndCase = 0;
 
@@ -156,36 +158,42 @@ void verifyDetectedIntersection() {
           detectedMarkerId = 3;
           detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
+          smallestAngle = 0;
           break;
         case 27:
         case 26:
           detectedMarkerId = 25;
           detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
+          smallestAngle = 0;
           break;
         case 19:
         case 20:
           detectedMarkerId = 21;
           detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
+          smallestAngle = 0;
           break;
         case 13:
         case 15:
           detectedMarkerId = 14;
           detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
+          smallestAngle = 0;
           break;
         case 8:
         case 10:
           detectedMarkerId = 9;
           detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
+          smallestAngle = 0;
           break;
         case 40:
         case 41:
           detectedMarkerId = 39;
           detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
           deadEndCase = 1;
+          smallestAngle = 0;
           break;
       }
       if (deadEndCase == 1) {
@@ -205,6 +213,36 @@ void verifyDetectedIntersection() {
           double pow2 = ((double)absoluteLocationY) * MAP_RESOLUTION - ((double)neighborIntersectionY) * MAP_RESOLUTION;
           pow2 = pow(pow2, 2);
           double robotToIntersectionDistance = sqrt(pow1 + pow2);
+
+          double xDiff = neighborIntersectionX - lastIntersectionX;
+          double yDiff = neighborIntersectionY - lastIntersectionY;
+
+          double neighborAngle = atan2(yDiff, xDiff);
+          switch (i) {
+            case 10:
+              neighborAngle = -M_PI;
+              break;
+            case 11:
+              neighborAngle = M_PI / 2;
+              break;
+            case 43:
+              neighborAngle = -M_PI * 0.9;
+              break;
+            case 38:
+              neighborAngle = M_PI / 4;
+              break;
+            case 7:
+              neighborAngle = M_PI * 0.9;
+              break;
+            case 8:
+              neighborAngle = 0;
+              break;
+          }
+
+
+          double angleCompare = abs(normalise((absoluteHeadingAngle - neighborAngle), -M_PI, M_PI));
+
+
           if (robotToIntersectionDistance < smallestDistance) {
             //            Serial.print(" distance");
             //            Serial.println(robotToIntersectionDistance);
@@ -220,24 +258,30 @@ void verifyDetectedIntersection() {
             //            Serial.print(pow1);
             //            Serial.print(" pow2:");
             //            Serial.println(pow2);
+
+
             smallestDistance = robotToIntersectionDistance;
+            smallestAngle = angleCompare;
             smallestDistanceMarkerID = i;
+//            Serial.print(" angle");
+//            Serial.println(smallestAngle);
+
           }
         }
       }
 
-      if (smallestDistance < 0.2) {
+      if (smallestDistance < 0.2 && smallestAngle < 20 * M_PI / 180) {
         detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
         detectedMarkerId = smallestDistanceMarkerID;
-//        Serial.print(" distance");
-//        Serial.println(smallestDistance);
+        //        Serial.print(" distance");
+        //        Serial.println(smallestDistance);
         Serial.print(" last");
         Serial.print(lastIntersectionMarkerId);
         Serial.print(" check");
-        Serial.print(detectedMarkerId);
+        Serial.println(detectedMarkerId);
       }
       else {
-        Serial.print("check didnt work");
+        Serial.println("check didnt work");
         detectedIntersection = INTERSECTION_TYPE_NONE;
       }
     }
@@ -296,3 +340,14 @@ bool IsSensorApproaching(int sensorLocation) {
 bool IsSensorOnOrApproaching(int sensorLocation) {
   return (IsSensorApproaching(sensorLocation) || IsSensorOn(sensorLocation));
 }
+
+
+double normalise(const double value, const double start, const double end)
+{
+  const double width = end - start;   //
+  const double offsetValue = value - start;   // value relative to 0
+
+  return (offsetValue - (floor(offsetValue / width) * width)) + start;
+  // + start to reset back to start of original range
+}
+

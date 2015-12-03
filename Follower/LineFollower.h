@@ -27,6 +27,9 @@
 #define TURN_STATE_HIT_WHITE 1
 #define TURN_STATE_HIT_BLACK 2
 
+#define PATH_STRAIGHT 0
+#define PATH_LEFT 1
+#define PATH_RIGHT 2
 
 extern int followerState;
 extern bool isRealigning;

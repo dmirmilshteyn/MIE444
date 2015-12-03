@@ -150,7 +150,7 @@ void updateFollowerState(unsigned long currentTime) {
 
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
   //should make avg speed inversely proportional to the controller...will slow down if error is high
-  float speedOffsetFactor = (-exp(-abs(controller) / 120) + 1) * 1.1;
+  float speedOffsetFactor = (-exp(-abs(controller) / 120) + 1) * 1.15;
   if (speedOffsetFactor > 1)speedOffsetFactor = 1;
   float adjustedSpeed = averageMotorSpeed;// - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
   //float adjustedSpeed = averageMotorSpeed;
@@ -161,8 +161,8 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     motorSpeeds = driveMotorsBasic(controller, adjustedSpeed, speedOffset);
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
-    motorSpeeds.right = -(adjustedSpeed * 1.2);
-    motorSpeeds.left = adjustedSpeed * 1;
+    motorSpeeds.left = -(adjustedSpeed * 1.2);
+    motorSpeeds.right = adjustedSpeed * 1;
 
 
     //    isRealigning = true;
@@ -310,8 +310,8 @@ void wallDetection(unsigned long currentTime) {
 		wallSensorBuffer = 0;
 	}
 
-	/*Serial.print("dist: ");
-	Serial.print(wallDistance);*/
+//	Serial.print("dist: ");
+//	Serial.print(wallDistance);
 
   if (followerState == FOLLOWER_STATE_ONLINE) {
 	

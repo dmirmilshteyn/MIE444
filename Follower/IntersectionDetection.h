@@ -45,7 +45,7 @@ inline double GetEncoderDistanceTicks() {
 }
 
 void ReadIntersectionSensors(long tick);
-void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, int encoderLeft, int encoderRight);
+void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSensor, long encoderLeft, long encoderRight);
 void ProcessDetectedIntersection(int detectedIntersectionType);
 void verifyDetectedIntersection();
 

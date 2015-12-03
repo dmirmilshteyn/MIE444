@@ -197,44 +197,44 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   switch (currentIntersectionMarkerId) {
     case 3:
       angle = 0;
-      deadEndCase = 1;
+//      deadEndCase = 1;
       break;
     case 25:
       angle = -M_PI;
-      deadEndCase = 1;
+//      deadEndCase = 1;
       break;
     case 21:
       angle = -M_PI;
-      deadEndCase = 1;
+//      deadEndCase = 1;
       break;
     case 14:
       angle = M_PI;
-      deadEndCase = 1;
+//      deadEndCase = 1;
       break;
     case 9:
       angle = -M_PI;
-      deadEndCase = 1;
+//      deadEndCase = 1;
       break;
     case 39:
       angle = -M_PI / 3;
-      deadEndCase = 1;
+//      deadEndCase = 1;
       break;
-    case 10:
+    case 10: //arc line
       angle = -M_PI;
       break;
-    case 11:
+    case 11: //arc line
       angle = M_PI / 2;
       break;
-    case 43:
+    case 43: //arc line
       angle = -M_PI * 0.9;
       break;
-    case 38:
+    case 38: //arc line
       angle = M_PI/4;
       break;
-    case 7:
+    case 7: //arc line
       angle = M_PI * 0.9;
       break;
-    case 8:
+    case 8: //arc line
       angle = 0;
       break;
   }
