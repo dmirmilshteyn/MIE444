@@ -3,8 +3,7 @@
 #include "MemoryFree.h"
 #include "Localization.h"
 
-IntersectionPathfinder::IntersectionPathfinder(int previousMarkerId, double headingAngle) {
-  _previousMarkerId = previousMarkerId;
+IntersectionPathfinder::IntersectionPathfinder(double headingAngle) {
   _headingAngle = headingAngle;
 }
 
