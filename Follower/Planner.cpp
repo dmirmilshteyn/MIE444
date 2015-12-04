@@ -1,5 +1,16 @@
 #include "Planner.h"
 
+// All possible destination points to be traveled
+target targets[TARGET_COUNT] = {
+	{ 9 },
+	{ 7 },
+	{ 5 },
+	{ 3 },
+	{ 14 }
+};
+
+IntersectionPathfinderResult currentPathPlan;
+
 void ProcessDetectedIntersection(int detectedIntersectionType) {
 	if (currentPath == -1) {
 		pushDetectedIntersection(detectedIntersectionType);
@@ -33,4 +44,25 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 	lastIntersectionDetectionLeftEncoder = leftMotorCount;
 	lastIntersectionDetectionRightEncoder = rightMotorCount;
 #endif
+}
+
+void BuildPathPlan() {
+	// Find candidate paths for each target - pick the one that has the lowest cost
+	IntersectionPathfinderResult *bestPath = NULL;
+
+	IntersectionPathfinder pathfinder(absoluteHeadingAngle);
+	for (int i = 0; i < TARGET_COUNT; i++) {
+		if (!targets[i].hit) {
+			IntersectionPathfinderResult candidatePath = pathfinder.FindPath(lastIntersectionMarkerId, targets[i].id);
+			if (candidatePath.size > 0 && candidatePath.cost > -1) {
+				if (bestPath == NULL || candidatePath.cost < bestPath->cost) {
+					bestPath = &candidatePath;
+				}
+			}
+		}
+	}
+
+	if (bestPath != NULL) {
+		currentPathPlan = *bestPath;
+	}
 }

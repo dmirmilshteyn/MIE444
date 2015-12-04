@@ -156,6 +156,7 @@
     <ClInclude Include="Pathfinder.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="Planner.h" />
     <ClInclude Include="__vm\.Follower.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MemoryFree.cpp" />
+    <ClCompile Include="Planner.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -17,8 +17,10 @@ struct IntersectionPathfinderResult {
 	int *path;
 	float *pathTurns;
 	int size;
+	int cost;
 
-	IntersectionPathfinderResult(int *path, float *pathTurns, int size) : path(path), pathTurns(pathTurns), size(size) { }
+	IntersectionPathfinderResult() : path(NULL), pathTurns(NULL), size(0), cost(-1) {}
+	IntersectionPathfinderResult(int *path, float *pathTurns, int size, int cost) : path(path), pathTurns(pathTurns), size(size), cost(cost) { }
 };
 
 struct IntersectionPathNode {
