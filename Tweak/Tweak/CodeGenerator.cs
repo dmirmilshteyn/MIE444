@@ -41,6 +41,7 @@ namespace Tweak
                     writer.WriteLine();
 
                     writer.WriteLine($"#define INTERSECTION_MARKER_COUNT {map.IntersectionMarkers.Count}");
+                    writer.WriteLine($"#define STARTING_POSITION_COUNT {map.StartPositions.Count}");
                     writer.WriteLine();
 
                     writer.WriteLine("#endif");
@@ -120,6 +121,18 @@ namespace Tweak
                     writer.WriteLine($"extern const intersection_marker intersections[INTERSECTION_MARKER_COUNT];");
                     writer.WriteLine();
 
+                    // Write out the start position datatype
+                    writer.WriteLine("struct start_position {");
+                    writer.WriteLine("  byte x;");
+                    writer.WriteLine("  byte y;");
+                    writer.WriteLine("  byte nearestIntersectionId;");
+                    writer.WriteLine("};");
+                    writer.WriteLine();
+
+                    // Write out the extern for the start positions array
+                    writer.WriteLine("extern const start_position start_positions[STARTING_POSITION_COUNT];");
+                    writer.WriteLine();
+
                     // Build the intersection costmap
                     IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
                     IntersectionGraphNode[,] costmap = costmapGenerator.BuildCostmap();
@@ -157,6 +170,19 @@ namespace Tweak
 
                         if (i < map.IntersectionMarkers.Count - 1) {
                             writer.Write(", ");
+                        }
+                        writer.WriteLine();
+                    }
+                    writer.WriteLine("};");
+                    writer.WriteLine();
+
+                    // Write out the values for each start position
+                    writer.WriteLine("const PROGMEM start_position start_positions[STARTING_POSITION_COUNT] = {");
+                    for (int i = 0; i < map.StartPositions.Count; i++) {
+                        writer.Write($" {{ {map.StartPositions[i].X}, {map.StartPositions[i].Y}, {map.StartPositions[i].NearestIntersectionId} }}");
+
+                        if (i < map.StartPositions.Count - 1) {
+                            writer.Write(",");
                         }
                         writer.WriteLine();
                     }

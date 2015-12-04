@@ -16652,18 +16652,22 @@
       <StartPosition>
         <X>2</X>
         <Y>53</Y>
+        <NearestIntersectionId>14</NearestIntersectionId>
       </StartPosition>
       <StartPosition>
         <X>59</X>
         <Y>53</Y>
+        <NearestIntersectionId>9</NearestIntersectionId>
       </StartPosition>
       <StartPosition>
         <X>87</X>
         <Y>53</Y>
+        <NearestIntersectionId>7</NearestIntersectionId>
       </StartPosition>
       <StartPosition>
         <X>87</X>
         <Y>5</Y>
+        <NearestIntersectionId>5</NearestIntersectionId>
       </StartPosition>
     </StartPositions>
   </Map>

@@ -11,6 +11,8 @@ namespace Tweak
         public int X { get; set; }
         public int Y { get; set; }
 
+        public int NearestIntersectionId { get; set; }
+
         public StartPosition() {
         }
     }

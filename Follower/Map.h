@@ -83,6 +83,14 @@ struct intersection_marker {
 
 extern const intersection_marker intersections[INTERSECTION_MARKER_COUNT];
 
+struct start_position {
+  byte x;
+  byte y;
+  byte nearestIntersectionId;
+};
+
+extern const start_position start_positions[STARTING_POSITION_COUNT];
+
 extern const int8_t intersection_graph[INTERSECTION_MARKER_COUNT][INTERSECTION_MARKER_COUNT][2];
 
 #endif

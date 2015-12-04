@@ -129,8 +129,7 @@ namespace Tweak
 
             pointerPressed = true;
             switch (MapPlacementMode) {
-                case MapPlacementMode.Tiles:
-                    {
+                case MapPlacementMode.Tiles: {
                         if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
                             deleting = true;
                         }
@@ -138,8 +137,7 @@ namespace Tweak
                         ProcessPointerMoved(sender, e);
                     }
                     break;
-                case MapPlacementMode.Intersections:
-                    {
+                case MapPlacementMode.Intersections: {
                         if (e.KeyModifiers != Windows.System.VirtualKeyModifiers.Control) {
                             pointerPressed = false;
                             if (!intersectionA.HasValue) {
@@ -187,8 +185,7 @@ namespace Tweak
                         }
                     }
                     break;
-                case MapPlacementMode.Path:
-                    {
+                case MapPlacementMode.Path: {
                         if (!pathPlanningA.HasValue) {
                             UIElement canvas = (UIElement)sender;
 
@@ -204,8 +201,7 @@ namespace Tweak
                         }
                     }
                     break;
-                case MapPlacementMode.StartPositions:
-                    {
+                case MapPlacementMode.StartPositions: {
                         if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift) {
                             IntersectionCostmapGenerator costmapGenerator = new IntersectionCostmapGenerator(map);
                             int testDistance = 1;
@@ -213,7 +209,7 @@ namespace Tweak
                             List<Tuple<int, IntersectionCostmapPath>> allPaths = new List<Tuple<int, IntersectionCostmapPath>>();
 
                             for (int i = 0; i < map.StartPositions.Count; i++) {
-                                var paths = costmapGenerator.BuildCostmapPath(new Position(map.StartPositions[i].X, map.StartPositions[i].Y), -1,-1, -1, testDistance).Distinct(new IntersectionCostmapPathComparer());
+                                var paths = costmapGenerator.BuildCostmapPath(new Position(map.StartPositions[i].X, map.StartPositions[i].Y), -1, -1, -1, testDistance).Distinct(new IntersectionCostmapPathComparer());
 
                                 foreach (var path in paths) {
                                     allPaths.Add(Tuple.Create(i, path));
@@ -252,8 +248,7 @@ namespace Tweak
             deleting = false;
 
             switch (MapPlacementMode) {
-                case MapPlacementMode.Path:
-                    {
+                case MapPlacementMode.Path: {
                         if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
                             if (pathPlanningA.HasValue && pathPlanningB.HasValue) {
                                 AStarPathfinder pathfinder = new AStarPathfinder(map);
@@ -266,8 +261,7 @@ namespace Tweak
                         }
                     }
                     break;
-                case MapPlacementMode.StartPositions:
-                    {
+                case MapPlacementMode.StartPositions: {
                         if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control) {
                             map.StartPositions.RemoveAt(map.StartPositions.Count - 1);
                         }
