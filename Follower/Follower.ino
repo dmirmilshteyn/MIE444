@@ -81,7 +81,9 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+ /* ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);*/
 
   //ProcessDetectedIntersection(INTERSECTION_TYPE_T);
   //ProcessDetectedIntersection(INTERSECTION_TYPE_LEFTTURN);

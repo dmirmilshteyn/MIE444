@@ -92,6 +92,8 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
 }
 
 void verifyDetectedIntersection() {
+	// TODO: Debugging
+	return;
   if (detectedIntersection != INTERSECTION_TYPE_NONE && currentPath > -1) {
 
     //    Serial.print(" detected");

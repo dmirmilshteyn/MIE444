@@ -254,8 +254,6 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 	return IntersectionPathfinderResult(path, pathTurns, depth, endingNode->g);
 }
 
-
-
 void IntersectionPathfinder::MarkBlocked(int markerId, bool value) {
   /*int position = markerId / 8;
     int offset = markerId % 8;

@@ -47,9 +47,6 @@
     <ClInclude Include="IntersectionPathfinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pathfinder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IntersectionDetection.h">
       <Filter>Header Files</Filter>
     </ClInclude>

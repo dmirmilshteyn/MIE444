@@ -167,6 +167,23 @@ void pushDetectedIntersection(int intersectionType) {
         }
 
       }
+
+	  // Hit all targets that are part of this path
+	  for (int i = 0; i < TARGET_COUNT; i++) {
+		  for (int p = 0; p <= MAX_PATH_LENGTH - 1; p++) {
+			  if (pathLocation[result][p] != -1) {
+				  int pathIntersectionid = pgm_read_byte(&(intersections[(int)pathLocation[result][p]].id));
+
+				  if (targets[i].id == pathIntersectionid) {
+					  targets[i].hit = true;
+				  }
+			  }
+			  
+		  }
+	  }
+
+	  // Build a path plan based on our current location
+	  BuildPathPlan();
     }
   }
 }

@@ -20,8 +20,17 @@ struct target {
 	target(int id) : id(id), hit(false) {}
 };
 
+struct PathPlan {
+	IntersectionPathfinderResult path;
+	int pathIndex;
+	int target;
+
+	PathPlan() : pathIndex(0), target(-1) {}
+	PathPlan(IntersectionPathfinderResult path, int target) : path(path), pathIndex(0), target(target) {}
+};
+
 extern target targets[TARGET_COUNT];
-extern IntersectionPathfinderResult currentPathPlan;
+extern PathPlan currentPathPlan;
 
 void ProcessDetectedIntersection(int detectedIntersectionType);
 void BuildPathPlan();
