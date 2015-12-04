@@ -119,7 +119,7 @@ MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedO
 }
 
 void updateFollowerState(unsigned long currentTime) {
-  if (readLeft < 600 && readRight < 600 && followerState != FOLLOWER_STATE_RIGHT && followerState != FOLLOWER_STATE_LEFT) {
+  if (readLeft < 600 && readRight < 600 && followerState != FOLLOWER_STATE_RIGHT && followerState != FOLLOWER_STATE_LEFT && followerState != FOLLOWER_STATE_STRAIGHT) {
     followerState = FOLLOWER_STATE_OFFLINE;
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
@@ -161,7 +161,7 @@ void updateFollowerState(unsigned long currentTime) {
     }
   }
 
-  if (followerState == FOLLOWER_STATE_STRAIGHT && !IsSensorOnOrApproaching(SENSOR_LOCATION_LEFT) && !IsSensorOnOrApproaching(SENSOR_LOCATION_RIGHT)) {
+  if (followerState == FOLLOWER_STATE_STRAIGHT && detectedIntersection == INTERSECTION_TYPE_NONE && !IsSensorOnOrApproaching(SENSOR_LOCATION_LEFT) && !IsSensorOnOrApproaching(SENSOR_LOCATION_RIGHT) && readLeft >= 600 && readRight >= 600) {
 	  followerState = FOLLOWER_STATE_ONLINE;
   }
 }

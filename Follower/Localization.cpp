@@ -325,7 +325,8 @@ int DetermineTurnDirection(double headingAngle, int currentX, int currentY, int 
 
 	double previousAngle = headingAngle;
 
-	double angle = normalise(upcomingAngle, -M_PI, M_PI) - normalise(previousAngle, -M_PI, M_PI);
+	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
+	angle = normalise(angle, -M_PI, M_PI);
 
 	if (abs(angle) < 20 * M_PI / 180) {
 		return PATH_STRAIGHT;

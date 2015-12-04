@@ -10,7 +10,7 @@
 #include "LineFollower.h"
 #include "IntersectionPathfinder.h"
 
-#define TARGET_COUNT 5
+#define TARGET_COUNT 1
 
 struct target {
 	int id;

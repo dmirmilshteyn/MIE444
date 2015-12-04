@@ -16,8 +16,8 @@
 
 /*************Lane following PID Variables and Functions***********/
 float Kp = 1; // 0.6; //0.3;
-float Ki = 0.0015;
-float Kd = 400; //332; //450; //100;
+float Ki = 0;//0.0009;//0.0015;
+float Kd = 600;//400; //332; //450; //100;
 
 long tempTime = 0;
 float DERIVATIVE_SPEED_ADJUST = 0;
@@ -82,6 +82,14 @@ void setup() {
   initializeEncoders();
   interrupts();
 
+  delay(15000);
+
+  /*digitalWrite(ANTENNA_LED, HIGH);
+
+  ProcessDetectedIntersection(INTERSECTION_TYPE_T);
+  ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);*/
+
+  //ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
   /*ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
   ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);
   ProcessDetectedIntersection(INTERSECTION_TYPE_TRIGHT);*/
@@ -112,7 +120,7 @@ void setup() {
   //Serial.println(lastIntersectionMarkerId);
   // Expected: 17
 
-  delay(15000);
+ 
 }
 
 void loop() {

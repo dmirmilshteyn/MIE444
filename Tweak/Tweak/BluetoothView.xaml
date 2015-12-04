@@ -95,16 +95,30 @@
                     <TextBlock Grid.Column="3" Grid.Row="7" Text="{Binding ConnectedDevice.Synchronizer.IntersectionId}" HorizontalAlignment="Center" />
                 </Grid>
                 <TextBlock Text="Path Plan" FontWeight="Bold" HorizontalAlignment="Center" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Intersection Id: " />
-                    <TextBlock Grid.Column="1" Text="Marker Id: " />
-                    <TextBlock Grid.Column="2" Text="Turn Direction: " />
-                </Grid>
+                <ItemsControl ItemsSource="{Binding ConnectedDevice.Synchronizer.PathPlan.Plan}" Height="40" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <!-- could use a WrapPanel if more appropriate for your scenario -->
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding IntersectionId}"/>
+                                <TextBlock x:Name="commaTextBlock" Text=" → "/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock>
+                    <Run Text="Intersection Id: " />
+                    <Run Text="{Binding ConnectedDevice.Synchronizer.CurrentPathPlanNode.IntersectionId}" />
+                    <Run Text=", Marker Id: " />
+                    <Run Text="{Binding ConnectedDevice.Synchronizer.CurrentPathPlanNode.MarkerId}" />
+                     <Run Text=", Turn Direction: " />
+                    <Run Text="{Binding ConnectedDevice.Synchronizer.CurrentPathPlanNode.TurnDirection}" />
+                </TextBlock>
                 <TextBlock Text="Raw" FontWeight="Bold" HorizontalAlignment="Center" />
                 <Grid Visibility="Collapsed">
                     <Grid.ColumnDefinitions>

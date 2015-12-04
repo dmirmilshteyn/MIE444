@@ -362,9 +362,9 @@ namespace Tweak.Bluetooth
                             int offset = 1;
                             PathPlan.Plan.Clear();
                             for (int i = 0; i < size; i++) {
-                                int markerId = (int)float.Parse(resultSegments[offset + i]);
-                                int intersectionid = (int)float.Parse(resultSegments[offset + i + 1]);
-                                TurnDirection turnDirection = (TurnDirection)(int)float.Parse(resultSegments[offset + i + 2]);
+                                int markerId = (int)float.Parse(resultSegments[offset++]);
+                                int intersectionid = (int)float.Parse(resultSegments[offset++]);
+                                TurnDirection turnDirection = (TurnDirection)(int)float.Parse(resultSegments[offset++]);
 
                                 PathPlan.Plan.Add(new PathPlanNode()
                                 {
@@ -372,6 +372,8 @@ namespace Tweak.Bluetooth
                                     IntersectionId = intersectionid,
                                     TurnDirection = turnDirection
                                 });
+
+
                             }
                         }
                         break;

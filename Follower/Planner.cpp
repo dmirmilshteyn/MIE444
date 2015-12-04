@@ -2,16 +2,18 @@
 
 // All possible destination points to be traveled
 target targets[TARGET_COUNT] = {
-	{ 9 },
+	/*{ 9 },
 	{ 7 },
-	{ 5 },
-	{ 3 },
-	{ 14 }
+	{ 5 },*/
+	{ 3 }
+	/*{ 14 }*/
 };
 
 PathPlan currentPathPlan;
 
 void ProcessDetectedIntersection(int detectedIntersectionType) {
+	Serial.println("DETECTED");
+
 	if (currentPath == -1) {
 		pushDetectedIntersection(detectedIntersectionType);
 	}
@@ -43,16 +45,17 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 	Serial.print("Detected: ");
 	Serial.println(lastIntersectionMarkerId);
 
-	/*driveMotorsAtSpeed(MotorSpeeds(0, 0));
+	//driveMotorsAtSpeed(MotorSpeeds(0, 0));
 
-	delay(5000);
+	//delay(5000);
 
-	driveMotorsAtSpeed(MotorSpeeds(lastLeftSpeed, lastRightSpeed));*/
+	//driveMotorsAtSpeed(MotorSpeeds(lastLeftSpeed, lastRightSpeed));
 
 
 #ifndef NOPATHPLANFOLLOW
 	// An active path plan is loaded, attempt to follow it
 	if (currentPathPlan.path.size > 0) {
+		publishCurrentPathPlanNodeIndex(currentPathPlan.pathIndex);
 		if (currentPathPlan.pathIndex == currentPathPlan.path.size - 1) {
 			// Arrived at the destination, attempt to enter the branch
 			// Mark the target as hit
@@ -157,6 +160,8 @@ void BuildPathPlan() {
 
 	if (bestPath.size > 0) {
 		currentPathPlan = PathPlan(bestPath, selectedTarget);
+
+		publishPathInformation(-1, currentPathPlan.path);
 	}
 
 	driveMotorsAtSpeed(MotorSpeeds(lastLeftSpeed, lastRightSpeed));

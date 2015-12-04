@@ -40,12 +40,13 @@ void ReadIntersectionSensors(long tick) {
   currentLeft = sensorB;
   currentRight = sensorC;
 
-  if (followerState == FOLLOWER_STATE_ONLINE && !isRealigning) {
+  if ((followerState == FOLLOWER_STATE_ONLINE || followerState == FOLLOWER_STATE_STRAIGHT) && !isRealigning) {
     if (leftMotorCount > lastIntersectionDetectionLeftEncoder + 600 / 4 &&
         rightMotorCount > lastIntersectionDetectionRightEncoder + 600 / 4) {
       IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
-      if (detectedIntersection != INTERSECTION_TYPE_NONE) {
+	  // Only process the intersection if the follower is in a neutral (online) state
+      if (detectedIntersection != INTERSECTION_TYPE_NONE && followerState == FOLLOWER_STATE_ONLINE) {
         //        Serial.println("process: ");
         //        Serial.println(detectedIntersection);
         ProcessDetectedIntersection(detectedIntersection);

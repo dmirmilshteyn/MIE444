@@ -185,7 +185,8 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 	Serial.print(previousAngle);
 	Serial.print(" up ");
 	Serial.println(upcomingAngle);
-	double angle = normalise(upcomingAngle, -M_PI, M_PI) - normalise(previousAngle, -M_PI, M_PI);
+	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
+	angle = normalise(angle, -M_PI, M_PI);
 
 	if (abs(angle) < 20 * M_PI / 180) {
 		pathTurns[0] = PATH_STRAIGHT;
@@ -223,8 +224,8 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 		Serial.print(" up ");
 		Serial.println(upcomingAngle);
 
-		angle = normalise(upcomingAngle, -M_PI, M_PI) - normalise(previousAngle, -M_PI, M_PI);
-
+		angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
+		angle = normalise(angle, -M_PI, M_PI);
 
 		if (abs(angle) < 20 * M_PI / 180) {
 			pathTurns[i - 1] = PATH_STRAIGHT;
