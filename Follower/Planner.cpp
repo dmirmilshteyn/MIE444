@@ -58,8 +58,6 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
     publishCurrentPathPlanNodeIndex(currentPathPlan.pathIndex);
     if (currentPathPlan.pathIndex == currentPathPlan.path.size - 1) {
       // Arrived at the destination, attempt to enter the branch
-      // Mark the target as hit
-      targets[currentPathPlan.target].hit = true;
 
       // Find the closest start position to this target
       int targetStartPosition = -1;
@@ -92,6 +90,15 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
             followerState = FOLLOWER_STATE_RIGHT;
             break;
         }
+
+		if (AllTargetsHit()) {
+			followerState = FOLLOWER_STATE_WALL_START_DONE;
+		}
+
+		// Mark the target as hit
+		if (currentPathPlan.target != -1) {
+			targets[currentPathPlan.target].hit = true;
+		}
 
         //followerState = FOLLOWER_STATE_WALL_START_DONE;
       }
@@ -141,30 +148,57 @@ void BuildPathPlan() {
 
   driveMotorsAtSpeed(MotorSpeeds(0, 0));
 
-  // Find candidate paths for each target - pick the one that has the lowest cost
-  IntersectionPathfinderResult bestPath;
-  int selectedTarget = -1;
-
   IntersectionPathfinder pathfinder(absoluteHeadingAngle);
-  for (int i = 0; i < TARGET_COUNT; i++) {
-    if (!targets[i].hit) {
-      IntersectionPathfinderResult candidatePath = pathfinder.FindPath(lastIntersectionMarkerId, targets[i].id);
-      if (candidatePath.size > 0 && candidatePath.cost > -1) {
-        if (bestPath.size == 0 || candidatePath.cost < bestPath.cost) {
-          bestPath = candidatePath;
-          selectedTarget = i;
-        }
-      }
-    }
+  if (!AllTargetsHit()) {
+	  // There are still some targets that have not yet been hit
+
+	  // Find candidate paths for each target - pick the one that has the lowest cost
+	  IntersectionPathfinderResult bestPath;
+	  int selectedTarget = -1;
+	  
+	  for (int i = 0; i < TARGET_COUNT; i++) {
+		  if (!targets[i].hit) {
+			  IntersectionPathfinderResult candidatePath = pathfinder.FindPath(lastIntersectionMarkerId, targets[i].id);
+			  if (candidatePath.size > 0 && candidatePath.cost > -1) {
+				  if (bestPath.size == 0 || candidatePath.cost < bestPath.cost) {
+					  bestPath = candidatePath;
+					  selectedTarget = i;
+				  }
+			  }
+		  }
+	  }
+
+	  if (bestPath.size > 0) {
+		  currentPathPlan = PathPlan(bestPath, selectedTarget);
+	  }
+  }
+  else {
+	  // All targets have been hit - go home!
+
+	  int homeMarkerId = (int)pathLocation[currentPath][0];
+	  int homeIntersectionId = pgm_read_byte(&(intersections[homeMarkerId].id));
+
+	  IntersectionPathfinderResult candidatePath = pathfinder.FindPath(lastIntersectionMarkerId, homeIntersectionId);
+
+	  if (candidatePath.size > 0) {
+		  currentPathPlan = PathPlan(candidatePath, -1);
+	  }
   }
 
-  if (bestPath.size > 0) {
-    currentPathPlan = PathPlan(bestPath, selectedTarget);
-
-    publishPathInformation(-1, currentPathPlan.path);
-  }
-
+  publishPathInformation(-1, currentPathPlan.path);
   driveMotorsAtSpeed(MotorSpeeds(lastLeftSpeed, lastRightSpeed));
+}
+
+bool AllTargetsHit() {
+	bool hitAll = true;
+	for (int i = 0; i < TARGET_COUNT; i++) {
+		if (!targets[i].hit) {
+			hitAll = false;
+			break;
+		}
+	}
+
+	return hitAll;
 }
 
 void processDeadEnd() {
