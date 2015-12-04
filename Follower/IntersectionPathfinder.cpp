@@ -179,10 +179,6 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 
 	double previousAngle = _headingAngle;//pathLocation[currentPath][2];
 
-	Serial.print(" pre ");
-	Serial.print(previousAngle);
-	Serial.print(" up ");
-	Serial.println(upcomingAngle);
 	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
 	if (angle > M_PI) {
 		angle -= 2 * M_PI;
@@ -220,11 +216,6 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 		yDiff = currentIntersectionY - previousIntersectionY;
 
 		previousAngle = atan2(yDiff, xDiff);
-
-		Serial.print(" pre ");
-		Serial.print(previousAngle);
-		Serial.print(" up ");
-		Serial.println(upcomingAngle);
 
 		angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
 

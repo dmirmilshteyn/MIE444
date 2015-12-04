@@ -77,9 +77,6 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 	lastIntersectionDetectionLeftEncoder = leftMotorCount;
 	lastIntersectionDetectionRightEncoder = rightMotorCount;
 #endif
-
-	Serial.print("State: ");
-	Serial.println(followerState);
 }
 
 void BuildPathPlan() {
@@ -92,8 +89,6 @@ void BuildPathPlan() {
 		if (!targets[i].hit) {
 			IntersectionPathfinderResult candidatePath = pathfinder.FindPath(lastIntersectionMarkerId, targets[i].id);
 			if (candidatePath.size > 0 && candidatePath.cost > -1) {
-				Serial.print("Cost: ");
-				Serial.println(candidatePath.cost);
 				if (bestPath.size == 0 || candidatePath.cost < bestPath.cost) {
 					bestPath = candidatePath;
 					selectedTarget = i;
@@ -103,7 +98,6 @@ void BuildPathPlan() {
 	}
 
 	if (bestPath.size > 0) {
-		Serial.println(selectedTarget);
 		currentPathPlan = PathPlan(bestPath, selectedTarget);
 	}
 }
