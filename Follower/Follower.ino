@@ -112,7 +112,7 @@ void setup() {
   //Serial.println(lastIntersectionMarkerId);
   // Expected: 17
 
-  //delay(2000);
+  delay(15000);
 }
 
 void loop() {

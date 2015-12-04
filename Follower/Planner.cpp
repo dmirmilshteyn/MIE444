@@ -37,6 +37,19 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 		break;
 	}
 
+	int lastLeftSpeed = currentLeftMotorSpeed;
+	int lastRightSpeed = currentRightMotorSpeed;
+
+	Serial.print("Detected: ");
+	Serial.println(lastIntersectionMarkerId);
+
+	/*driveMotorsAtSpeed(MotorSpeeds(0, 0));
+
+	delay(5000);
+
+	driveMotorsAtSpeed(MotorSpeeds(lastLeftSpeed, lastRightSpeed));*/
+
+
 #ifndef NOPATHPLANFOLLOW
 	// An active path plan is loaded, attempt to follow it
 	if (currentPathPlan.path.size > 0) {
@@ -67,7 +80,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 
 				switch (currentTurn) {
 				case PATH_STRAIGHT:
-					followerState = FOLLOWER_STATE_ONLINE;
+					followerState = FOLLOWER_STATE_STRAIGHT;
 					break;
 				case PATH_LEFT:
 					followerState = FOLLOWER_STATE_LEFT;
@@ -76,6 +89,8 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 					followerState = FOLLOWER_STATE_RIGHT;
 					break;
 				}
+
+				followerState = FOLLOWER_STATE_WALL_START_DONE;
 			}
 			else {
 				// TODO: What happens when the target has been hit and it is not near a start position?
@@ -93,7 +108,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 
 			switch (currentTurn) {
 			case PATH_STRAIGHT:
-				followerState = FOLLOWER_STATE_ONLINE;
+				followerState = FOLLOWER_STATE_STRAIGHT;
 				break;
 			case PATH_LEFT:
 				followerState = FOLLOWER_STATE_LEFT;

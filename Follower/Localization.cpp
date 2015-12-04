@@ -277,7 +277,6 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   //Serial.println(lastIntersectionMarkerId);
   //    Serial.print("   ");
   //    Serial.println(intersections[lastIntersectionMarkerId].id);
-
 }
 
 int tryToLocalize() {

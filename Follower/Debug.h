@@ -10,7 +10,7 @@
 //#define PRINT_DEBUG_MESSAGES
 //#define PRINT_DEBUG_MESSAGES_2
 //#define NOMOTORS
-#define NOPATHPLANFOLLOW
+//#define NOPATHPLANFOLLOW
 
 // ************************
 // **** Debug Commands ****

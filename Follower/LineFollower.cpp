@@ -160,6 +160,10 @@ void updateFollowerState(unsigned long currentTime) {
       wallSampleTotal = 0;
     }
   }
+
+  if (followerState == FOLLOWER_STATE_STRAIGHT && !IsSensorOnOrApproaching(SENSOR_LOCATION_LEFT) && !IsSensorOnOrApproaching(SENSOR_LOCATION_RIGHT)) {
+	  followerState = FOLLOWER_STATE_ONLINE;
+  }
 }
 
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
@@ -171,7 +175,7 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
   float speedOffset = speedOffsetFactor * (adjustedSpeed); //abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
 
   MotorSpeeds motorSpeeds;
-  if (followerState == FOLLOWER_STATE_ONLINE) {
+  if (followerState == FOLLOWER_STATE_ONLINE || followerState == FOLLOWER_STATE_STRAIGHT) {
     motorSpeeds = driveMotorsBasic(controller, adjustedSpeed, speedOffset);
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
