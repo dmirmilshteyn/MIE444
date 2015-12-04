@@ -15,10 +15,11 @@
 #include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
-float Kp = 2.0; // 0.6; //0.3;
-float Ki = 0.00;
-float Kd = 900; //332; //450; //100;
+float Kp = 1; // 0.6; //0.3;
+float Ki = 0.0015;
+float Kd = 400; //332; //450; //100;
 
+long tempTime = 0;
 float DERIVATIVE_SPEED_ADJUST = 0;
 void setup() {
   // put your setup code here, to run once:
@@ -111,12 +112,12 @@ void setup() {
   //Serial.println(lastIntersectionMarkerId);
   // Expected: 17
 
-  //delay(15000);
+  //delay(2000);
 }
 
 void loop() {
 
-  //delay(10);
+  delay(10);
   unsigned long currentTime;
 
   // TODO: Debugging code
@@ -148,7 +149,7 @@ void loop() {
   updateFollowerState(currentTime);
   ReadIntersectionSensors(currentTime);
   followLaneAnalog(currentTime);
-  wallDetection(currentTime);
+  //wallDetection(currentTime);
   
   updateRelativeLocation();
 
