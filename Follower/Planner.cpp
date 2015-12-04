@@ -3,9 +3,9 @@
 // All possible destination points to be traveled
 target targets[TARGET_COUNT] = {
   /*{ 9 },
-    { 7 },
-    { 5 },*/
-  { 3 }
+    { 7 },*/
+    { 5 },
+	{ 3 }
   /*{ 14 }*/
 };
 
@@ -171,6 +171,7 @@ void processDeadEnd() {
 
   //processdeadend
 
+	BuildPathPlan();
 }
 
 
