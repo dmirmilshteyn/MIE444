@@ -22,6 +22,7 @@
 #define FOLLOWER_STATE_WALL_DEADEND 6
 #define FOLLOWER_STATE_WALL_START_DONE 7
 #define FOLLOWER_STATE_WALL_START_GOBACK 8
+#define FOLLOWER_STATE_PAUSED 9
 
 #define TURN_STATE_DEFAULT 0
 #define TURN_STATE_HIT_WHITE 1
@@ -52,6 +53,9 @@ extern int stallPWM; //PWM at which the motor stalls
 
 extern int determineStallPWMDone;//states when determineStallPWMD() is complete
 
+extern int currentLeftMotorSpeed;
+extern int currentRightMotorSpeed;
+
 void updateFollowerState(unsigned long currentTime);
 MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedOffset);
 MotorSpeeds driveMotorsPID(float controller, float derivative);
@@ -60,6 +64,8 @@ float getLaneError();
 void followLaneAnalog(unsigned long currentTime);
 void determineStallPWM();//will determine the stallPWM of the robot with the current payload and battery power. It will add speed to the motors until the robot starts moving.
 void wallDetection(unsigned long currentTime);
+
+void driveMotorsAtSpeed(MotorSpeeds motorSpeeds);
 
 #endif
 

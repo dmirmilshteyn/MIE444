@@ -118,6 +118,11 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 }
 
 void BuildPathPlan() {
+	int lastLeftSpeed = currentLeftMotorSpeed;
+	int lastRightSpeed = currentRightMotorSpeed;
+
+	driveMotorsAtSpeed(MotorSpeeds(0, 0));
+
 	// Find candidate paths for each target - pick the one that has the lowest cost
 	IntersectionPathfinderResult bestPath;
 	int selectedTarget = -1;
@@ -138,4 +143,6 @@ void BuildPathPlan() {
 	if (bestPath.size > 0) {
 		currentPathPlan = PathPlan(bestPath, selectedTarget);
 	}
+
+	driveMotorsAtSpeed(MotorSpeeds(lastLeftSpeed, lastRightSpeed));
 }

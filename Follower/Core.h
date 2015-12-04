@@ -6,6 +6,9 @@
 struct MotorSpeeds {
 	int left;
 	int right;
+
+	MotorSpeeds() : left(0), right(0) {}
+	MotorSpeeds(int left, int right) : left(left), right(right) {}
 };
 
 //rounds an integer to 100's

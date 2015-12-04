@@ -32,6 +32,9 @@ bool isRealigning = false;
 long lastRealignLeftMotorCount = 0;
 long lastRealignRightMotorCount = 0;
 
+int currentLeftMotorSpeed = 0;
+int currentRightMotorSpeed = 0;
+
 void followLaneAnalog(unsigned long currentTime) {
   determineStallPWM();
   float timeDifference = currentTime - previousTime;
@@ -245,30 +248,7 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     motorSpeeds.left = 0;
   }
 
-  //next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
-#ifndef NOMOTORS
-  if (motorSpeeds.left >= 0) {
-    leftForward = true;
-    analogWrite(BIN2_LEFT_MOTOR, 0);
-    analogWrite(BIN1_LEFT_MOTOR, motorSpeeds.left);//drives left motor forward
-  }
-  else {
-    leftForward = false;
-    analogWrite(BIN1_LEFT_MOTOR, 0);
-    analogWrite(BIN2_LEFT_MOTOR, -motorSpeeds.left);//drives left motor reverse
-  }
-
-  if (motorSpeeds.right >= 0) {
-    rightForward = true;
-    analogWrite(AIN2_RIGHT_MOTOR, 0);
-    analogWrite(AIN1_RIGHT_MOTOR, motorSpeeds.right);//drives right motor forward
-  }
-  else {
-    rightForward = false;
-    analogWrite(AIN1_RIGHT_MOTOR, 0);
-    analogWrite(AIN2_RIGHT_MOTOR, -motorSpeeds.right);//drives right motor reverse
-  }
-#endif
+  driveMotorsAtSpeed(motorSpeeds);
 
   if (motorSpeeds.left == 0 && motorSpeeds.right == 0) {
     //delay(2000);
@@ -336,7 +316,35 @@ void wallDetection(unsigned long currentTime) {
   }
 }
 
+void driveMotorsAtSpeed(MotorSpeeds speeds) {
+#ifndef NOMOTORS
+	//next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
+	if (speeds.left >= 0) {
+		leftForward = true;
+		analogWrite(BIN2_LEFT_MOTOR, 0);
+		analogWrite(BIN1_LEFT_MOTOR, speeds.left);//drives left motor forward
+	}
+	else {
+		leftForward = false;
+		analogWrite(BIN1_LEFT_MOTOR, 0);
+		analogWrite(BIN2_LEFT_MOTOR, -speeds.left);//drives left motor reverse
+	}
 
+	if (speeds.right >= 0) {
+		rightForward = true;
+		analogWrite(AIN2_RIGHT_MOTOR, 0);
+		analogWrite(AIN1_RIGHT_MOTOR, speeds.right);//drives right motor forward
+	}
+	else {
+		rightForward = false;
+		analogWrite(AIN1_RIGHT_MOTOR, 0);
+		analogWrite(AIN2_RIGHT_MOTOR, -speeds.right);//drives right motor reverse
+	}
+
+	currentLeftMotorSpeed = speeds.left;
+	currentRightMotorSpeed = speeds.right;
+#endif
+}
 
 
 
