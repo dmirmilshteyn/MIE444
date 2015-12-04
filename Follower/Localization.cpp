@@ -143,6 +143,7 @@ void updateRelativeLocation() {
 
   absoluteHeadingAngle += absoluteHeadingAngleDiff;
 
+
   //Serial.print(" ");
   //Serial.println(absoluteHeadingAngle);
   //  if (correctRelativeAngleDone == false) {
@@ -151,6 +152,7 @@ void updateRelativeLocation() {
 }
 
 void pushDetectedIntersection(int intersectionType) {
+
   if (nextIntersectionIndex < MAX_PATH_LENGTH) {
     intersectionChain[nextIntersectionIndex++] = intersectionType;
 
@@ -191,6 +193,7 @@ void pushDetectedIntersection(int intersectionType) {
 void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   // Try to identify the current intersection marker id
 
+
   bool valid = false;
   int x = lastIntersectionMarkerId;
   double smallestDistance = 1000;
@@ -214,27 +217,27 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   switch (currentIntersectionMarkerId) {
     case 3:
       angle = 0;
-//      deadEndCase = 1;
+      //      deadEndCase = 1;
       break;
     case 25:
-      angle = -M_PI;
-//      deadEndCase = 1;
+      angle = -M_PI / 2;
+      //      deadEndCase = 1;
       break;
     case 21:
-      angle = -M_PI;
-//      deadEndCase = 1;
+      angle = -M_PI / 2;
+      //      deadEndCase = 1;
       break;
     case 14:
-      angle = M_PI;
-//      deadEndCase = 1;
+      angle = M_PI / 2;
+      //      deadEndCase = 1;
       break;
     case 9:
-      angle = -M_PI;
-//      deadEndCase = 1;
+      angle = -M_PI / 2;
+      //      deadEndCase = 1;
       break;
     case 39:
       angle = -M_PI / 3;
-//      deadEndCase = 1;
+      //      deadEndCase = 1;
       break;
     case 10: //arc line
       angle = -M_PI;
@@ -246,7 +249,7 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
       angle = -M_PI * 0.9;
       break;
     case 38: //arc line
-      angle = M_PI/4;
+      angle = M_PI / 4;
       break;
     case 7: //arc line
       angle = M_PI * 0.9;
@@ -265,9 +268,12 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
 
   lastIntersectionMarkerId = currentIntersectionMarkerId;
 
-//  Serial.print(" angle");
-//  Serial.println(absoluteHeadingAngle * 180 / M_PI);
-//  Serial.println();
+
+  lastIntersectionEncoderTick = (leftMotorCount + rightMotorCount) / 2;
+
+  //  Serial.print(" angle");
+  //  Serial.println(absoluteHeadingAngle * 180 / M_PI);
+  //  Serial.println();
   //Serial.println(lastIntersectionMarkerId);
   //    Serial.print("   ");
   //    Serial.println(intersections[lastIntersectionMarkerId].id);
@@ -299,8 +305,8 @@ int tryToLocalize() {
         if (pathLocation[p][i] != -1) {
           absoluteLocationX = pgm_read_byte(&(intersections[(int)pathLocation[p][i]].intersectionX));
           absoluteLocationY = pgm_read_byte(&(intersections[(int)pathLocation[p][i]].intersectionY));
-          absoluteLocationXMeters = (double)absoluteLocationX*MAP_RESOLUTION;
-          absoluteLocationYMeters = (double)absoluteLocationY*MAP_RESOLUTION;
+          absoluteLocationXMeters = (double)absoluteLocationX * MAP_RESOLUTION;
+          absoluteLocationYMeters = (double)absoluteLocationY * MAP_RESOLUTION;
           break;
         }
 

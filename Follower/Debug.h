@@ -43,7 +43,7 @@ int readDebugCommand();
 
 void processDebugCommand(int command);
 
-void publishLaneFollowingData(long currentTime, MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor);
+void publishLaneFollowingData(long currentTime, MotorSpeeds motorSpeeds, float currentError, long integral, float derivative, float controller, float leftLineSensor, float rightLineSensor);
 void publishIntersectionDetectionData(long currentTime, int frontSensor, int leftSensor, int rightSensor, int detectedIntersection);
 void publishEncoderData(long leftMotorCount, long rightMotorCount);
 void publishMap();

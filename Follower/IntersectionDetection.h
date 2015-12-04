@@ -16,12 +16,14 @@
 
 #include "Debug.h"
 
-#define FRONT_APPROACHING_THRESHOLD 750;
-#define FRONT_ON_THRESHOLD 850;
-#define LEFT_APPROACHING_THRESHOLD 650;
-#define LEFT_ON_THRESHOLD 850;
-#define RIGHT_APPROACHING_THRESHOLD 650;
-#define RIGHT_ON_THRESHOLD 850;
+#define FRONT_APPROACHING_THRESHOLD 750
+#define FRONT_ON_THRESHOLD 850
+#define LEFT_APPROACHING_THRESHOLD 650
+#define LEFT_ON_THRESHOLD 850
+#define RIGHT_APPROACHING_THRESHOLD 650
+#define RIGHT_ON_THRESHOLD 850
+
+#define DEAD_END_MAX 6
 
 #define SENSOR_LOCATION_FRONT 0
 #define SENSOR_LOCATION_LEFT 1
@@ -39,7 +41,11 @@ extern int currentTestIntersection;
 extern long lastLeftEncoder;
 extern long lastRightEncoder;
 
+extern float deadEndAngles[DEAD_END_MAX][2];
+
 extern double lastTick;
+
+extern long lastIntersectionEncoderTick;
 
 inline double GetEncoderDistanceTicks() {
 	return (GEAR_RATIO * ENCODER_TEETH_COUNT * (1.0 / 22));
@@ -57,6 +63,8 @@ int GetSensorApproachingThreshold(int sensorLocation);
 bool IsSensorOn(int sensorLocation);
 bool IsSensorApproaching(int sensorLocation);
 bool IsSensorOnOrApproaching(int sensorLocation);
+
+
 
 #endif
 

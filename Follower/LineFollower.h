@@ -39,7 +39,7 @@ extern float readLeft;
 extern float readRight;
 
 extern float lastError;
-extern float integral;
+extern long integral;
 extern bool leftForward;
 extern bool rightForward;
 
