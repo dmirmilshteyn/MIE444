@@ -35,5 +35,7 @@ extern PathPlan currentPathPlan;
 void ProcessDetectedIntersection(int detectedIntersectionType);
 void BuildPathPlan();
 
+void processDeadEnd();
+
 #endif
 

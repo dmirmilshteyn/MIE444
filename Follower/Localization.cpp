@@ -217,27 +217,27 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   switch (currentIntersectionMarkerId) {
     case 3:
       angle = 0;
-      //      deadEndCase = 1;
+            deadEndCase = 1;
       break;
     case 25:
       angle = -M_PI / 2;
-      //      deadEndCase = 1;
+            deadEndCase = 1;
       break;
     case 21:
       angle = -M_PI / 2;
-      //      deadEndCase = 1;
+            deadEndCase = 1;
       break;
     case 14:
       angle = M_PI / 2;
-      //      deadEndCase = 1;
+            deadEndCase = 1;
       break;
     case 9:
       angle = -M_PI / 2;
-      //      deadEndCase = 1;
+            deadEndCase = 1;
       break;
     case 39:
       angle = -M_PI / 3;
-      //      deadEndCase = 1;
+            deadEndCase = 1;
       break;
     case 10: //arc line
       angle = -M_PI;
@@ -270,6 +270,10 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
 
 
   lastIntersectionEncoderTick = (leftMotorCount + rightMotorCount) / 2;
+
+  if(deadEndCase == 1){
+    processDeadEnd();
+  }
 
   //  Serial.print(" angle");
   //  Serial.println(absoluteHeadingAngle * 180 / M_PI);
