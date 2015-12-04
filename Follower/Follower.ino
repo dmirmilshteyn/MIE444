@@ -15,10 +15,11 @@
 #include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
-float Kp = 2.0; // 0.6; //0.3;
-float Ki = 0.00;
-float Kd = 900; //332; //450; //100;
+float Kp = 1; // 0.6; //0.3;
+float Ki = 0.0015;
+float Kd = 400;//900; //332; //450; //100;
 
+long tempTime = 0;
 float DERIVATIVE_SPEED_ADJUST = 0;
 void setup() {
   // put your setup code here, to run once:
@@ -72,10 +73,10 @@ void setup() {
 
   Serial.println("Values:");
   for (int i = 0; i < path.size; i++) {
-	  Serial.print("Intersection: ");
-  	  Serial.print(pgm_read_byte(&(intersections[path.path[i]].id)));
-	  Serial.print(", Target Angle: ");
-	  Serial.println(path.pathTurns[i]);
+    Serial.print("Intersection: ");
+    Serial.print(pgm_read_byte(&(intersections[path.path[i]].id)));
+    Serial.print(", Target Angle: ");
+    Serial.println(path.pathTurns[i]);
   }
 
   initializeEncoders();
@@ -109,12 +110,12 @@ void setup() {
   //Serial.println(lastIntersectionMarkerId);
   // Expected: 17
 
-  //delay(15000);
+  delay(15000);
 }
 
 void loop() {
 
-  //delay(10);
+  delay(10);
   unsigned long currentTime;
 
   // TODO: Debugging code
@@ -146,32 +147,34 @@ void loop() {
   updateFollowerState(currentTime);
   ReadIntersectionSensors(currentTime);
   followLaneAnalog(currentTime);
-  wallDetection(currentTime);
-  
+  //wallDetection(currentTime);
+
   updateRelativeLocation();
 
   publishEncoderData(leftMotorCount, rightMotorCount);
   publishLocalizationData(currentTime);
 
- 
+
 
   /*long loopTime = millis() - currentTime;
 
-  Serial.println(loopTime);*/
+    Serial.println(loopTime);*/
 
   while (Serial.available() > 0) {
     int command = Serial.read();
     processDebugCommand(command);
   }
 
-  Serial.print(absoluteLocationX);
-  Serial.print(" ");
-  Serial.print(-absoluteLocationY);
-  Serial.print(" ");
-  Serial.println(absoluteHeadingAngle * 180 / M_PI);
 
 
+//  if (tempTime + 100 < currentTime) {
+//    tempTime = currentTime;
+//    Serial.print(absoluteLocationX);
+//    Serial.print(" ");
+//    Serial.print(-absoluteLocationY);
+//    Serial.print(" ");
+//    Serial.print(absoluteHeadingAngle * 180 / M_PI);
+//    Serial.print(" ");
+//  }
 
-
-  
 }

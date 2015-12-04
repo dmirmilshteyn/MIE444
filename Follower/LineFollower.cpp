@@ -6,7 +6,7 @@ int followerState = FOLLOWER_STATE_ONLINE;
 int turnState = TURN_STATE_DEFAULT;
 
 float lastError;
-float integral;
+long integral = 0;
 bool leftForward = true;
 bool rightForward = true;
 int wallSensorBuffer = 0;
@@ -43,13 +43,24 @@ void followLaneAnalog(unsigned long currentTime) {
   float controller;
 
 
-  //integral = integral + (((currentError + lastError) / 2) * timeDifference);
+  integral = integral + (((currentError + lastError) / 2) * timeDifference);
+  if (Ki * abs(integral) > 130) {
+    if(integral>0){
+      integral = 100/Ki;
+    }
+    else{
+      integral = -100/Ki;
+    }
+  }
   derivative = (currentError - lastError) / timeDifference;
   lastError = currentError;
   controller = Kp * currentError + Ki * integral + Kd * derivative;
 
+  //Serial.print(" error: ");
+  //Serial.print(currentError);
+  //Serial.print(" controller: ");
+  //Serial.println(controller);
   MotorSpeeds motorSpeeds = driveMotorsPID(controller, derivative);
-
   publishLaneFollowingData(currentTime, motorSpeeds, currentError, integral, derivative, controller, readLeft, readRight);
 
   previousTime = currentTime;
@@ -123,34 +134,34 @@ void updateFollowerState(unsigned long currentTime) {
   }
 
   if (followerState == FOLLOWER_STATE_IDENTIFY_WALL) {
-	  if (currentTime > wallIdentificationStartTime + 1000) {
-		  bool isBlack = ((double)wallSampleCount / (double)wallSampleTotal) > 0.5;
-		  if (!isBlack) {
-				// TODO: Debugging for now
-			  numCheckpointsFound = CHECKPOINTS_TOTAL;
-			  // Detected a white wall -> this is the starting location
-		  //if (pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)) == pgm_read_byte(&(intersections[(int)pathLocation[currentPath][0]].id))) {
-			  if (numCheckpointsFound < CHECKPOINTS_TOTAL) {
-				  followerState = FOLLOWER_STATE_WALL_START_GOBACK;
-			  }
-			  else {
-				  followerState = FOLLOWER_STATE_WALL_START_DONE;
-			  }
-		  }
-		  else {
-			  // Detected a black wall - handle the deadend state
-			  followerState = FOLLOWER_STATE_WALL_DEADEND;
-		  }
+    if (currentTime > wallIdentificationStartTime + 1000) {
+      bool isBlack = ((double)wallSampleCount / (double)wallSampleTotal) > 0.5;
+      if (!isBlack) {
+        // TODO: Debugging for now
+        numCheckpointsFound = CHECKPOINTS_TOTAL;
+        // Detected a white wall -> this is the starting location
+        //if (pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)) == pgm_read_byte(&(intersections[(int)pathLocation[currentPath][0]].id))) {
+        if (numCheckpointsFound < CHECKPOINTS_TOTAL) {
+          followerState = FOLLOWER_STATE_WALL_START_GOBACK;
+        }
+        else {
+          followerState = FOLLOWER_STATE_WALL_START_DONE;
+        }
+      }
+      else {
+        // Detected a black wall - handle the deadend state
+        followerState = FOLLOWER_STATE_WALL_DEADEND;
+      }
 
-		  wallSampleCount = 0;
-		  wallSampleTotal = 0;
-	  }
+      wallSampleCount = 0;
+      wallSampleTotal = 0;
+    }
   }
 }
 
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
   //should make avg speed inversely proportional to the controller...will slow down if error is high
-  float speedOffsetFactor = (-exp(-abs(controller) / 120) + 1) * 1.15;
+  float speedOffsetFactor = abs(controller / 255); //(-exp(-abs(controller) / 120) + 1) * 1.15;
   if (speedOffsetFactor > 1)speedOffsetFactor = 1;
   float adjustedSpeed = averageMotorSpeed;// - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
   //float adjustedSpeed = averageMotorSpeed;
@@ -169,7 +180,7 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     //    lastRealignLeftMotorCount = -1;
     //    lastRealignRightMotorCount = -1;
   }
-  else if(followerState == FOLLOWER_STATE_WALL_START_DONE){
+  else if (followerState == FOLLOWER_STATE_WALL_START_DONE) {
     motorSpeeds.right = 0;
     motorSpeeds.left = 0;
   }
@@ -220,18 +231,18 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     }
   }
   else if (followerState == FOLLOWER_STATE_IDENTIFY_WALL) {
-	  // While checking, stop the motors
-	  motorSpeeds.right = 0;
-	  motorSpeeds.left = 0;
+    // While checking, stop the motors
+    motorSpeeds.right = 0;
+    motorSpeeds.left = 0;
 
-	  wallSampleCount += digitalRead(WALL_COLOUR_SENSOR);
-	  wallSampleTotal++;
+    wallSampleCount += digitalRead(WALL_COLOUR_SENSOR);
+    wallSampleTotal++;
   }
   else if (followerState == FOLLOWER_STATE_WALL_START_DONE) {
-	  // Aaaaannnnnndd we're done!
+    // Aaaaannnnnndd we're done!
 
-	  motorSpeeds.right = 0;
-	  motorSpeeds.left = 0;
+    motorSpeeds.right = 0;
+    motorSpeeds.left = 0;
   }
 
   //next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
@@ -274,7 +285,7 @@ float getLaneError() {
   readLeft = analogRead(LINE_FOLLOW_SENSOR_LEFT);
   readRight = analogRead(LINE_FOLLOW_SENSOR_RIGHT);
 
-  return readLeft - readRight;
+  return readLeft - readRight - 32;
 }
 
 
@@ -302,24 +313,24 @@ void determineStallPWM() {
 
 void wallDetection(unsigned long currentTime) {
 
-	wallSensorBuffer += analogRead(WALL_DISTANCE_SENSOR);
-	wallBufferCounter++;
-	if (wallBufferCounter >= 10) {
-		wallDistance = ((double)wallSensorBuffer) / wallBufferCounter;
-		wallBufferCounter = 0;
-		wallSensorBuffer = 0;
-	}
+  wallSensorBuffer += analogRead(WALL_DISTANCE_SENSOR);
+  wallBufferCounter++;
+  if (wallBufferCounter >= 10) {
+    wallDistance = ((double)wallSensorBuffer) / wallBufferCounter;
+    wallBufferCounter = 0;
+    wallSensorBuffer = 0;
+  }
 
-//	Serial.print("dist: ");
-//	Serial.print(wallDistance);
+  //	Serial.print("dist: ");
+  //	Serial.print(wallDistance);
 
   if (followerState == FOLLOWER_STATE_ONLINE) {
-	
+
     if (wallDistance > 190 ) {
       wallDistance = 0;
 
-	  followerState = FOLLOWER_STATE_IDENTIFY_WALL;
-	  wallIdentificationStartTime = currentTime;
+      followerState = FOLLOWER_STATE_IDENTIFY_WALL;
+      wallIdentificationStartTime = currentTime;
     }
 
   }

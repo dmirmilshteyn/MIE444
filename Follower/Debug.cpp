@@ -60,7 +60,7 @@ long lastIntersectionPublishTime = 0;
 long lastLaneFollowingPublishTime = 0;
 long lastPathPublishTime = 0;
 
-void publishLaneFollowingData(long currentTime, MotorSpeeds motorSpeeds, float currentError, float integral, float derivative, float controller, float leftLineSensor, float rightLineSensor) {
+void publishLaneFollowingData(long currentTime, MotorSpeeds motorSpeeds, float currentError, long integral, float derivative, float controller, float leftLineSensor, float rightLineSensor) {
   return;
   if (currentTime > lastLaneFollowingPublishTime + 1000) {
     lastLaneFollowingPublishTime = currentTime;
@@ -87,7 +87,7 @@ void publishLaneFollowingData(long currentTime, MotorSpeeds motorSpeeds, float c
 }
 
 void publishIntersectionDetectionData(long currentTime, int frontSensor, int leftSensor, int rightSensor, int detectedIntersection) {
-  return;
+  
   if (currentTime > lastIntersectionPublishTime + 1000) {
     lastIntersectionPublishTime = currentTime;
 #ifdef PRINT_DEBUG_MESSAGES_2

@@ -2,7 +2,7 @@
 
 int detectedIntersection = INTERSECTION_TYPE_NONE;
 int detectedMarkerId = -1;
-
+long lastIntersectionEncoderTick = 0;
 int currentFront = 0;
 int currentLeft = 0;
 int currentRight = 0;
@@ -15,6 +15,17 @@ long lastRightEncoder = 0;
 
 long lastIntersectionDetectionLeftEncoder = 0;
 long lastIntersectionDetectionRightEncoder = 0;
+
+float deadEndAngles[DEAD_END_MAX][2] = {
+  {3, 0},
+  {25, -M_PI / 2},
+  {21, -M_PI / 2},
+  {14, M_PI / 2},
+  {9, -M_PI / 2},
+  {39, -M_PI / 3}
+};
+
+
 
 double lastTick = 0;
 
@@ -35,6 +46,8 @@ void ReadIntersectionSensors(long tick) {
       IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
       if (detectedIntersection != INTERSECTION_TYPE_NONE) {
+        //        Serial.println("process: ");
+        //        Serial.println(detectedIntersection);
         ProcessDetectedIntersection(detectedIntersection);
       }
     }
@@ -66,11 +79,11 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
     currentTestIntersection = INTERSECTION_TYPE_CROSS;
   }
 
-  //  if (abs(encoderLeft - lastLeftEncoder) > 225) {
-  //    detectedIntersection = currentTestIntersection;
-  //    verifyDetectedIntersection();
-  //  }
-  //  else {
+  //if (abs(encoderLeft - lastLeftEncoder) > 225) {
+  //  detectedIntersection = currentTestIntersection;
+  //  verifyDetectedIntersection();
+  //}
+  //else {
   double currentTick = (encoderLeft + encoderRight) / 2;
   if (currentTestIntersection != previousTestIntersection) {
     detectedIntersection = INTERSECTION_TYPE_NONE;
@@ -85,13 +98,16 @@ void IdentifyIntersection(int tick, int frontSensor, int leftSensor, int rightSe
       lastTick = currentTick;
     }
   }
-  //  }
+  //}
 
-  //  lastLeftEncoder = encoderLeft;
-  //  lastRightEncoder = encoderRight;
+  //lastLeftEncoder = encoderLeft;
+  //lastRightEncoder = encoderRight;
 }
 
 void verifyDetectedIntersection() {
+
+  //  Serial.print("intersection: ");
+  //  Serial.println(detectedIntersection);
   if (detectedIntersection != INTERSECTION_TYPE_NONE && currentPath > -1) {
 
     //    Serial.print(" detected");
@@ -114,61 +130,74 @@ void verifyDetectedIntersection() {
     double pow3 = ((double)absoluteLocationX) * MAP_RESOLUTION - ((double)lastIntersectionX) * MAP_RESOLUTION;
     double pow4 = ((double)absoluteLocationY) * MAP_RESOLUTION - ((double)lastIntersectionY) * MAP_RESOLUTION;
     double testDistance = sqrt(pow(pow3, 2) + pow(pow4, 2));
+    double testMarkerId = -1;
+    double testAngle = M_PI;
 
-    if (testDistance < 0.2) {
 
-      switch (lastIntersectionMarkerId) {
-        case 0:
-        case 1:
-        case 2:
-          detectedMarkerId = 3;
-          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
-          deadEndCase = 1;
-          smallestAngle = 0;
-          break;
-        case 27:
-        case 26:
-          detectedMarkerId = 25;
-          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
-          deadEndCase = 1;
-          smallestAngle = 0;
-          break;
-        case 19:
-        case 20:
-          detectedMarkerId = 21;
-          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
-          deadEndCase = 1;
-          smallestAngle = 0;
-          break;
-        case 13:
-        case 15:
-          detectedMarkerId = 14;
-          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
-          deadEndCase = 1;
-          smallestAngle = 0;
-          break;
-        case 8:
-        case 10:
-          detectedMarkerId = 9;
-          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
-          deadEndCase = 1;
-          smallestAngle = 0;
-          break;
-        case 40:
-        case 41:
-          detectedMarkerId = 39;
-          detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
-          deadEndCase = 1;
-          smallestAngle = 0;
-          break;
-      }
-      if (deadEndCase == 1) {
-        Serial.print(" lastS");
-        Serial.print(lastIntersectionMarkerId);
-        Serial.print(" checkS");
-        Serial.println(detectedMarkerId);
+    switch (lastIntersectionMarkerId) {
+      case 0:
+      case 1:
+      case 2:
+        testMarkerId = 3;
+        deadEndCase = 1;
+        break;
+      case 27:
+      case 26:
+        testMarkerId = 25;
+        deadEndCase = 1;
+        break;
+      case 19:
+      case 20:
+        testMarkerId = 21;
+        deadEndCase = 1;
+        break;
+      case 13:
+      case 15:
+        testMarkerId = 14;
+        deadEndCase = 1;
+        break;
+      case 8:
+      case 10:
+        testMarkerId = 9;
+        deadEndCase = 1;
+        break;
+      case 40:
+      case 41:
+        testMarkerId = 39;
+        deadEndCase = 1;
+        break;
+    }
+
+    for (int i = 0; i < DEAD_END_MAX; i++) {
+      if (testMarkerId == (int)deadEndAngles[i][0]) {
+        testAngle = deadEndAngles[i][1];
+        break;
       }
     }
+
+    double testAngleCompare = abs(normalise((absoluteHeadingAngle - testAngle), -M_PI, M_PI));
+
+    long currentEncoderTick = (leftMotorCount + rightMotorCount) / 2;
+    long encoderTickDiff = currentEncoderTick - lastIntersectionEncoderTick;
+    double encoderTickDiffMetres = (double)encoderTickDiff / GEAR_RATIO / ENCODER_TEETH_COUNT * WHEEL_RADIUS * 2 * M_PI;
+Serial.print(" encoderTickDiffMetres:");
+Serial.println(encoderTickDiffMetres);
+    if (testDistance < 0.2 && testAngleCompare < 20 * 180 / M_PI && deadEndCase == 1 && encoderTickDiffMetres > 0.25) {
+      detectedMarkerId = testMarkerId;
+      detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));
+      smallestAngle = 0;
+
+      Serial.print(" lastS");
+      Serial.print(lastIntersectionMarkerId);
+      Serial.print(" checkS");
+      Serial.print(detectedMarkerId);
+      Serial.print("   ");
+
+    }
+    else {
+      deadEndCase = 0;
+    }
+    // }
     if (deadEndCase == 0) {
       for (int i = 0; i < INTERSECTION_MARKER_COUNT; i++) {
         if ((int8_t)pgm_read_byte(&(intersection_graph[i][lastIntersectionMarkerId][0])) != -1) {
@@ -229,8 +258,8 @@ void verifyDetectedIntersection() {
             smallestDistance = robotToIntersectionDistance;
             smallestAngle = angleCompare;
             smallestDistanceMarkerID = i;
-//            Serial.print(" angle");
-//            Serial.println(smallestAngle);
+            //            Serial.print(" angle");
+            //            Serial.println(smallestAngle);
 
           }
         }
@@ -244,15 +273,18 @@ void verifyDetectedIntersection() {
         Serial.print(" last");
         Serial.print(lastIntersectionMarkerId);
         Serial.print(" check");
-        Serial.println(detectedMarkerId);
+        Serial.print(detectedMarkerId);
+        Serial.print("   ");
       }
       else {
-        Serial.println("check didnt work");
+        //        Serial.println("check didnt work");
         detectedIntersection = INTERSECTION_TYPE_NONE;
       }
     }
   }
 
+  //  Serial.print("Corrected: ");
+  //  Serial.println(detectedIntersection);
 }
 
 int GetCurrentSensorValue(int sensorLocation) {

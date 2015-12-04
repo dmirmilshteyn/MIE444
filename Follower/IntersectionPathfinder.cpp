@@ -165,7 +165,9 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 	//  { 39, 38,  M_PI / 4 }, // Starting with T, then Left
 	//  { 39, 38,  M_PI / 4 }, // Starting with T, then TLeft (this is an error case)
 	//  { 25, 24, 0 } // Starting with T, then TRight
-	currentPath = 0;
+
+  
+
 	byte upcomingIntersectionX = pgm_read_byte(&(intersections[path[1]].intersectionX));
 	byte upcomingIntersectionY = pgm_read_byte(&(intersections[path[1]].intersectionY));
 
@@ -183,13 +185,8 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 	Serial.print(previousAngle);
 	Serial.print(" up ");
 	Serial.println(upcomingAngle);
-	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
-	if (angle > M_PI) {
-		angle -= 2 * M_PI;
-	}
-	else if (angle < -M_PI) {
-		angle += 2 * M_PI;
-	}
+	double angle = normalise(upcomingAngle, -M_PI, M_PI) - normalise(previousAngle, -M_PI, M_PI);
+
 	if (abs(angle) < 20 * M_PI / 180) {
 		pathTurns[0] = PATH_STRAIGHT;
 	}
@@ -226,15 +223,9 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 		Serial.print(" up ");
 		Serial.println(upcomingAngle);
 
-		angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
+		angle = normalise(upcomingAngle, -M_PI, M_PI) - normalise(previousAngle, -M_PI, M_PI);
 
 
-		if (angle > M_PI) {
-			angle -= 2 * M_PI;
-		}
-		else if (angle < -M_PI) {
-			angle += 2 * M_PI;
-		}
 		if (abs(angle) < 20 * M_PI / 180) {
 			pathTurns[i - 1] = PATH_STRAIGHT;
 		}
