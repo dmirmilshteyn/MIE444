@@ -37,6 +37,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 		break;
 	}
 
+#ifndef NOPATHPLANFOLLOW
 	// An active path plan is loaded, attempt to follow it
 	if (currentPathPlan.path.size > 0) {
 		if (currentPathPlan.pathIndex == currentPathPlan.path.size - 1) {
@@ -105,6 +106,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 			currentPathPlan.pathIndex++;
 		}
 	}
+#endif // ! NOPATHPLANFOLLOW
 
 #ifdef NOMOTORS
 	followerState == FOLLOWER_STATE_ONLINE;
