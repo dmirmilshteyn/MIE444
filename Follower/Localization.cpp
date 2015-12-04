@@ -160,7 +160,7 @@ void pushDetectedIntersection(int intersectionType) {
     if (result > -1) {
       // Localization was successful
 
-      for (int i = 0; i <= MAX_PATH_LENGTH - 1; i++) {
+      for (int i = 0; i < MAX_PATH_LENGTH; i++) {
 
         lastIntersectionMarkerId = pathLocation[result][i];
         if (pathLocation[result][i] == -1) {
@@ -172,7 +172,7 @@ void pushDetectedIntersection(int intersectionType) {
 
 	  // Hit all targets that are part of this path
 	  for (int i = 0; i < TARGET_COUNT; i++) {
-		  for (int p = 0; p <= MAX_PATH_LENGTH - 1; p++) {
+		  for (int p = 0; p < MAX_PATH_LENGTH; p++) {
 			  if (pathLocation[result][p] != -1) {
 				  int pathIntersectionid = pgm_read_byte(&(intersections[(int)pathLocation[result][p]].id));
 
@@ -249,7 +249,7 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
       angle = -M_PI * 0.9;
       break;
     case 38: //arc line
-      angle = M_PI / 4;
+      angle = M_PI / 3;
       break;
     case 7: //arc line
       angle = M_PI * 0.9;
@@ -264,8 +264,8 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   absoluteHeadingAngle = angle;
   absoluteLocationX = currentIntersectionX;
   absoluteLocationY = currentIntersectionY;
-
-
+  absoluteLocationXMeters = (double)absoluteLocationX * MAP_RESOLUTION;
+  absoluteLocationYMeters = (double)absoluteLocationY * MAP_RESOLUTION;
   lastIntersectionMarkerId = currentIntersectionMarkerId;
 
 

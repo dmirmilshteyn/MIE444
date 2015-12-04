@@ -266,7 +266,7 @@ Serial.println(encoderTickDiffMetres);
         }
       }
 
-      if (smallestDistance < 0.2 && smallestAngle < 20 * M_PI / 180) {
+      if (smallestDistance < 0.2 && smallestAngle < 40 * M_PI / 180) {
         detectedIntersection = pgm_read_byte(&(intersections[smallestDistanceMarkerID].type));
         detectedMarkerId = smallestDistanceMarkerID;
         //        Serial.print(" distance");
