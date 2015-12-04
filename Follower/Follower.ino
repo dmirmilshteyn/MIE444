@@ -120,7 +120,7 @@ void setup() {
   //Serial.println(lastIntersectionMarkerId);
   // Expected: 17
 
- 
+ wallTime = millis();
 }
 
 void loop() {
@@ -157,7 +157,7 @@ void loop() {
   updateFollowerState(currentTime);
   ReadIntersectionSensors(currentTime);
   followLaneAnalog(currentTime);
-  //wallDetection(currentTime);
+  wallDetection(currentTime);
   
   updateRelativeLocation();
 

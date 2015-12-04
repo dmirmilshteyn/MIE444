@@ -23,6 +23,9 @@ unsigned long wallIdentificationStartTime = 0;
 int wallSampleCount = 0;
 int wallSampleTotal = 0;
 
+long wallEncoderTicks = 0;
+long wallTime = 0;
+
 float readLeft;
 float readRight;
 
@@ -48,11 +51,11 @@ void followLaneAnalog(unsigned long currentTime) {
 
   integral = integral + (((currentError + lastError) / 2) * timeDifference);
   if (Ki * abs(integral) > 130) {
-    if(integral>0){
-      integral = 100/Ki;
+    if (integral > 0) {
+      integral = 100 / Ki;
     }
-    else{
-      integral = -100/Ki;
+    else {
+      integral = -100 / Ki;
     }
   }
   derivative = (currentError - lastError) / timeDifference;
@@ -119,7 +122,7 @@ MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedO
 }
 
 void updateFollowerState(unsigned long currentTime) {
-  if (readLeft < 600 && readRight < 600 && followerState != FOLLOWER_STATE_RIGHT && followerState != FOLLOWER_STATE_LEFT && followerState != FOLLOWER_STATE_STRAIGHT) {
+  if (readLeft < 600 && readRight < 600 && followerState != FOLLOWER_STATE_RIGHT && followerState != FOLLOWER_STATE_LEFT && followerState != FOLLOWER_STATE_STRAIGHT&&followerState != FOLLOWER_STATE_WALL_DEADEND) {
     followerState = FOLLOWER_STATE_OFFLINE;
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
@@ -162,7 +165,7 @@ void updateFollowerState(unsigned long currentTime) {
   }
 
   if (followerState == FOLLOWER_STATE_STRAIGHT && detectedIntersection == INTERSECTION_TYPE_NONE && !IsSensorOnOrApproaching(SENSOR_LOCATION_LEFT) && !IsSensorOnOrApproaching(SENSOR_LOCATION_RIGHT) && readLeft >= 600 && readRight >= 600) {
-	  followerState = FOLLOWER_STATE_ONLINE;
+    followerState = FOLLOWER_STATE_ONLINE;
   }
 }
 
@@ -226,7 +229,7 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
       }
       else if (followerState == FOLLOWER_STATE_WALL_DEADEND) {
         // Turn right
-
+        wallTime = millis();
         isRealigning = true;
         lastRealignLeftMotorCount = -1;
         lastRealignRightMotorCount = -1;
@@ -313,40 +316,54 @@ void wallDetection(unsigned long currentTime) {
     if (wallDistance > 190 ) {
       wallDistance = 0;
 
-      followerState = FOLLOWER_STATE_IDENTIFY_WALL;
-      wallIdentificationStartTime = currentTime;
+      followerState = FOLLOWER_STATE_WALL_DEADEND;
+      //wallIdentificationStartTime = currentTime;
     }
 
   }
 }
 
+void wallDetection2(unsigned long currentTime) {
+
+  if (followerState == FOLLOWER_STATE_ONLINE) {
+    if (currentTime > wallTime + 1000) {
+      wallTime = currentTime;
+      if ((leftMotorCount + rightMotorCount) / 2 < wallEncoderTicks + 10) {
+        followerState = FOLLOWER_STATE_WALL_DEADEND;
+      }
+      wallTime = currentTime;
+      wallEncoderTicks = (leftMotorCount + rightMotorCount) / 2;
+    }
+  }
+}
+
 void driveMotorsAtSpeed(MotorSpeeds speeds) {
 #ifndef NOMOTORS
-	//next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
-	if (speeds.left >= 0) {
-		leftForward = true;
-		analogWrite(BIN2_LEFT_MOTOR, 0);
-		analogWrite(BIN1_LEFT_MOTOR, speeds.left);//drives left motor forward
-	}
-	else {
-		leftForward = false;
-		analogWrite(BIN1_LEFT_MOTOR, 0);
-		analogWrite(BIN2_LEFT_MOTOR, -speeds.left);//drives left motor reverse
-	}
+  //next 4 if statements drive the left and right motors forward or back depending on the signs of newLeftMotorSpeed and newRightMotorSpeed
+  if (speeds.left >= 0) {
+    leftForward = true;
+    analogWrite(BIN2_LEFT_MOTOR, 0);
+    analogWrite(BIN1_LEFT_MOTOR, speeds.left);//drives left motor forward
+  }
+  else {
+    leftForward = false;
+    analogWrite(BIN1_LEFT_MOTOR, 0);
+    analogWrite(BIN2_LEFT_MOTOR, -speeds.left);//drives left motor reverse
+  }
 
-	if (speeds.right >= 0) {
-		rightForward = true;
-		analogWrite(AIN2_RIGHT_MOTOR, 0);
-		analogWrite(AIN1_RIGHT_MOTOR, speeds.right);//drives right motor forward
-	}
-	else {
-		rightForward = false;
-		analogWrite(AIN1_RIGHT_MOTOR, 0);
-		analogWrite(AIN2_RIGHT_MOTOR, -speeds.right);//drives right motor reverse
-	}
+  if (speeds.right >= 0) {
+    rightForward = true;
+    analogWrite(AIN2_RIGHT_MOTOR, 0);
+    analogWrite(AIN1_RIGHT_MOTOR, speeds.right);//drives right motor forward
+  }
+  else {
+    rightForward = false;
+    analogWrite(AIN1_RIGHT_MOTOR, 0);
+    analogWrite(AIN2_RIGHT_MOTOR, -speeds.right);//drives right motor reverse
+  }
 
-	currentLeftMotorSpeed = speeds.left;
-	currentRightMotorSpeed = speeds.right;
+  currentLeftMotorSpeed = speeds.left;
+  currentRightMotorSpeed = speeds.right;
 #endif
 }
 

@@ -64,6 +64,7 @@ float getLaneError();
 void followLaneAnalog(unsigned long currentTime);
 void determineStallPWM();//will determine the stallPWM of the robot with the current payload and battery power. It will add speed to the motors until the robot starts moving.
 void wallDetection(unsigned long currentTime);
+void wallDetection2(unsigned long currentTime);
 
 void driveMotorsAtSpeed(MotorSpeeds motorSpeeds);
 

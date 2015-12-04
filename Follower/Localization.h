@@ -33,6 +33,10 @@ extern float pathLocation[PATH_COUNT][MAX_PATH_LENGTH + 1];
 extern int currentPath;
 extern int lastIntersectionMarkerId;
 
+
+extern long wallEncoderTicks;
+extern long wallTime;
+
 void initializeEncoders();
 void handleLeftMotorInterupt();
 void handleRightMotorInterupt();
