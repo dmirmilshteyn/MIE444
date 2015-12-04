@@ -318,6 +318,26 @@ int tryToLocalize() {
   return -1;
 }
 
+int DetermineTurnDirection(double headingAngle, int currentX, int currentY, int upcomingX, int upcomingY) {
+	double xDiff = upcomingX - currentX;
+	double yDiff = upcomingY - currentY;
+
+	double upcomingAngle = atan2(yDiff, xDiff);
+
+	double previousAngle = headingAngle;
+
+	double angle = normalise(upcomingAngle, -M_PI, M_PI) - normalise(previousAngle, -M_PI, M_PI);
+
+	if (abs(angle) < 20 * M_PI / 180) {
+		return PATH_STRAIGHT;
+	}
+	else if (angle > 0) {
+		return PATH_RIGHT;
+	}
+	else if (angle < 0) {
+		return PATH_LEFT;
+	}
+}
 
 
 

@@ -41,5 +41,7 @@ void pushDetectedIntersection(int intersectionType);
 void updateIntersectionLocalization(int intersectionType);
 int tryToLocalize();
 
+int DetermineTurnDirection(double headingAngle, int currentX, int currentY, int upcomingX, int upcomingY);
+
 #endif
 

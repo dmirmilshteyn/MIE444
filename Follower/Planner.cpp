@@ -44,11 +44,47 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 			// Mark the target as hit
 			targets[currentPathPlan.target].hit = true;
 
-			// Reset the current path plan
-			currentPathPlan = PathPlan();
+			// Find the closest start position to this target
+			int targetStartPosition = -1;
+			int currentIntersectionId = pgm_read_byte(&(intersections[(int)currentPathPlan.path.path[currentPathPlan.pathIndex]].id));
+			for (int i = 0; i < STARTING_POSITION_COUNT; i++) {
+				if (pgm_read_byte(&(start_positions[i].nearestIntersectionId)) == currentIntersectionId) {
+					targetStartPosition = i;
+					break;
+				}
+			}
 
-			// TODO: What happens after the target has been hit?
-			followerState = FOLLOWER_STATE_WALL_START_DONE;
+			if (targetStartPosition != -1) {
+				// If a target start position was found, determine the turn direction
+				byte upcomingX = pgm_read_byte(&(start_positions[targetStartPosition].x));
+				byte upcomingY = pgm_read_byte(&(start_positions[targetStartPosition].y));
+
+				byte currentX = pgm_read_byte(&(intersections[(int)currentPathPlan.path.path[currentPathPlan.pathIndex]].intersectionX));
+				byte currentY = pgm_read_byte(&(intersections[(int)currentPathPlan.path.path[currentPathPlan.pathIndex]].intersectionY));
+
+				int currentTurn = DetermineTurnDirection(absoluteHeadingAngle, currentX, currentY, upcomingX, upcomingY);
+
+				switch (currentTurn) {
+				case PATH_STRAIGHT:
+					followerState = FOLLOWER_STATE_ONLINE;
+					break;
+				case PATH_LEFT:
+					followerState = FOLLOWER_STATE_LEFT;
+					break;
+				case PATH_RIGHT:
+					followerState = FOLLOWER_STATE_RIGHT;
+					break;
+				}
+			}
+			else {
+				// TODO: What happens when the target has been hit and it is not near a start position?
+
+				// For now, end the robot movement
+				followerState = FOLLOWER_STATE_WALL_START_DONE;
+			}
+
+			// Reset the current path plan once everything is done
+			currentPathPlan = PathPlan();
 		}
 		else {
 			// Currently enroute to the destination, travel in the next direction
