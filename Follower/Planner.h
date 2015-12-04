@@ -10,7 +10,7 @@
 #include "LineFollower.h"
 #include "IntersectionPathfinder.h"
 
-#define TARGET_COUNT 1
+#define TARGET_COUNT 2
 
 struct target {
 	int id;
@@ -34,6 +34,8 @@ extern PathPlan currentPathPlan;
 
 void ProcessDetectedIntersection(int detectedIntersectionType);
 void BuildPathPlan();
+
+bool AllTargetsHit();
 
 void processDeadEnd();
 

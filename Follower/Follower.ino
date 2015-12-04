@@ -15,7 +15,7 @@
 #include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
-float Kp = 1; // 0.6; //0.3;
+float Kp = 1.7; // 0.6; //0.3;
 float Ki = 0;//0.0009;//0.0015;
 float Kd = 600;//400; //332; //450; //100;
 
