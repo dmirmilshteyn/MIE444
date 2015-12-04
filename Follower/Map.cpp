@@ -65,7 +65,8 @@ const PROGMEM start_position start_positions[STARTING_POSITION_COUNT] = {
  { 2, 53, 14 },
  { 59, 53, 9 },
  { 87, 53, 7 },
- { 87, 5, 5 }
+ { 87, 5, 5 },
+ { 47, 22, 3 }
 };
 
 const PROGMEM int8_t intersection_graph[INTERSECTION_MARKER_COUNT][INTERSECTION_MARKER_COUNT][2] = {

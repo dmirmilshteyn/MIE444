@@ -16669,6 +16669,11 @@
         <Y>5</Y>
         <NearestIntersectionId>5</NearestIntersectionId>
       </StartPosition>
+      <StartPosition>
+        <X>47</X>
+        <Y>22</Y>
+        <NearestIntersectionId>3</NearestIntersectionId>
+      </StartPosition>
     </StartPositions>
   </Map>
 </Project>

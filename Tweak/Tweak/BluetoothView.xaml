@@ -106,6 +106,9 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding IntersectionId}"/>
+                                <TextBlock Text=" (" />
+                                <TextBlock Text="{Binding TurnDirection}" />
+                                <TextBlock Text=") " />
                                 <TextBlock x:Name="commaTextBlock" Text=" → "/>
                             </StackPanel>
                         </DataTemplate>

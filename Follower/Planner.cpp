@@ -93,7 +93,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
 					break;
 				}
 
-				followerState = FOLLOWER_STATE_WALL_START_DONE;
+				//followerState = FOLLOWER_STATE_WALL_START_DONE;
 			}
 			else {
 				// TODO: What happens when the target has been hit and it is not near a start position?
