@@ -93,7 +93,7 @@ namespace Tweak
                     ConnectedDevice = await bluetoothManager.Connect(SelectedDevice);
 
                     ConnectButtonText = "Disconnect";
-                } catch {
+                } catch (Exception ex) {
                     ConnectButtonText = "Failed... try again";
                     ConnectedDevice = null;
                 }

@@ -95,16 +95,9 @@
                     <TextBlock Grid.Column="3" Grid.Row="7" Text="{Binding ConnectedDevice.Synchronizer.IntersectionId}" HorizontalAlignment="Center" />
                 </Grid>
                 <TextBlock Text="Path Plan" FontWeight="Bold" HorizontalAlignment="Center" />
-                <ItemsControl ItemsSource="{Binding ConnectedDevice.Synchronizer.PathPlan}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>

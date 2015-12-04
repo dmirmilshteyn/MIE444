@@ -47,10 +47,10 @@
     <ClInclude Include="IntersectionPathfinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pathfinder.h">
+    <ClInclude Include="IntersectionDetection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntersectionDetection.h">
+    <ClInclude Include="Planner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,6 +80,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Planner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
