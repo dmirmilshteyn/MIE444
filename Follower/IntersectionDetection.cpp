@@ -46,7 +46,7 @@ void ReadIntersectionSensors(long tick) {
       IdentifyIntersection(tick, sensorA, sensorB, sensorC, leftMotorCount, rightMotorCount);
 
 	  // Only process the intersection if the follower is in a neutral (online) state
-      if (detectedIntersection != INTERSECTION_TYPE_NONE && followerState == FOLLOWER_STATE_ONLINE) {
+      if (detectedIntersection != INTERSECTION_TYPE_NONE && followerState == FOLLOWER_STATE_ONLINE && (lastIntersectionMarkerId != detectedMarkerId || lastIntersectionMarkerId == -1)) {
         //        Serial.println("process: ");
         //        Serial.println(detectedIntersection);
         ProcessDetectedIntersection(detectedIntersection);
