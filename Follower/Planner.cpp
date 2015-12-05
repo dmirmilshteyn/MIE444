@@ -11,6 +11,8 @@ target targets[TARGET_COUNT] = {
 
 PathPlan currentPathPlan;
 
+bool goingHome = false;
+
 void ProcessDetectedIntersection(int detectedIntersectionType) {
   Serial.println("DETECTED");
 
@@ -91,10 +93,6 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
             break;
         }
 
-		if (AllTargetsHit()) {
-			followerState = FOLLOWER_STATE_WALL_START_DONE;
-		}
-
 		// Mark the target as hit
 		if (currentPathPlan.target != -1) {
 			targets[currentPathPlan.target].hit = true;
@@ -131,6 +129,7 @@ void ProcessDetectedIntersection(int detectedIntersectionType) {
       currentPathPlan.pathIndex++;
     }
   }
+
 #endif // ! NOPATHPLANFOLLOW
 
 #ifdef NOMOTORS
@@ -201,12 +200,25 @@ bool AllTargetsHit() {
 	return hitAll;
 }
 
-void processDeadEnd() {
 
-  //processdeadend
+void processDeadEnd() {
+	if (AllTargetsHit()) {
+		if (!goingHome) {
+			goingHome = true;
+		}
+	}
 
 	BuildPathPlan();
 }
 
+MotorSpeeds ProcessBeforeDeadEnd(MotorSpeeds motorSpeeds) {
+	if (goingHome == 1) {
+		motorSpeeds.left = 0;
+		motorSpeeds.right = 0;
 
+		followerState = FOLLOWER_STATE_WALL_START_DONE;
+	}
+
+	return motorSpeeds;
+}
 

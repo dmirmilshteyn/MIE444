@@ -181,8 +181,8 @@ void verifyDetectedIntersection() {
     long currentEncoderTick = (leftMotorCount + rightMotorCount) / 2;
     long encoderTickDiff = currentEncoderTick - lastIntersectionEncoderTick;
     double encoderTickDiffMetres = (double)encoderTickDiff / GEAR_RATIO / ENCODER_TEETH_COUNT * WHEEL_RADIUS * 2 * M_PI;
-Serial.print(" encoderTickDiffMetres:");
-Serial.println(encoderTickDiffMetres);
+//Serial.print(" encoderTickDiffMetres:");
+//Serial.println(encoderTickDiffMetres);
     if (testDistance < 0.2 && testAngleCompare < 20 * 180 / M_PI && deadEndCase == 1 && encoderTickDiffMetres > 0.25) {
       detectedMarkerId = testMarkerId;
       detectedIntersection = pgm_read_byte(&(intersections[detectedMarkerId].type));

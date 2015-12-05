@@ -50,12 +50,12 @@ void followLaneAnalog(unsigned long currentTime) {
 
 
   integral = integral + (((currentError + lastError) / 2) * timeDifference);
-  if (Ki * abs(integral) > 130) {
+  if (Ki * abs(integral) > 150) {
     if (integral > 0) {
-      integral = 100 / Ki;
+      integral = 150 / Ki;
     }
     else {
-      integral = -100 / Ki;
+      integral = -150 / Ki;
     }
   }
   derivative = (currentError - lastError) / timeDifference;
@@ -219,13 +219,13 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
     else {
       if (followerState == FOLLOWER_STATE_LEFT) {
         // Turn left
-        motorSpeeds.left = -averageMotorSpeed * 0.6;
-        motorSpeeds.right = averageMotorSpeed * 1.3;
+        motorSpeeds.left = -averageMotorSpeed * 1.2;
+        motorSpeeds.right = averageMotorSpeed * 1.25;
       }
       else if (followerState == FOLLOWER_STATE_RIGHT) {
         // Turn right
-        motorSpeeds.right = -averageMotorSpeed * 0.6;
-        motorSpeeds.left = averageMotorSpeed * 1.3;
+        motorSpeeds.right = -averageMotorSpeed * 1.2;
+        motorSpeeds.left = averageMotorSpeed * 1.25;
       }
       else if (followerState == FOLLOWER_STATE_WALL_DEADEND) {
         // Turn right
@@ -236,7 +236,8 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
         motorSpeeds.right = -(adjustedSpeed * 1.2);
         motorSpeeds.left = adjustedSpeed * 1;
 
-
+		// Allow the planner to handle any cases before finalizing the rotation
+		motorSpeeds = ProcessBeforeDeadEnd(motorSpeeds);
       }
     }
   }
@@ -313,7 +314,7 @@ void wallDetection(unsigned long currentTime) {
 
   if (followerState == FOLLOWER_STATE_ONLINE) {
 
-    if (wallDistance > 190 ) {
+    if (wallDistance > 200 ) {
       wallDistance = 0;
 
       followerState = FOLLOWER_STATE_WALL_DEADEND;

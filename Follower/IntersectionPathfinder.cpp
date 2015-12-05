@@ -19,6 +19,10 @@ void IntersectionPathfinder::Initialize(IntersectionPathNodeSet *trackingSet) {
   // Close off the TLeft because it causes conflicts
   closed_nodes[19] = 1;
   closed_nodes[22] = 1;
+
+  // Close off the annoying parts
+  closed_nodes[42] = 1;
+  closed_nodes[7] = 1;
 }
 
 void IntersectionPathfinder::Dispose(IntersectionPathNodeSet *trackingSet) {
@@ -188,7 +192,7 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
 	angle = normalise(angle, -M_PI, M_PI);
 
-	if (abs(angle) < 20 * M_PI / 180) {
+	if (abs(angle) < 30 * M_PI / 180) {
 		pathTurns[0] = PATH_STRAIGHT;
 	}
 	else if (angle > 0) {
@@ -227,7 +231,7 @@ IntersectionPathfinderResult IntersectionPathfinder::ReconstructPath(Intersectio
 		angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
 		angle = normalise(angle, -M_PI, M_PI);
 
-		if (abs(angle) < 20 * M_PI / 180) {
+		if (abs(angle) < 30 * M_PI / 180) {
 			pathTurns[i - 1] = PATH_STRAIGHT;
 		}
 		else if (angle > 0) {
