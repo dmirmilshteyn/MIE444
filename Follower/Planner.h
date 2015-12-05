@@ -38,6 +38,7 @@ void BuildPathPlan();
 bool AllTargetsHit();
 
 void processDeadEnd();
+MotorSpeeds ProcessBeforeDeadEnd(MotorSpeeds motorSpeeds);
 
 #endif
 

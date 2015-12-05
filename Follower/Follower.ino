@@ -15,9 +15,11 @@
 #include "Localization.h"
 
 /*************Lane following PID Variables and Functions***********/
-float Kp = 1.7; // 0.6; //0.3;
-float Ki = 0;//0.0009;//0.0015;
-float Kd = 600;//400; //332; //450; //100;
+float Kp = 2.1;//2.5;//1.7; // 0.6; //0.3;
+float Ki = 0.003;//0.0009;//0.0015;
+float Kd = 700;//400; //332; //450; //100;
+
+// 2.2, 0.002, 400
 
 long tempTime = 0;
 float DERIVATIVE_SPEED_ADJUST = 0;
@@ -82,7 +84,7 @@ void setup() {
   initializeEncoders();
   interrupts();
 
-  delay(15000);
+ // delay(15000);
 
   /*digitalWrite(ANTENNA_LED, HIGH);
 

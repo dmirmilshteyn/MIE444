@@ -257,6 +257,9 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
     case 8: //arc line
       angle = 0;
       break;
+	case 40:
+		angle = -5 * M_PI / 6;
+		break;
   }
 
   // TODO: add special cases for angle where the line between 2 intersections isnt straight (i.e. arcs)
@@ -332,7 +335,7 @@ int DetermineTurnDirection(double headingAngle, int currentX, int currentY, int 
 	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
 	angle = normalise(angle, -M_PI, M_PI);
 
-	if (abs(angle) < 20 * M_PI / 180) {
+	if (abs(angle) < 30 * M_PI / 180) {
 		return PATH_STRAIGHT;
 	}
 	else if (angle > 0) {
