@@ -1,6 +1,8 @@
 #include "Debug.h"
 #include "Constants.h"
 
+//****DEBUG MESSAGES****//
+
 inline void print(const char* message) {
 #ifdef PRINT_DEBUG_MESSAGES
   Serial.print(message);
@@ -186,7 +188,7 @@ void processDebugCommand(int command) {
       Serial.print("|");
       Serial.print(Kd);
       Serial.print("|");
-      Serial.print(DERIVATIVE_SPEED_ADJUST);
+      Serial.print("0");
       Serial.print("|");
       Serial.print(averageMotorSpeed);
       Serial.print("|");
@@ -221,10 +223,10 @@ void processDebugCommand(int command) {
       println(Kd);
       break;
     case DEBUG_SPEED_ADJUST:
-      DERIVATIVE_SPEED_ADJUST = Serial.parseFloat();
+      //DERIVATIVE_SPEED_ADJUST = Serial.parseFloat();
       Serial.read();
       print("Speed Adjust = ");
-      println(DERIVATIVE_SPEED_ADJUST);
+      println("0");
       break;
     case DEBUG_AVERAGE_SPEED:
       /*averageMotorSpeed = */Serial.parseInt();

@@ -4,6 +4,7 @@
 
 #include "Map.h"
 
+//structure of all the intersection markers. See Map.h file for struct definition
 const PROGMEM intersection_marker intersections[INTERSECTION_MARKER_COUNT] = {
   { 0, 5, 17, 8, 17, 6, 6, 15 }, 
   { 0, 9, 15, 9, 17, 6, 6, 15 }, 

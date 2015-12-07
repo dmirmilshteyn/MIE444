@@ -6,12 +6,10 @@ long int previousLeftMotorCount = 0;
 long int previousRightMotorCount = 0;
 int absoluteLocationX = -1;
 int absoluteLocationY = -1;
-double absoluteLocationXMeters = 0; //************ADD*************
-double absoluteLocationYMeters = 0; //************ADD*************
+double absoluteLocationXMeters = 0;
+double absoluteLocationYMeters = 0;
 double absoluteHeadingAngle = 0; //rads...right is positive, left is negative
 void updateRelativeLocation();
-void correctRelativeAngle();
-bool correctRelativeAngleDone = false;
 
 int currentPath = -1;
 int lastIntersectionMarkerId = -1;
@@ -55,61 +53,27 @@ void initializeEncoders() {
   attachInterrupt(digitalPinToInterrupt(ENCODER_RIGHT_MOTOR), handleRightMotorInterupt, CHANGE);
 }
 
+//INCREMENTS THE ENCODER COUNTS (INTERRUPT PINS)
 void handleLeftMotorInterupt() {
-  // Note: 1 wheel rotation = GEAR_RATIO * ENCODER_TEETH_COUNT = 100.37 * 12 = 1204.44 clicks
-  /*if (leftForward == true) {
-    leftMotorCount++;
-    }
-    else {
-    leftMotorCount--;
-    }*/
-  /*if(digitalRead(ENCODER_LEFT_MOTORB)) leftMotorCount++;
-    else leftMotorCount--;*/
-
   if (digitalRead(ENCODER_LEFT_MOTOR) == digitalRead(ENCODER_LEFT_MOTORB)) {
     leftMotorCount--;
   }
   else {
     leftMotorCount++;
   }
-
-  // TODO: Handle direction
 }
 
+//INCREMENTS THE ENCODER COUNTS (INTERRUPT PINS)
 void handleRightMotorInterupt() {
-  /*if (rightForward == true) {
-    rightMotorCount++;
-    }
-    else {
-    rightMotorCount--;
-    }*/
-  /*if(digitalRead(ENCODER_RIGHT_MOTORB)) rightMotorCount++;
-    else leftMotorCount--;*/
-
   if (digitalRead(ENCODER_RIGHT_MOTOR) == digitalRead(ENCODER_RIGHT_MOTORB)) {
     rightMotorCount--;
   }
   else {
     rightMotorCount++;
   }
-
-  // TODO: Handle direction
 }
 
-//if robot is placed at an angle with the line, this code will correct the angle and position after the robot has travelled 0.4m
-void correctRelativeAngle() {
-  double travelDistFromStart = sqrt(pow(absoluteLocationXMeters, 2) + pow(absoluteLocationYMeters, 2));
-  double relativeCorrectionAngle;
-  if (travelDistFromStart > 0.4) {
-    relativeCorrectionAngle = atan(absoluteLocationYMeters / absoluteLocationXMeters);
-    absoluteHeadingAngle -= relativeCorrectionAngle;
-    absoluteLocationXMeters = travelDistFromStart;
-    absoluteLocationYMeters = 0;
-    absoluteLocationX = round(absoluteLocationXMeters / MAP_RESOLUTION);
-    absoluteLocationY = round(absoluteLocationYMeters / MAP_RESOLUTION);
-    correctRelativeAngleDone = true;
-  }
-}
+//UPDATES THE LOCATION OF THE ROVER BASED ON THE ENCODER COUNTS
 void updateRelativeLocation() {
   double leftEncoderDiff = leftMotorCount - previousLeftMotorCount;
   previousLeftMotorCount = leftEncoderDiff + previousLeftMotorCount;
@@ -126,7 +90,6 @@ void updateRelativeLocation() {
 
   absoluteHeadingAngleDiff = (leftEncoderDiffMeters - rightEncoderDiffMeters) / WHEEL_GAP;
 
-  //Serial.print(absoluteHeadingAngleDiff);
 
   if (abs(absoluteHeadingAngleDiff) > 0.001) {
     travelDist = abs(((leftEncoderDiffMeters + rightEncoderDiffMeters) * sqrt(2 - 2 * cos(absoluteHeadingAngleDiff))) / (2 * absoluteHeadingAngleDiff));
@@ -142,15 +105,9 @@ void updateRelativeLocation() {
   absoluteLocationY = round(absoluteLocationYMeters / MAP_RESOLUTION);
 
   absoluteHeadingAngle += absoluteHeadingAngleDiff;
-
-
-  //Serial.print(" ");
-  //Serial.println(absoluteHeadingAngle);
-  //  if (correctRelativeAngleDone == false) {
-  //    correctRelativeAngle();
-  //  }
 }
 
+//ATTEMPTS TO DETERMINE ROVER'S INITIAL LOCATION
 void pushDetectedIntersection(int intersectionType) {
 
   if (nextIntersectionIndex < MAX_PATH_LENGTH) {
@@ -170,26 +127,27 @@ void pushDetectedIntersection(int intersectionType) {
 
       }
 
-	  // Hit all targets that are part of this path
-	  for (int i = 0; i < TARGET_COUNT; i++) {
-		  for (int p = 0; p < MAX_PATH_LENGTH; p++) {
-			  if (pathLocation[result][p] != -1) {
-				  int pathIntersectionid = pgm_read_byte(&(intersections[(int)pathLocation[result][p]].id));
+      // Hit all targets that are part of this path
+      for (int i = 0; i < TARGET_COUNT; i++) {
+        for (int p = 0; p < MAX_PATH_LENGTH; p++) {
+          if (pathLocation[result][p] != -1) {
+            int pathIntersectionid = pgm_read_byte(&(intersections[(int)pathLocation[result][p]].id));
 
-				  if (targets[i].id == pathIntersectionid) {
-					  targets[i].hit = true;
-				  }
-			  }
-			  
-		  }
-	  }
+            if (targets[i].id == pathIntersectionid) {
+              targets[i].hit = true;
+            }
+          }
 
-	  // Build a path plan based on our current location
-	  BuildPathPlan();
+        }
+      }
+
+      // Build a path plan based on our current location
+      BuildPathPlan();
     }
   }
 }
 
+//CALIBRATES THE ROVER'S LOCATION AND ANGLE ONCE AN INTERSECTION IS DETECTED
 void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   // Try to identify the current intersection marker id
 
@@ -214,30 +172,32 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
 
   double angle = atan2(yDiff, xDiff);
   byte deadEndCase = 0;
+
+  //SPECIAL CASES FOR ANGLE CORRECTION AT DEAD ENDS AND ARCS
   switch (currentIntersectionMarkerId) {
     case 3:
       angle = 0;
-            deadEndCase = 1;
+      deadEndCase = 1;
       break;
     case 25:
       angle = -M_PI / 2;
-            deadEndCase = 1;
+      deadEndCase = 1;
       break;
     case 21:
       angle = -M_PI / 2;
-            deadEndCase = 1;
+      deadEndCase = 1;
       break;
     case 14:
       angle = M_PI / 2;
-            deadEndCase = 1;
+      deadEndCase = 1;
       break;
     case 9:
       angle = -M_PI / 2;
-            deadEndCase = 1;
+      deadEndCase = 1;
       break;
     case 39:
       angle = -M_PI / 3;
-            deadEndCase = 1;
+      deadEndCase = 1;
       break;
     case 10: //arc line
       angle = -M_PI;
@@ -257,12 +217,10 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
     case 8: //arc line
       angle = 0;
       break;
-	case 40:
-		angle = -5 * M_PI / 6;
-		break;
+    case 40:
+      angle = -5 * M_PI / 6;
+      break;
   }
-
-  // TODO: add special cases for angle where the line between 2 intersections isnt straight (i.e. arcs)
 
   absoluteHeadingAngle = angle;
   absoluteLocationX = currentIntersectionX;
@@ -270,20 +228,12 @@ void updateIntersectionLocalization(int currentIntersectionMarkerId) {
   absoluteLocationXMeters = (double)absoluteLocationX * MAP_RESOLUTION;
   absoluteLocationYMeters = (double)absoluteLocationY * MAP_RESOLUTION;
   lastIntersectionMarkerId = currentIntersectionMarkerId;
-
-
   lastIntersectionEncoderTick = (leftMotorCount + rightMotorCount) / 2;
 
-  if(deadEndCase == 1){
+  //AT EVERY DEAD END, ROVER NEEDS TO GENERATE A NEW PATH TO ANOTHER DEAD END
+  if (deadEndCase == 1) {
     processDeadEnd();
   }
-
-  //  Serial.print(" angle");
-  //  Serial.println(absoluteHeadingAngle * 180 / M_PI);
-  //  Serial.println();
-  //Serial.println(lastIntersectionMarkerId);
-  //    Serial.print("   ");
-  //    Serial.println(intersections[lastIntersectionMarkerId].id);
 }
 
 int tryToLocalize() {
@@ -325,25 +275,25 @@ int tryToLocalize() {
 }
 
 int DetermineTurnDirection(double headingAngle, int currentX, int currentY, int upcomingX, int upcomingY) {
-	double xDiff = upcomingX - currentX;
-	double yDiff = upcomingY - currentY;
+  double xDiff = upcomingX - currentX;
+  double yDiff = upcomingY - currentY;
 
-	double upcomingAngle = atan2(yDiff, xDiff);
+  double upcomingAngle = atan2(yDiff, xDiff);
 
-	double previousAngle = headingAngle;
+  double previousAngle = headingAngle;
 
-	double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
-	angle = normalise(angle, -M_PI, M_PI);
+  double angle = normalise(upcomingAngle, 0, 2 * M_PI) - normalise(previousAngle, 0, 2 * M_PI);
+  angle = normalise(angle, -M_PI, M_PI);
 
-	if (abs(angle) < 30 * M_PI / 180) {
-		return PATH_STRAIGHT;
-	}
-	else if (angle > 0) {
-		return PATH_RIGHT;
-	}
-	else if (angle < 0) {
-		return PATH_LEFT;
-	}
+  if (abs(angle) < 30 * M_PI / 180) {
+    return PATH_STRAIGHT;
+  }
+  else if (angle > 0) {
+    return PATH_RIGHT;
+  }
+  else if (angle < 0) {
+    return PATH_LEFT;
+  }
 }
 
 

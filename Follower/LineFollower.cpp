@@ -5,10 +5,16 @@
 int followerState = FOLLOWER_STATE_ONLINE;
 int turnState = TURN_STATE_DEFAULT;
 
+/*************LIne following PID constants***********/
+float Kp = 2.1;
+float Ki = 0.003;
+float Kd = 700;
 float lastError;
 long integral = 0;
 bool leftForward = true;
 bool rightForward = true;
+
+/*************Wall Detection constants***********/
 int wallSensorBuffer = 0;
 int wallBufferCounter = 0;
 double wallDistance = 0;
@@ -38,6 +44,7 @@ long lastRealignRightMotorCount = 0;
 int currentLeftMotorSpeed = 0;
 int currentRightMotorSpeed = 0;
 
+//CALCULATED THE PID CONTROLLER PARAMETERS
 void followLaneAnalog(unsigned long currentTime) {
   determineStallPWM();
   float timeDifference = currentTime - previousTime;
@@ -62,18 +69,20 @@ void followLaneAnalog(unsigned long currentTime) {
   lastError = currentError;
   controller = Kp * currentError + Ki * integral + Kd * derivative;
 
-  //Serial.print(" error: ");
-  //Serial.print(currentError);
-  //Serial.print(" controller: ");
-  //Serial.println(controller);
   MotorSpeeds motorSpeeds = driveMotorsPID(controller, derivative);
   publishLaneFollowingData(currentTime, motorSpeeds, currentError, integral, derivative, controller, readLeft, readRight);
 
   previousTime = currentTime;
 }
 
-MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedOffset) {
+//DRIVES MOTORS BASED ON PID CONTROLLER WHEN FOLLOWER_STATE_ONLINE
+MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed) {
   MotorSpeeds newMotorSpeeds;
+
+  float speedOffsetFactor = abs(controller / 255);
+  if (speedOffsetFactor > 1)speedOffsetFactor = 1;
+
+  float speedOffset = speedOffsetFactor * (adjustedSpeed);
 
   /*int newLeftMotorSpeed;
     int newRightMotorSpeed;*/
@@ -121,8 +130,13 @@ MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedO
   return newMotorSpeeds;
 }
 
+//UPDATED THE FOLLOWER STATE
 void updateFollowerState(unsigned long currentTime) {
-  if (readLeft < 600 && readRight < 600 && followerState != FOLLOWER_STATE_RIGHT && followerState != FOLLOWER_STATE_LEFT && followerState != FOLLOWER_STATE_STRAIGHT&&followerState != FOLLOWER_STATE_WALL_DEADEND) {
+  if (readLeft < 600 && readRight < 600 &&
+      followerState != FOLLOWER_STATE_RIGHT &&
+      followerState != FOLLOWER_STATE_LEFT &&
+      followerState != FOLLOWER_STATE_STRAIGHT &&
+      followerState != FOLLOWER_STATE_WALL_DEADEND) {
     followerState = FOLLOWER_STATE_OFFLINE;
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
@@ -138,57 +152,23 @@ void updateFollowerState(unsigned long currentTime) {
       isRealigning = false;
     }
   }
-
-  if (followerState == FOLLOWER_STATE_IDENTIFY_WALL) {
-    if (currentTime > wallIdentificationStartTime + 1000) {
-      bool isBlack = ((double)wallSampleCount / (double)wallSampleTotal) > 0.5;
-      if (!isBlack) {
-        // TODO: Debugging for now
-        numCheckpointsFound = CHECKPOINTS_TOTAL;
-        // Detected a white wall -> this is the starting location
-        //if (pgm_read_byte(&(intersections[lastIntersectionMarkerId].id)) == pgm_read_byte(&(intersections[(int)pathLocation[currentPath][0]].id))) {
-        if (numCheckpointsFound < CHECKPOINTS_TOTAL) {
-          followerState = FOLLOWER_STATE_WALL_START_GOBACK;
-        }
-        else {
-          followerState = FOLLOWER_STATE_WALL_START_DONE;
-        }
-      }
-      else {
-        // Detected a black wall - handle the deadend state
-        followerState = FOLLOWER_STATE_WALL_DEADEND;
-      }
-
-      wallSampleCount = 0;
-      wallSampleTotal = 0;
-    }
-  }
-
   if (followerState == FOLLOWER_STATE_STRAIGHT && detectedIntersection == INTERSECTION_TYPE_NONE && !IsSensorOnOrApproaching(SENSOR_LOCATION_LEFT) && !IsSensorOnOrApproaching(SENSOR_LOCATION_RIGHT) && readLeft >= 600 && readRight >= 600) {
     followerState = FOLLOWER_STATE_ONLINE;
   }
 }
 
+//THIS FUNCTION DRIVES THE MOTORS BASED ON THE STATE OF THE FOLLOWER.
+//driveMotorsBasic IS ENVOKED IF THE FOLLOWER IS IN ITS DEFAULT LINE FOLLOWING STATE
 MotorSpeeds driveMotorsPID(float controller, float derivative) {
-  //should make avg speed inversely proportional to the controller...will slow down if error is high
-  float speedOffsetFactor = abs(controller / 255); //(-exp(-abs(controller) / 120) + 1) * 1.15;
-  if (speedOffsetFactor > 1)speedOffsetFactor = 1;
-  float adjustedSpeed = averageMotorSpeed;// - DERIVATIVE_SPEED_ADJUST * derivative * (averageMotorSpeed - (stallPWM)) / (255 - stallPWM);
-  //float adjustedSpeed = averageMotorSpeed;
-  float speedOffset = speedOffsetFactor * (adjustedSpeed); //abs((controller * (adjustedSpeed - (stallPWM)) / (255 - stallPWM))); //controller offset is scaled with average speed (255-stallPWM). Cutoff at stallPWM.
 
+  float adjustedSpeed = averageMotorSpeed;
   MotorSpeeds motorSpeeds;
   if (followerState == FOLLOWER_STATE_ONLINE || followerState == FOLLOWER_STATE_STRAIGHT) {
-    motorSpeeds = driveMotorsBasic(controller, adjustedSpeed, speedOffset);
+    motorSpeeds = driveMotorsBasic(controller, adjustedSpeed);
   }
   else if (followerState == FOLLOWER_STATE_OFFLINE) {
     motorSpeeds.left = -(adjustedSpeed * 1.2);
     motorSpeeds.right = adjustedSpeed * 1;
-
-
-    //    isRealigning = true;
-    //    lastRealignLeftMotorCount = -1;
-    //    lastRealignRightMotorCount = -1;
   }
   else if (followerState == FOLLOWER_STATE_WALL_START_DONE) {
     motorSpeeds.right = 0;
@@ -236,19 +216,12 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
         motorSpeeds.right = -(adjustedSpeed * 1.2);
         motorSpeeds.left = adjustedSpeed * 1;
 
-		// Allow the planner to handle any cases before finalizing the rotation
-		motorSpeeds = ProcessBeforeDeadEnd(motorSpeeds);
+        // Allow the planner to handle any cases before finalizing the rotation
+        motorSpeeds = ProcessBeforeDeadEnd(motorSpeeds);
       }
     }
   }
-  else if (followerState == FOLLOWER_STATE_IDENTIFY_WALL) {
-    // While checking, stop the motors
-    motorSpeeds.right = 0;
-    motorSpeeds.left = 0;
 
-    wallSampleCount += digitalRead(WALL_COLOUR_SENSOR);
-    wallSampleTotal++;
-  }
   else if (followerState == FOLLOWER_STATE_WALL_START_DONE) {
     // Aaaaannnnnndd we're done!
 
@@ -260,7 +233,6 @@ MotorSpeeds driveMotorsPID(float controller, float derivative) {
 
   if (motorSpeeds.left == 0 && motorSpeeds.right == 0) {
     //delay(2000);
-
     lastIntersectionDetectionLeftEncoder = leftMotorCount;
     lastIntersectionDetectionRightEncoder = rightMotorCount;
   }
@@ -276,7 +248,9 @@ float getLaneError() {
   return readLeft - readRight - 32;
 }
 
-
+//THIS FUNCTION WILL DETERMINE THE PWM AT WHICH THE MOTORS STALL
+//BY INCREMENTING PWM UNTIL THE ROVER STARTS MOVING.
+//IT IS TO ENSURE THE MOTORS NEVER OPERATE AT STALL PWM TO PREVENT DAMAGE.
 void determineStallPWM() {
   if (determineStallPWMDone == 0) {
     int i = 0;
@@ -298,7 +272,8 @@ void determineStallPWM() {
   }
 }
 
-
+//CODE FOR WALL DETECTION
+//FOLLOWER STATE WILL CHANGE TO FOLLOWER_STATE_WALL_DEADEND ONCE A WALL IS DETECTED
 void wallDetection(unsigned long currentTime) {
 
   wallSensorBuffer += analogRead(WALL_DISTANCE_SENSOR);
@@ -308,17 +283,11 @@ void wallDetection(unsigned long currentTime) {
     wallBufferCounter = 0;
     wallSensorBuffer = 0;
   }
-
-  //	Serial.print("dist: ");
-  //	Serial.print(wallDistance);
-
   if (followerState == FOLLOWER_STATE_ONLINE) {
 
     if (wallDistance > 200 ) {
       wallDistance = 0;
-
       followerState = FOLLOWER_STATE_WALL_DEADEND;
-      //wallIdentificationStartTime = currentTime;
     }
 
   }

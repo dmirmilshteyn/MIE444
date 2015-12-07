@@ -7,7 +7,7 @@
  ************* Hardware Constants *************
  **********************************************/
 
- //DIGITAL PINS
+//DIGITAL PINS
 #define AIN1_RIGHT_MOTOR 10 //FORWARD
 #define AIN2_RIGHT_MOTOR 5 //REVERSE
 #define BIN1_LEFT_MOTOR 9 //FORWARD
@@ -44,23 +44,6 @@
 #define ROBOT_WIDTH 0.21
 
 #define WHEEL_GAP 0.2035
-
- //PID
- //#define Kp 3.4
- //#define Ki 0.000
- //#define Kd 400
-
-extern float Kp;
-extern float Ki;
-extern float Kd;
-extern float DERIVATIVE_SPEED_ADJUST;
-
-//#define DERIVATIVE_SPEED_ADJUST 1
-
-//best settings for pwm 65
-//#define Kp 1.7
-//#define Ki 0.00
-//#define Kd 200
 
 
 #endif

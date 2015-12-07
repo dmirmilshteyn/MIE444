@@ -39,6 +39,9 @@ extern unsigned long previousTime;
 extern float readLeft;
 extern float readRight;
 
+extern float Kp;
+extern float Ki;
+extern float Kd;
 extern float lastError;
 extern long integral;
 extern bool leftForward;
@@ -57,7 +60,7 @@ extern int currentLeftMotorSpeed;
 extern int currentRightMotorSpeed;
 
 void updateFollowerState(unsigned long currentTime);
-MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed, float speedOffset);
+MotorSpeeds driveMotorsBasic(float controller, float adjustedSpeed);
 MotorSpeeds driveMotorsPID(float controller, float derivative);
 
 float getLaneError();

@@ -19,36 +19,23 @@ void disableLED() {
   ledOn = false;
 }
 
-
+//function checks if the current detected checkpoint has alredy been found (based on rover location on map)
 bool checkpointFound() {
   double checkpointDistance;
   bool condition = false;
   for (int i = 0; i < numCheckpointsFound; i++) {
     checkpointDistance = sqrt(pow((absoluteLocationXMeters) - (storedCheckpoint[i].x * MAP_RESOLUTION), 2) + pow((absoluteLocationYMeters) - (storedCheckpoint[i].y * MAP_RESOLUTION), 2));
-    if (checkpointDistance < 0.5) {
+    if (checkpointDistance < 0.2) {
       condition = true;
     }
   }
-//  Serial.print(absoluteLocationXMeters);
-//  Serial.print("  ");
-//  Serial.print(absoluteLocationYMeters);
-//  Serial.print("  ");
-//  Serial.println(condition);
   return condition;
 }
+
+//what the robot will do when it reaches the checkponint
 void checkPointHandle(long currentTime) {
-//    Serial.print(digitalRead(IR_DETECTOR));
-//    Serial.print("  ");
-//    Serial.println(analogRead(5));
-//****************need large potentiometer (>200K)**********
-
-
-  //what the robot will do when it reaches the checkponint
   if (numCheckpointsFound < CHECKPOINTS_TOTAL && digitalRead(IR_DETECTOR) == 0 && checkpointEventActive == false) {
-    //    Serial.println("test");
     if (checkpointFound() == false) {
-      //      Serial.println("test2");
-      //set current location of checkpoint as found
       storedCheckpoint[numCheckpointsFound].x = absoluteLocationX;  //sets found checkpoint coordinates to current robot position
       storedCheckpoint[numCheckpointsFound].y = absoluteLocationY;
 
@@ -59,16 +46,12 @@ void checkPointHandle(long currentTime) {
 
     }
   }
-  //following may not work if loop takes longer than 100ms
+
+  //Once checkpoint is detected, LED will keep blinking at 300ms intervals for CHECKPOINT_REACTION_DURATION miliseconds
   if (checkpointEventActive && currentTime < (checkpointTime + CHECKPOINT_REACTION_DURATION)) {
 
     int LEDonMillis = checkpointTime + ledBlinkCount * 600;
     int LEDoffMillis = checkpointTime + (ledBlinkCount * 600) + 300;
-    //    Serial.print(roundToHundreds(currentTime));
-    //    Serial.print("  ");
-    //    Serial.print(roundToHundreds(LEDonMillis));
-    //    Serial.print("  ");
-    //    Serial.println(roundToHundreds(LEDoffMillis));
     if (roundToHundreds(currentTime) == roundToHundreds(LEDonMillis)) {
       if (!ledOn) {
         enableLED();
@@ -88,6 +71,5 @@ void checkPointHandle(long currentTime) {
       disableLED();
     }
     checkpointEventActive = false;
-    //Serial.println("DONE");
   }
 }

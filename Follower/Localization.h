@@ -23,11 +23,9 @@ extern long int previousRightMotorCount;
 extern int absoluteLocationX;
 extern int absoluteLocationY;
 extern double absoluteHeadingAngle;
-extern double absoluteLocationXMeters; //************ADD*************
-extern double absoluteLocationYMeters; //************ADD*************
+extern double absoluteLocationXMeters;
+extern double absoluteLocationYMeters;
 extern void updateRelativeLocation();
-extern void correctRelativeAngle();
-extern bool correctRelativeAngleDone;
 extern float pathLocation[PATH_COUNT][MAX_PATH_LENGTH + 1];
 
 extern int currentPath;
